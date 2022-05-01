@@ -1,4 +1,4 @@
-package com.example.cse110lab5;
+package com.example.zooseekercse110team7;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.util.Collections;
 import java.util.List;

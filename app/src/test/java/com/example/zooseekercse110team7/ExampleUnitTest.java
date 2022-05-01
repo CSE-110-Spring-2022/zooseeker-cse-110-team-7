@@ -1,4 +1,4 @@
-package com.example.cse110lab5;
+package com.example.zooseekercse110team7;
 
 import org.junit.Test;
 

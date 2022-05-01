@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.cse110lab5">
+    package="com.example.zooseekercse110team7">
 
     <application
         android:allowBackup="true"
@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CSE110Lab5">
         <activity
-            android:name=".TodoListActivity"
+            android:name="com.example.zooseekercse110team7.TodoListActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.zooseekercse110team7.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

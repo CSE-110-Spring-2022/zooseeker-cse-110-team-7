@@ -1,4 +1,4 @@
-package com.example.cse110lab5;
+package com.example.zooseekercse110team7;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

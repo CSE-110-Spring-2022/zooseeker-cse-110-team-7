@@ -1,4 +1,4 @@
-package com.example.cse110lab5;
+package com.example.zooseekercse110team7;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -6,12 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import java.util.List;
 
 public class TodoListActivity extends AppCompatActivity {
     // Exposed for testing purposes later...

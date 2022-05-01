@@ -6,7 +6,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.cse110lab5"
+        applicationId "com.example.zooseekercse110team7"
         minSdk 28
         targetSdk 28
         versionCode 1
