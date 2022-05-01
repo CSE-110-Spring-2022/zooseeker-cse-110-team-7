@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,11 +26,8 @@ import java.util.List;
 // the `sample_node_info.json`
 
 public class NodeInfoJsonParse {
-//    @SerializedName("id")
-    //TODO: give it and actual id number
-    //see piazza: https://piazza.com/class/l186r5pbwg2q4?cid=460
-    @PrimaryKey(autoGenerate = true)
-    public String idString;
+    @SerializedName("id")
+    public String id;
 
     @SerializedName("name")
     public String name;
@@ -40,14 +38,19 @@ public class NodeInfoJsonParse {
     @SerializedName("tags")
     public String[] tags;
 
-    public NodeInfoJsonParse(){
+    public NodeInfoJsonParse(){}
 
+    public NodeInfoJsonParse(String id, String name, String kind, String[] tags){
+        this.id = id;
+        this.name = name;
+        this.kind = kind;
+        this.tags = tags;
     }
 
     @Override
     public String toString() {
         return "NodeInfoJsonParse{" +
-                "idString='" + idString + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", kind='" + kind + '\'' +
                 ", tags=" + Arrays.toString(tags) +
