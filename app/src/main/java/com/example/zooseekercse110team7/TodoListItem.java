@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,6 +44,15 @@ public class TodoListItem {
     }
 
     public static List<TodoListItem> loadJSON(Context context, String path){
+        //boolean to check if file exists already
+
+        //TODO: Actually create file
+        File file = new File("output.json");
+        if(!file.exists()){
+            //call NodeInfoJsonParse.WriteJson(Context)
+            NodeInfoJsonParse n = new NodeInfoJsonParse();
+            n.WriteTodoJSON(context);
+        }
 
         try{
             InputStream input = context.getAssets().open(path);
