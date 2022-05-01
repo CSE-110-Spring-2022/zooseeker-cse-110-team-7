@@ -13,6 +13,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = new Intent(this, TodoListActivity.class);
+
+// Enable to go to Map Activity
+//        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 }
