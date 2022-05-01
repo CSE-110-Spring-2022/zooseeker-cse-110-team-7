@@ -134,4 +134,9 @@ public class TodoListActivityTest {
             assertFalse(editedItem.completed);
         });
     }
+
+    @Test
+    public void intentFail(){
+        assertEquals(1,0);
+    }
 }
