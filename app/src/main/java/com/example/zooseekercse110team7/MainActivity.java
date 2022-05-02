@@ -14,8 +14,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, TodoListActivity.class);
 
-// Enable to go to Map Activity
+// Enable to go to Map Activity / Current Map Location
 //        Intent intent = new Intent(this, MapsActivity.class);
+//        Intent intent = new Intent(this, CurrentMapLoc.class);
         startActivity(intent);
     }
 }
