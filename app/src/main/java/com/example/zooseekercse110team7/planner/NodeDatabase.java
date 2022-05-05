@@ -1,4 +1,4 @@
-package com.example.zooseekercse110team7;
+package com.example.zooseekercse110team7.planner;
 
 import android.content.Context;
 
@@ -9,42 +9,44 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import org.w3c.dom.Node;
+
 import java.util.List;
 import java.util.concurrent.Executors;
 
-@Database(entities = {TodoListItem.class}, version = 1)
-public abstract class TodoDatabase extends RoomDatabase {
-    private static TodoDatabase singleton = null;
+@Database(entities = {NodeItem.class}, version = 1)
+public abstract class NodeDatabase extends RoomDatabase {
+    private static NodeDatabase singleton = null;
 
-    public abstract TodoListItemDao todoListItemDao();
+    public abstract NodeDao nodeDao();
 
-    public synchronized static TodoDatabase getSingleton(Context context){
+    public synchronized static NodeDatabase getSingleton(Context context){
         if(singleton == null){
-            singleton = TodoDatabase.makeDatabase(context);
+            singleton = NodeDatabase.makeDatabase(context);
         }
 
         return singleton;
     }
 
-    public static TodoDatabase makeDatabase(Context context){
-        return Room.databaseBuilder(context, TodoDatabase.class, "todo_app.db")
+    public static NodeDatabase makeDatabase(Context context){
+        return Room.databaseBuilder(context, NodeDatabase.class, "planner_app.db")
                 .allowMainThreadQueries()
                 .addCallback(new Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
                         Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                            List<TodoListItem> todos = TodoListItem.
+                            List<NodeItem> todos = NodeItem.
                                     loadJSON(context, "sample_node_info.json");
-                            getSingleton(context).todoListItemDao().insertAll(todos);
+                            getSingleton(context).nodeDao().insertAll(todos);
                         });
                     }
-            }).build();
+                }).build();
     }
 
 
     @VisibleForTesting
-    public static void injectTestDatabase(TodoDatabase testDatabase){
+    public static void injectTestDatabase(NodeDatabase testDatabase){
         if(singleton != null){
             singleton.close();
         }

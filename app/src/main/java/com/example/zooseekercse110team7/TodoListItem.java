@@ -1,6 +1,7 @@
 package com.example.zooseekercse110team7;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -46,14 +47,14 @@ public class TodoListItem {
     public static List<TodoListItem> loadJSON(Context context, String path){
         //boolean to check if file exists already
 
-        //TODO: Actually create file
-        File file = new File("output.json");
-        if(!file.exists()){
-            //call NodeInfoJsonParse.WriteJson(Context)
-            NodeInfoJsonParse n = new NodeInfoJsonParse();
-            n.WriteTodoJSON(context);
-        }
-
+//        //TODO: Actually create file
+//        File file = new File("output.json");
+//        if(!file.exists()){
+//            //call NodeInfoJsonParse.WriteJson(Context)
+//            NodeInfoJsonParse n = new NodeInfoJsonParse();
+//            n.WriteTodoJSON(context);
+//        }
+        Log.d("Load Path", path);
         try{
             InputStream input = context.getAssets().open(path);
             Reader reader = new InputStreamReader(input);

@@ -62,14 +62,14 @@ public class TodoDatabaseTest {
         assertNotNull(item);
         assertEquals("Photos of Spider-Man", item.text);
     }
-        @Test public void testDelete() {
-            TodoListItem item = new TodoListItem("Pizza time", false, 0);
-            //testChange added to test GitHub Actions
-            long testChange;
-            long id = dao.insert(item);
-            item = dao.get(id);
-            int itemsDeleted = dao.delete(item);
-            assertEquals( 1, itemsDeleted);
-            assertNull(dao.get(id));
+    @Test public void testDelete() {
+        TodoListItem item = new TodoListItem("Pizza time", false, 0);
+        //testChange added to test GitHub Actions
+        long testChange;
+        long id = dao.insert(item);
+        item = dao.get(id);
+        int itemsDeleted = dao.delete(item);
+        assertEquals( 1, itemsDeleted);
+        assertNull(dao.get(id));
     }
 }
