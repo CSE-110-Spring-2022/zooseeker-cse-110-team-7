@@ -1,14 +1,11 @@
-package com.example.zooseekercse110team7;
+package com.example.zooseekercse110team7.map;
 
 //import org.jgrapht.Graph;
-import static androidx.test.InstrumentationRegistry.getContext;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 import java.util.Map;
 
 import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
 public class AssetLoader {
 

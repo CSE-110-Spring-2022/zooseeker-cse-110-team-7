@@ -1,8 +1,5 @@
-package com.example.zooseekercse110team7;
+package com.example.zooseekercse110team7.map;
 
-import java.util.Map;
-
-import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 

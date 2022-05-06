@@ -1,4 +1,4 @@
-package com.example.zooseekercse110team7;
+package com.example.zooseekercse110team7.todo_list;
 
 import android.app.Application;
 import android.content.Context;

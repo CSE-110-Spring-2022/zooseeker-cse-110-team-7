@@ -18,6 +18,10 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.example.zooseekercse110team7.todo_list.TodoDatabase;
+import com.example.zooseekercse110team7.todo_list.TodoListItem;
+import com.example.zooseekercse110team7.todo_list.TodoListItemDao;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

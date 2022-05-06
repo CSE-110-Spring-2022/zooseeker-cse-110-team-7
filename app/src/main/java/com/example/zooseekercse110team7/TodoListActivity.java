@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.zooseekercse110team7.todo_list.TodoListAdapter;
+import com.example.zooseekercse110team7.todo_list.TodoListViewModel;
+
 public class TodoListActivity extends AppCompatActivity {
     // Exposed for testing purposes later...
     public RecyclerView recyclerView;

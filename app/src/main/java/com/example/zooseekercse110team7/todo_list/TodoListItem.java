@@ -1,4 +1,4 @@
-package com.example.zooseekercse110team7;
+package com.example.zooseekercse110team7.todo_list;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,7 +10,6 @@ import androidx.room.PrimaryKey;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zooseekercse110team7.R;
-import com.example.zooseekercse110team7.TodoListAdapter;
 
 import java.util.Collections;
 import java.util.List;

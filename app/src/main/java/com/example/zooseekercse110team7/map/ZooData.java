@@ -1,4 +1,4 @@
-package com.example.zooseekercse110team7;
+package com.example.zooseekercse110team7.map;
 
 import android.content.Context;
 
