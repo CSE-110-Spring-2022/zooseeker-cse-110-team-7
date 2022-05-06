@@ -68,7 +68,7 @@ public class NodeItem {
     public boolean completed, onPlanner;//booleans to check if it's completed or on the planner
 
     //constructor
-    public NodeItem(String id, String name, String kind, List<String> tags){
+    NodeItem(String id, String name, String kind, List<String> tags){
         this.id = id;
         this.name = name;
         this.kind = kind;
