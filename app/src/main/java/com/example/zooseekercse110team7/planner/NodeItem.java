@@ -6,6 +6,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -23,7 +25,27 @@ public class NodeItem {
     @PrimaryKey (autoGenerate = false) @NonNull
     public String id;
     @NonNull
-    public String name, kind, tags;
+    public String name, kind;
+
+    @TypeConverters(StringListToGsonConverter.class)
+    public List<String> tags;
+
+    /**
+     * This subclass parses an array of strings into a comma separated string and parses comma
+     * separated strings into a list
+     * */
+    public static class StringListToGsonConverter{
+        @TypeConverter
+        public static List<String> restoreList(String tagListString){
+            return new Gson().fromJson(tagListString, new TypeToken<List<String>>() {}.getType());
+        }
+        @TypeConverter
+        public static String saveList(List<String> tags) {
+            if(tags.isEmpty()){ return new Gson().toJson("NULL"); }
+            return new Gson().toJson(tags);
+        }
+    }
+
     /**
      * Note: `tags` is a String and NOT a list -- use pattern matching using LIKE
      *        https://www.sqlitetutorial.net/sqlite-like/
@@ -31,7 +53,7 @@ public class NodeItem {
 
     public boolean completed, onPlanner;
 
-    NodeItem(String id, String name, String kind, String tags){
+    NodeItem(String id, String name, String kind, List<String> tags){
         this.id = id;
         this.name = name;
         this.kind = kind;

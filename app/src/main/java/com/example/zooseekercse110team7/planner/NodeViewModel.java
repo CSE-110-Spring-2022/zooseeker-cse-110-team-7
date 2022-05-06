@@ -13,10 +13,11 @@ public class NodeViewModel extends AndroidViewModel {
     private LiveData<List<NodeItem>> nodeItems;
     private final NodeDao nodeDao;
 
-    NodeViewModel(@NonNull Application application){
+    public NodeViewModel(@NonNull Application application){
         super(application);
         Context context = getApplication().getApplicationContext();
-        nodeDao = (NodeDatabase.getSingleton(context)).nodeDao();
+        NodeDatabase db = NodeDatabase.getSingleton(context);
+        nodeDao = db.nodeDao();
     }
 
     public LiveData<List<NodeItem>> getNodeItems(){

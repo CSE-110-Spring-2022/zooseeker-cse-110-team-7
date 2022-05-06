@@ -7,6 +7,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.w3c.dom.Node;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 @Database(entities = {NodeItem.class}, version = 1)
+@TypeConverters(NodeItem.StringListToGsonConverter.class)
 public abstract class NodeDatabase extends RoomDatabase {
     private static NodeDatabase singleton = null;
 
