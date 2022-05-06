@@ -11,9 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zooseekercse110team7.R;
+import com.example.zooseekercse110team7.todo_list.TodoListItem;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * This class updates the Recycler Viewer (UI list). It extends to the RecyclerView
@@ -31,6 +33,12 @@ import java.util.List;
  * */
 public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewHolder>{
     private List<NodeItem> plannerItems = Collections.emptyList();
+
+    private Consumer<NodeItem> onDeleteButtonClicked;
+
+    public void setOnDeleteButtonClicked(Consumer<NodeItem> onDeleteButtonClicked) {
+        this.onDeleteButtonClicked = onDeleteButtonClicked;
+    }
 
     public void setPlannerItems(List<NodeItem> newPlannerItems){
         plannerItems.clear();
@@ -71,6 +79,11 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
             nameTextView = itemView.findViewById(R.id.node_name_tv);//note: 'tv' means 'text view'
             kindTextView = itemView.findViewById(R.id.node_kind_tv);
             deleteBtn = itemView.findViewById(R.id.node_delete_btn);
+
+            deleteBtn.setOnClickListener((view)->{
+                if(onDeleteButtonClicked == null){ return; }
+                onDeleteButtonClicked.accept(nodeItem);
+            });
         }
 
         /**

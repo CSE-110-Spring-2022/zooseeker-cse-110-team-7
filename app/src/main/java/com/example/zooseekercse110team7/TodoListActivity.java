@@ -26,17 +26,7 @@ public class TodoListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list);
 
-        //TodoListAdapter adapter = new TodoListAdapter();
-        //adapter.setHasStableIds(true);
-
-//        TodoListItemDao todoListItemDao = TodoDatabase.getSingleton(this).todoListItemDao();
-//        List<TodoListItem> todoListItems = todoListItemDao.getAll();
-//
-//        TodoListAdapter adapter = new TodoListAdapter();
-//        adapter.setHasStableIds(true);
-//        adapter.setTodoListItems(todoListItems);
-
-        /*TodoListViewModel*/ viewModel = new ViewModelProvider(this).get(TodoListViewModel.class);
+        viewModel = new ViewModelProvider(this).get(TodoListViewModel.class);
         TodoListAdapter adapter = new TodoListAdapter();
         adapter.setOnCheckBoxClickedHandler(viewModel::toggleCompleted);
         adapter.setOnTextEditedHandler(viewModel::updateText);
@@ -46,11 +36,6 @@ public class TodoListActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.todo_items);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-        //adapter.setTodoListItems(TodoListItem.loadJSON(this,"demo_todos.json"));
-
-        //List<TodoListItem> todos = TodoListItem.loadJSON(this, "demo_todos.json");
-        //Log.d("TodoListActivity", todos.toString());
 
         this.newTodoText = this.findViewById(R.id.new_todo_text);
         this.addTodoButton = this.findViewById(R.id.add_todo_btn);

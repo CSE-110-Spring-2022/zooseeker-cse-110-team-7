@@ -39,8 +39,11 @@ public class NodeViewModel extends AndroidViewModel {
 
     private void loadUsers(){ nodeItems = nodeDao.getAllLive(); }
 
-    //TODO: Delete Node Item -- We want to remove from planner, not database -- use booleans
-//    public void deleteItem(NodeItem nodeItem){ nodeDao.delete(nodeItem); }
+    //TODO: Update UI
+    public void deleteItem(NodeItem nodeItem){
+        nodeItem.onPlanner = false;
+        nodeDao.update(nodeItem);
+    }
 
     //TODO: Add Node Item
 //    public void AddItem(/*params*/){

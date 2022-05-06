@@ -46,7 +46,11 @@ public class NodeItem {
     public static class StringListToGsonConverter{
         @TypeConverter
         public static List<String> restoreList(String tagListString){
-            return new Gson().fromJson(tagListString, new TypeToken<List<String>>() {}.getType());
+            Log.d("RESTORE", tagListString);
+            if(tagListString.equals("\"NULL\"")){
+                return Collections.emptyList();
+            }
+            return new Gson().fromJson(tagListString, new TypeToken<List<String>>(){}.getType());
         }
         @TypeConverter
         public static String saveList(List<String> tags) {
