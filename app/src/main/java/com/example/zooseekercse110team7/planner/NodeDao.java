@@ -22,7 +22,7 @@ public interface NodeDao {
      * Inserts item to database
      * */
     @Insert
-    long Insert(NodeItem nodeItem);
+    long insert(NodeItem nodeItem);
     //inserts a list of items
     @Insert
     List<Long> insertAll(List<NodeItem> nodeItems);
@@ -34,6 +34,9 @@ public interface NodeDao {
     List<NodeItem> getAll();
     @Query("SELECT * FROM `node_items` WHERE onPlanner = 1")
     LiveData<List<NodeItem>> getAllLive();
+    //get item based on `id`
+    @Query("SELECT * FROM `node_items` WHERE `id`=:id")
+    NodeItem get(long id);
 
     /**
      * The implementation of the method will update its parameters in the database if they already
@@ -44,8 +47,11 @@ public interface NodeDao {
     int update(NodeItem nodeItem);
 
     /**
-     * The implementation of the method will delete its parameters from the database
+     * The implementation of the method will delete an object from the database
      * */
     @Delete
     int delete(NodeItem nodeItem);
+    //deletes all items from the table
+    @Query("DELETE FROM `node_items`")
+    int deleteAll();
 }
