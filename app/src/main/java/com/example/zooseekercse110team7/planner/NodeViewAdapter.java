@@ -1,5 +1,8 @@
 package com.example.zooseekercse110team7.planner;
 
+import android.app.Activity;
+import android.app.Application;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zooseekercse110team7.R;
-import com.example.zooseekercse110team7.todo_list.TodoListItem;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,9 +49,11 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
         notifyDataSetChanged();
     }
 
+    private TextView numberItemsTextView;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        numberItemsTextView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_planner,null).findViewById(R.id.number_items_tv);
         View view = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.node_item, parent, false);
@@ -70,7 +75,7 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private NodeItem nodeItem;      // current node item -- useful if helper functions used
-        private final TextView nameTextView, kindTextView, numberItemsTextView; // text views for `name` and `kind`
+        private final TextView nameTextView, kindTextView/*, numberItemsTextView*/; // text views for `name` and `kind`
         private final Button deleteBtn; // delete button view
 
         //constructor
@@ -78,7 +83,8 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
             super(itemView);
             nameTextView = itemView.findViewById(R.id.node_name_tv);//note: 'tv' means 'text view'
             kindTextView = itemView.findViewById(R.id.node_kind_tv);
-            numberItemsTextView = itemView.findViewById(R.id.number_Items);
+            //numberItemsTextView = itemView.findViewById(R.id.number_items_tv); // <-- will be null because it's in terms of `node_item.xml`
+
             deleteBtn = itemView.findViewById(R.id.node_delete_btn);
 
             deleteBtn.setOnClickListener((view)->{
@@ -92,16 +98,19 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
          * */
         public void setItem(NodeItem nodeItem){
             Log.d("Set_Item", nodeItem.toString());
+            String count = "POI: " + String.valueOf(getItemCount());
+            Log.d("Set_Count", count);
             this.nodeItem = nodeItem;
             try{
                 nameTextView.setText(nodeItem.name);
                 kindTextView.setText(nodeItem.kind);
-                numberItemsTextView.setText("POI: " + getItemCount());
+                numberItemsTextView.setText(count);//TODO: Fix UI Count
+                Log.d("Set_Count", "View Has: " + numberItemsTextView.getText());
             }catch (NullPointerException e){
                 Log.e("Setting",e.toString());
                 nameTextView.setText("NULL");
                 kindTextView.setText("NULL");
-                numberItemsTextView.setText("NULL");
+//                numberItemsTextView.setText("NULL");
             }
 
         }

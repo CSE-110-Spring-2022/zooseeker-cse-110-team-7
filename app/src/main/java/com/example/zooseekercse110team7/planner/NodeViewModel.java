@@ -39,7 +39,6 @@ public class NodeViewModel extends AndroidViewModel {
 
     private void loadUsers(){ nodeItems = nodeDao.getAllLive(); }
 
-    //TODO: Update UI
     public void deleteItem(NodeItem nodeItem){
         nodeItem.onPlanner = false;
         nodeDao.update(nodeItem);
