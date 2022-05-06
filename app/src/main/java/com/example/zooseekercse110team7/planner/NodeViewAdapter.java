@@ -16,6 +16,20 @@ import com.example.zooseekercse110team7.TodoListAdapter;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class updates the Recycler Viewer (UI list). It extends to the RecyclerView
+ * Adapter to be able to update it. It holds all the important methods dealing with the
+ * implementation of Recycler Viewer. The basic methods for a successful implementation are:
+ * - onCreateViewHolder
+ * - onBindHolder
+ * - getItemCount
+ *
+ * The ViewHolder is a java class that stores the reference to the card layout views that have to be
+ * dynamically modified during the execution of the program by a list of data obtained by the
+ * database
+ * Note: 'card layout' refers to the how an item is displayed in terms of the UI (i.e name, kind,
+ * and delete button)
+ * */
 public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewHolder>{
     private List<NodeItem> plannerItems = Collections.emptyList();
 
@@ -48,10 +62,11 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
 //    public long getItemId(int position){ return plannerItems.get(position).id; }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private NodeItem nodeItem;
-        private final TextView nameTextView, kindTextView;
-        private final Button deleteBtn;
+        private NodeItem nodeItem;      // current node item -- useful if helper functions used
+        private final TextView nameTextView, kindTextView; // text views for `name` and `kind`
+        private final Button deleteBtn; // delete button view
 
+        //constructor
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             nameTextView = itemView.findViewById(R.id.node_name_tv);//note: 'tv' means 'text view'
@@ -59,6 +74,9 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
             deleteBtn = itemView.findViewById(R.id.node_delete_btn);
         }
 
+        /**
+         * Displays the exhibit the user wants to visit. It also prevents and Null Exceptions.
+         * */
         public void setItem(NodeItem nodeItem){
             Log.d("Set_Item", nodeItem.toString());
             this.nodeItem = nodeItem;
@@ -73,6 +91,9 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
 
         }
 
+        /**
+         * Return the current node item
+         * */
         public NodeItem getNodeItem(){ return nodeItem; }
     }
 }

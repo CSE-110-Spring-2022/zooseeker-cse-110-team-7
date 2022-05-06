@@ -9,6 +9,13 @@ import androidx.room.Update;
 
 import java.util.List;
 
+
+/**
+ * The purpose of this class is to basically translate function into SQL to query (search) the
+ * database. In this class you CAN MODIFY as needed, but make sure to add comments to explain the
+ * SQL you've written.
+ * */
+
 @Dao
 public interface NodeDao {
     /**

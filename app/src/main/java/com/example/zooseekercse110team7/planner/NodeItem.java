@@ -20,6 +20,15 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
+
+/**
+ * String   id          - unique id
+ * String   name        - name of the exhibit/intersection/etc.
+ * String   kind        - category the node belongs to
+ * String   tags        - string of comma separated tags
+ * bool     completed   - flag that determines if the user completed item
+ * bool     onPlanner   - flag that determines if item was added to the planner by the user
+ * */
 @Entity(tableName = "node_items")
 public class NodeItem {
     @PrimaryKey (autoGenerate = false) @NonNull
@@ -51,8 +60,10 @@ public class NodeItem {
      *        https://www.sqlitetutorial.net/sqlite-like/
      * */
 
-    public boolean completed, onPlanner;
 
+    public boolean completed, onPlanner;//booleans to check if it's completed or on the planner
+
+    //constructor
     NodeItem(String id, String name, String kind, List<String> tags){
         this.id = id;
         this.name = name;
@@ -62,6 +73,9 @@ public class NodeItem {
         this.onPlanner = false; // by default it's not added to the planner
     }
 
+    /**
+     * Converts any NodeItem object into a string
+     * */
     @Override
     public String toString() {
         return "NodeItem{" +
@@ -74,6 +88,9 @@ public class NodeItem {
                 '}';
     }
 
+    /**
+     * Parses the JSON file
+     * */
     public static List<NodeItem> loadJSON(Context context, String path){
         Log.d("NodeItem_Load_JSON", path);
         try{

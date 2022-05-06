@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 @Database(entities = {NodeItem.class}, version = 1)
-@TypeConverters(NodeItem.StringListToGsonConverter.class)
+@TypeConverters(NodeItem.StringListToGsonConverter.class) //this line is for array conversion
 public abstract class NodeDatabase extends RoomDatabase {
     private static NodeDatabase singleton = null;
 

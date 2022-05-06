@@ -9,7 +9,16 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+/**
+ * The name of the class may be a tiny bit confusing, but the purpose of this class is to be the
+ * MODEL of the MVC pattern
+ *
+ * It extends to the (Android) MVC framework
+ * https://developer.android.com/topic/libraries/architecture/viewmodel
+ * */
 public class NodeViewModel extends AndroidViewModel {
+    //`LiveData` is just a fancy Observer
+    //https://developer.android.com/topic/libraries/architecture/livedata
     private LiveData<List<NodeItem>> nodeItems;
     private final NodeDao nodeDao;
 
@@ -30,7 +39,7 @@ public class NodeViewModel extends AndroidViewModel {
 
     private void loadUsers(){ nodeItems = nodeDao.getAllLive(); }
 
-    //TODO: Delete Node Item -- We want to remove from planner, not database
+    //TODO: Delete Node Item -- We want to remove from planner, not database -- use booleans
 //    public void deleteItem(NodeItem nodeItem){ nodeDao.delete(nodeItem); }
 
     //TODO: Add Node Item
