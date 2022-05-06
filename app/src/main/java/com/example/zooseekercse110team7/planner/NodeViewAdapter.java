@@ -70,7 +70,7 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private NodeItem nodeItem;      // current node item -- useful if helper functions used
-        private final TextView nameTextView, kindTextView; // text views for `name` and `kind`
+        private final TextView nameTextView, kindTextView, numberItemsTextView; // text views for `name` and `kind`
         private final Button deleteBtn; // delete button view
 
         //constructor
@@ -78,6 +78,7 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
             super(itemView);
             nameTextView = itemView.findViewById(R.id.node_name_tv);//note: 'tv' means 'text view'
             kindTextView = itemView.findViewById(R.id.node_kind_tv);
+            numberItemsTextView = itemView.findViewById(R.id.number_Items);
             deleteBtn = itemView.findViewById(R.id.node_delete_btn);
 
             deleteBtn.setOnClickListener((view)->{
@@ -95,10 +96,12 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
             try{
                 nameTextView.setText(nodeItem.name);
                 kindTextView.setText(nodeItem.kind);
+                numberItemsTextView.setText("POI: " + getItemCount());
             }catch (NullPointerException e){
                 Log.e("Setting",e.toString());
                 nameTextView.setText("NULL");
                 kindTextView.setText("NULL");
+                numberItemsTextView.setText("NULL");
             }
 
         }
