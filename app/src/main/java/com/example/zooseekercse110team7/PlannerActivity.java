@@ -28,17 +28,17 @@ public class PlannerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planner);
 
-////        viewModel = new ViewModelProvider(this).get(NodeViewModel.class);
-//        NodeViewAdapter nodeViewer = new NodeViewAdapter();
-////        viewModel.getNodeItems().observe(this, nodeViewer::setPlannerItems);
-//
-//        recyclerView = findViewById(R.id.node_viewer);//gets the recycler view from `activity_planer.xml`
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setAdapter(nodeViewer);
-//
-//        List<NodeItem> stuff = NodeItem.loadJSON(this, "sample_node_info.json");
-//        Log.d("STUFF", stuff.toString());
-//
-//        nodeViewer.setPlannerItems(NodeItem.loadJSON(this, "sample_node_info.json"));
+//        viewModel = new ViewModelProvider(this).get(NodeViewModel.class);
+        NodeViewAdapter nodeViewer = new NodeViewAdapter();
+//        viewModel.getNodeItems().observe(this, nodeViewer::setPlannerItems);
+
+        recyclerView = findViewById(R.id.node_viewer);//gets the recycler view from `activity_planer.xml`
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(nodeViewer);
+
+        List<NodeItem> stuff = NodeItem.loadJSON(this, "sample_node_info.json");
+        Log.d("STUFF", stuff.toString());
+
+        nodeViewer.setPlannerItems(NodeItem.loadJSON(this, "sample_node_info.json"));
     }
 }

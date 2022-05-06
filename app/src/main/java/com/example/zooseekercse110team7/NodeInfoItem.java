@@ -77,7 +77,6 @@ public class NodeInfoItem {
 //        Log.d("Write", "Start----");
 //        if(itemsList.isEmpty()){ itemsList = this.loadJSON(context); }
 //
-//        //TODO:Write a JSON
 ////        for(NodeInfoJsonParse item: Items){
 ////            Log.d("PRINTING ITEMS:",item.toString());
 ////        }

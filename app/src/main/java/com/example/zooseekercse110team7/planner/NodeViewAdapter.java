@@ -30,7 +30,7 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.activity_planner, parent, false);
+                .inflate(R.layout.node_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -63,7 +63,6 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
             Log.d("Set_Item", nodeItem.toString());
             this.nodeItem = nodeItem;
             try{
-                //TODO: Fix ME! see Logcat
                 nameTextView.setText(nodeItem.name);
                 kindTextView.setText(nodeItem.kind);
             }catch (NullPointerException e){

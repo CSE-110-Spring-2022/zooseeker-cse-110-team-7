@@ -47,7 +47,7 @@ public class TodoListItem {
     public static List<TodoListItem> loadJSON(Context context, String path){
         //boolean to check if file exists already
 
-//        //TODO: Actually create file
+
 //        File file = new File("output.json");
 //        if(!file.exists()){
 //            //call NodeInfoJsonParse.WriteJson(Context)
