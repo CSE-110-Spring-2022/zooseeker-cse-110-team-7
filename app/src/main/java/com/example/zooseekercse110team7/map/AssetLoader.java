@@ -39,4 +39,16 @@ public class AssetLoader {
     public String getEdgeFile(){
         return this.edgeInfoJSON;
     }
+
+    public Graph<String, IdentifiedWeightedEdge> getGraph(){
+        return this.graph;
+    }
+
+    public Map<String, ZooData.VertexInfo> getVertexMap(){
+        return this.vInfo;
+    }
+
+    public Map<String, ZooData.EdgeInfo> getEdgeMap(){
+        return this.eInfo;
+    }
 }
