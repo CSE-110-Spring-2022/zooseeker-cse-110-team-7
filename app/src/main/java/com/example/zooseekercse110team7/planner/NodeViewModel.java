@@ -40,7 +40,7 @@ public class NodeViewModel extends AndroidViewModel {
     private void loadUsers(){ nodeItems = nodeDao.getAllLive(); }
 
     public void deleteItem(NodeItem nodeItem){
-        nodeItem.onPlanner = false;
+        nodeItem.onPlanner = true;
         nodeDao.update(nodeItem);
     }
 

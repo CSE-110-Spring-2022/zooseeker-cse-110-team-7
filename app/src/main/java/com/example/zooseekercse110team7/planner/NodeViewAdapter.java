@@ -49,11 +49,11 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
         notifyDataSetChanged();
     }
 
-    private TextView numberItemsTextView;
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        numberItemsTextView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_planner,null).findViewById(R.id.number_items_tv);
+        //numberItemsTextView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_planner,null).findViewById(R.id.number_items_tv);
         View view = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.node_item, parent, false);
@@ -97,15 +97,15 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
          * Displays the exhibit the user wants to visit. It also prevents and Null Exceptions.
          * */
         public void setItem(NodeItem nodeItem){
-            Log.d("Set_Item", nodeItem.toString());
-            String count = "POI: " + String.valueOf(getItemCount());
-            Log.d("Set_Count", count);
+            //Log.d("Set_Item", nodeItem.toString());
+            //String count = "POI: " + String.valueOf(getItemCount());
+            //setNumberItemsTextViewLog.d("Set_Count", count);
             this.nodeItem = nodeItem;
             try{
                 nameTextView.setText(nodeItem.name);
                 kindTextView.setText(nodeItem.kind);
-                numberItemsTextView.setText(count);//TODO: Fix UI Count
-                Log.d("Set_Count", "View Has: " + numberItemsTextView.getText());
+               // numberItemsTextView.setText(count);
+               // Log.d("Set_Count", "View Has: " + numberItemsTextView.getText());
             }catch (NullPointerException e){
                 Log.e("Setting",e.toString());
                 nameTextView.setText("NULL");

@@ -32,7 +32,7 @@ public interface NodeDao {
      * */
     @Query("SELECT * FROM `node_items`")
     List<NodeItem> getAll();
-    @Query("SELECT * FROM `node_items` WHERE onPlanner = 1")
+    @Query("SELECT * FROM `node_items` WHERE onPlanner = 0")
     LiveData<List<NodeItem>> getAllLive();
     @Query("SELECT * FROM `node_items` WHERE `id`=:id")
     NodeItem get(String id);
