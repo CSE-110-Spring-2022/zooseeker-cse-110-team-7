@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.zooseekercse110team7.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
@@ -42,7 +43,7 @@ public class ZooData {
     }
 
     public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(String path) {
-        InputStream inputStream = AssetLoader.class.getClassLoader().getResourceAsStream(path);
+        InputStream inputStream = MainActivity.class.getClassLoader().getResourceAsStream(path);
         Reader reader = new InputStreamReader(inputStream);
 
         Gson gson = new Gson();
@@ -64,7 +65,7 @@ public class ZooData {
     }
 
     public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(String path) {
-        InputStream inputStream = AssetLoader.class.getClassLoader().getResourceAsStream(path);
+        InputStream inputStream = MainActivity.class.getClassLoader().getResourceAsStream(path);
         Reader reader = new InputStreamReader(inputStream);
 
         Gson gson = new Gson();
@@ -103,7 +104,7 @@ public class ZooData {
 
 
 
-        //InputStream inputStream = AssetLoader.class.getClassLoader().getResourceAsStream(path);
+        //InputStream inputStream = App.class.getClassLoader().getResourceAsStream(path);
         Reader reader = new InputStreamReader(inputStream);
 
         // And now we just import it!

@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.zooseekercse110team7.map.CurrentMapLoc;
+
 public class MainActivity extends AppCompatActivity {
-    private final ACTIVITY yourActivity = ACTIVITY.Planner;
+    private final ACTIVITY yourActivity = ACTIVITY.Map;
 
     enum ACTIVITY{
         Map,
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (yourActivity){
             case Map:
-                intent = new Intent(this, MapsActivity.class);
+                intent = new Intent(this, CurrentMapLoc.class);
                 startActivity(intent);
                 break;
             case Planner:

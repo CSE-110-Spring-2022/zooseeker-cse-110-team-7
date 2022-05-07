@@ -3,6 +3,8 @@ package com.example.zooseekercse110team7.map;
 //import org.jgrapht.Graph;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
+import com.example.zooseekercse110team7.MainActivity;
+
 import java.util.Map;
 
 import org.jgrapht.Graph;
@@ -26,4 +28,15 @@ public class AssetLoader {
         eInfo = ZooData.loadEdgeInfoJSON(edgeInfoJSON);
     }
 
+    public String getZooFile(){
+        return this.zooGraphJSON;
+    }
+
+    public String getNodeFile(){
+        return this.nodeInfoJSON;
+    }
+
+    public String getEdgeFile(){
+        return this.edgeInfoJSON;
+    }
 }
