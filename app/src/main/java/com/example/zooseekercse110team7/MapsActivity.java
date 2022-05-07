@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.zooseekercse110team7.map.CurrentMapLoc;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -72,9 +73,6 @@ public class MapsActivity extends AppCompatActivity implements
 
     private GoogleMap map;
     // [START_EXCLUDE silent]
-    private CompoundButton animateToggle;
-    private CompoundButton customDurationToggle;
-    private SeekBar customDurationBar;
     private PolylineOptions currPolylineOptions;
     private boolean isCanceled = false;
     // [END_EXCLUDE]
@@ -84,27 +82,12 @@ public class MapsActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // [START_EXCLUDE silent]
-        animateToggle = findViewById(R.id.animate);
-        customDurationToggle = findViewById(R.id.duration_toggle);
-        customDurationBar = findViewById(R.id.duration_bar);
 
-        updateEnabledState();
         // [END_EXCLUDE]
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        /*
-        Button backBtn = this.findViewById(R.id.back_button);
-        backBtn.setOnClickListener(view -> {
-            Intent backToPlanner = new Intent(this, PlannerActivity.class);
-            startActivity(backToPlanner);
-        });
-
-         */
-
-
 
     }
 
@@ -112,7 +95,6 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        updateEnabledState();
     }
     // [END_EXCLUDE]
 
@@ -148,6 +130,21 @@ public class MapsActivity extends AppCompatActivity implements
         return true;
     }
 
+    public void onBackClicked(View view){
+        /*
+        Button backButton = (Button)findViewById(R.id.back_button);;
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CurrentMapLoc.this, PlannerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+         */
+        Intent intent = new Intent(MapsActivity.this, PlannerActivity.class);
+        startActivity(intent);
+    }
     /**
      * Called when the Go To Bondi button is clicked.
      */
@@ -155,7 +152,6 @@ public class MapsActivity extends AppCompatActivity implements
         if (!checkReady()) {
             return;
         }
-
         changeCamera(CameraUpdateFactory.newCameraPosition(BONDI));
     }
 
@@ -182,147 +178,6 @@ public class MapsActivity extends AppCompatActivity implements
         });
     }
 
-    /**
-     * Called when the stop button is clicked.
-     */
-    public void onStopAnimation(View view) {
-        if (!checkReady()) {
-            return;
-        }
-
-        map.stopAnimation();
-    }
-
-    /**
-     * Called when the zoom in button (the one with the +) is clicked.
-     */
-    public void onZoomIn(View view) {
-        if (!checkReady()) {
-            return;
-        }
-
-        changeCamera(CameraUpdateFactory.zoomIn());
-    }
-
-    /**
-     * Called when the zoom out button (the one with the -) is clicked.
-     */
-    public void onZoomOut(View view) {
-        if (!checkReady()) {
-            return;
-        }
-
-        changeCamera(CameraUpdateFactory.zoomOut());
-    }
-
-    /**
-     * Called when the tilt more button (the one with the /) is clicked.
-     */
-    public void onTiltMore(View view) {
-        if (!checkReady()) {
-            return;
-        }
-
-        CameraPosition currentCameraPosition = map.getCameraPosition();
-        float currentTilt = currentCameraPosition.tilt;
-        float newTilt = currentTilt + 10;
-
-        newTilt = (newTilt > 90) ? 90 : newTilt;
-
-        CameraPosition cameraPosition = new CameraPosition.Builder(currentCameraPosition)
-                .tilt(newTilt).build();
-
-        changeCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
-
-    /**
-     * Called when the tilt less button (the one with the \) is clicked.
-     */
-    public void onTiltLess(View view) {
-        if (!checkReady()) {
-            return;
-        }
-
-        CameraPosition currentCameraPosition = map.getCameraPosition();
-
-        float currentTilt = currentCameraPosition.tilt;
-
-        float newTilt = currentTilt - 10;
-        newTilt = (newTilt > 0) ? newTilt : 0;
-
-        CameraPosition cameraPosition = new CameraPosition.Builder(currentCameraPosition)
-                .tilt(newTilt).build();
-
-        changeCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
-
-    /**
-     * Called when the left arrow button is clicked. This causes the camera to move to the left
-     */
-    public void onScrollLeft(View view) {
-        if (!checkReady()) {
-            return;
-        }
-
-        changeCamera(CameraUpdateFactory.scrollBy(-SCROLL_BY_PX, 0));
-    }
-
-    /**
-     * Called when the right arrow button is clicked. This causes the camera to move to the right.
-     */
-    public void onScrollRight(View view) {
-        if (!checkReady()) {
-            return;
-        }
-
-        changeCamera(CameraUpdateFactory.scrollBy(SCROLL_BY_PX, 0));
-    }
-
-    /**
-     * Called when the up arrow button is clicked. The causes the camera to move up.
-     */
-    public void onScrollUp(View view) {
-        if (!checkReady()) {
-            return;
-        }
-
-        changeCamera(CameraUpdateFactory.scrollBy(0, -SCROLL_BY_PX));
-    }
-
-    /**
-     * Called when the down arrow button is clicked. This causes the camera to move down.
-     */
-    public void onScrollDown(View view) {
-        if (!checkReady()) {
-            return;
-        }
-
-        changeCamera(CameraUpdateFactory.scrollBy(0, SCROLL_BY_PX));
-    }
-
-    /**
-     * Called when the animate button is toggled
-     */
-    public void onToggleAnimate(View view) {
-        updateEnabledState();
-    }
-
-    /**
-     * Called when the custom duration checkbox is toggled
-     */
-    public void onToggleCustomDuration(View view) {
-        updateEnabledState();
-    }
-
-    /**
-     * Update the enabled state of the custom duration controls.
-     */
-    private void updateEnabledState() {
-        customDurationToggle.setEnabled(animateToggle.isChecked());
-        customDurationBar
-                .setEnabled(animateToggle.isChecked() && customDurationToggle.isChecked());
-    }
-
     private void changeCamera(CameraUpdate update) {
         changeCamera(update, null);
     }
@@ -332,17 +187,8 @@ public class MapsActivity extends AppCompatActivity implements
      * animate toggle button.
      */
     private void changeCamera(CameraUpdate update, CancelableCallback callback) {
-        if (animateToggle.isChecked()) {
-            if (customDurationToggle.isChecked()) {
-                int duration = customDurationBar.getProgress();
-                // The duration must be strictly positive so we make it at least 1.
-                map.animateCamera(update, Math.max(duration, 1), callback);
-            } else {
-                map.animateCamera(update, callback);
-            }
-        } else {
-            map.moveCamera(update);
-        }
+        map.animateCamera(update, callback);
+        map.moveCamera(update);
     }
     // [END_EXCLUDE]
 
