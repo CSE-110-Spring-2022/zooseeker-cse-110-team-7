@@ -33,21 +33,8 @@ public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchActivity";
     private NodeSearchViewModel viewModel;
-    private TextView selectedCountTextView;
     private List<NodeItem> nodeItems = new ArrayList<>();
     private NodeSearchViewAdapter nodeViewAdapter = new NodeSearchViewAdapter();
-
-
-    private void setSelectedCountTextView() {
-        final Observer<List<NodeItem>> nameObserver = new Observer<List<NodeItem>>() {
-            @Override
-            public void onChanged(@Nullable final List<NodeItem> newName) {
-                // Update the UI, in this case, a TextView.
-                String number = "POI: " + String.valueOf(newName.size());
-                selectedCountTextView.setText(number);
-            }
-        };
-    }
 
     private List<NodeItem> filter(String filterString) {
         filterString = filterString.toLowerCase();
@@ -94,8 +81,6 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        //Observer item count
-        selectedCountTextView = findViewById(R.id.selected_count);
         viewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);//
 
         List<NodeItem> allItems = viewModel.getAllNodeItems();
