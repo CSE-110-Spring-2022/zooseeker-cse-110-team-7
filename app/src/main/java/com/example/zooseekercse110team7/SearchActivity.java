@@ -30,7 +30,7 @@ public class SearchActivity extends AppCompatActivity {
     private static final String TAG = "SearchActivity";
     private NodeViewModel viewModel;
     private TextView selectedCountTextView;
-    private List<NodeItem> nodeItems = new ArrayList<>();
+    private List<NodeItem> nodeItems;
     private NodeViewAdapter nodeViewAdapter = new NodeViewAdapter();
 
 
@@ -43,9 +43,6 @@ public class SearchActivity extends AppCompatActivity {
                 selectedCountTextView.setText(number);
             }
         };
-
-        // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-        viewModel.getNodeItems().observe(this, nameObserver);
     }
 
     private List<NodeItem> filter(String filterString) {
@@ -82,10 +79,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 Log.d(TAG, "new text = " + newText);
-                if (nodeItems.isEmpty()) {
-                    nodeItems.addAll(viewModel.getNodeItems().getValue());
-                }
-                nodeViewAdapter.setPlannerItems(filter(newText));
+                nodeViewAdapter.setItems(filter(newText));
                 return false;
             }
         });
@@ -100,10 +94,8 @@ public class SearchActivity extends AppCompatActivity {
         selectedCountTextView = findViewById(R.id.selected_count);
         viewModel = new ViewModelProvider(this).get(NodeViewModel.class);//
 
-        //Added item count observer
-        //setSelectedCountTextView();
-
-        viewModel.getNodeItems().observe(this, nodeViewAdapter::setPlannerItems);//
+        nodeItems = viewModel.getAllNodeItems();
+        nodeViewAdapter.setItems(new ArrayList<>(nodeItems));
 
         recyclerView = findViewById(R.id.search_node_viewer);//gets the recycler view from `activity_search.xml`
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
