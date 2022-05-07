@@ -30,7 +30,7 @@ public interface NodeDao {
     /**
      * Gets all the Node Items based on String IDs
      * */
-    @Query("SELECT * FROM `node_items`")
+    @Query("SELECT * FROM `node_items` ORDER BY name")
     List<NodeItem> getAll();
     @Query("SELECT * FROM `node_items` WHERE onPlanner = 1")
     LiveData<List<NodeItem>> getAllLive();

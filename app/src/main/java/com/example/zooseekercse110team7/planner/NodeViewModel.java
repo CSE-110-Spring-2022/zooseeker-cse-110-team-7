@@ -17,7 +17,7 @@ import java.util.List;
  * https://developer.android.com/topic/libraries/architecture/viewmodel
  * */
 public class NodeViewModel extends AndroidViewModel {
-    //`LiveData` is just a fancy Observer
+    //`LiveData` is just a fancy Observeractiv
     //https://developer.android.com/topic/libraries/architecture/livedata
     private LiveData<List<NodeItem>> nodeItems;
     private final NodeDao nodeDao;

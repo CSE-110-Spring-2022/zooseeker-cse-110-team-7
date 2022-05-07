@@ -37,11 +37,6 @@ import java.util.function.Consumer;
 public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewHolder>{
     private List<NodeItem> plannerItems = Collections.emptyList();
 
-    private Consumer<NodeItem> onDeleteButtonClicked;
-
-    public void setOnDeleteButtonClicked(Consumer<NodeItem> onDeleteButtonClicked) {
-        this.onDeleteButtonClicked = onDeleteButtonClicked;
-    }
 
     public void setPlannerItems(List<NodeItem> newPlannerItems){
         plannerItems.clear();
@@ -76,7 +71,6 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
     public class ViewHolder extends RecyclerView.ViewHolder{
         private NodeItem nodeItem;      // current node item -- useful if helper functions used
         private final TextView nameTextView, kindTextView/*, numberItemsTextView*/; // text views for `name` and `kind`
-        private final Button deleteBtn; // delete button view
 
         //constructor
         public ViewHolder(@NonNull View itemView){
@@ -84,13 +78,6 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
             nameTextView = itemView.findViewById(R.id.node_name_tv);//note: 'tv' means 'text view'
             kindTextView = itemView.findViewById(R.id.node_kind_tv);
             //numberItemsTextView = itemView.findViewById(R.id.number_items_tv); // <-- will be null because it's in terms of `node_item.xml`
-
-            deleteBtn = itemView.findViewById(R.id.node_delete_btn);
-
-            deleteBtn.setOnClickListener((view)->{
-                if(onDeleteButtonClicked == null){ return; }
-                onDeleteButtonClicked.accept(nodeItem);
-            });
         }
 
         /**

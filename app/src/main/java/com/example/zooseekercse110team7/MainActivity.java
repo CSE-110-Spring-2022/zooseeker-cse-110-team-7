@@ -36,9 +36,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case Search:
-                /* UNCOMMENT WHEN ACTIVITY IS MADE */
-//                intent = new Intent(this, SearchActivity.class);
-//                startActivity(intent);
+                intent = new Intent(this, SearchActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
