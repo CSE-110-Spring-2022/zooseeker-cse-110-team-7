@@ -34,7 +34,7 @@ public class SearchActivity extends AppCompatActivity {
     private static final String TAG = "SearchActivity";
     private NodeSearchViewModel viewModel;
     private TextView selectedCountTextView;
-    private List<NodeItem> nodeItems;
+    private List<NodeItem> nodeItems = new ArrayList<>();
     private NodeSearchViewAdapter nodeViewAdapter = new NodeSearchViewAdapter();
 
 
@@ -98,9 +98,13 @@ public class SearchActivity extends AppCompatActivity {
         selectedCountTextView = findViewById(R.id.selected_count);
         viewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);//
 
-        //nodeItems = viewModel.getLiveNodeItems();
-//        nodeViewAdapter.setItems(new ArrayList<>(nodeItems));
-        viewModel.getLiveNodeItems().observe(this,nodeViewAdapter::setItems);
+        List<NodeItem> allItems = viewModel.getAllNodeItems();
+        for (NodeItem item : allItems) {
+            if (item.kind.equals("exhibit")) {
+                nodeItems.add(item);
+            }
+        }
+        nodeViewAdapter.setItems(new ArrayList<>(nodeItems));
 
         recyclerView = findViewById(R.id.search_node_viewer);//gets the recycler view from `activity_search.xml`
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -111,11 +115,4 @@ public class SearchActivity extends AppCompatActivity {
         nodeViewAdapter.setOnAddButtonClicked(viewModel::addItem);
     }
 
-    /*
-    public void onBackClicked(View view){
-        Intent intent = new Intent(SearchActivity.this, PlannerActivity.class);
-        startActivity(intent);
-    }
-
-     */
 }
