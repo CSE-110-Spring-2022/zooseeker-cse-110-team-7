@@ -5,7 +5,7 @@ plugins {
 
 android {
     compileSdk 31
-    buildToolsVersion '30.0.2'
+
     defaultConfig {
         applicationId "com.example.zooseekercse110team7"
         minSdk 28
@@ -43,6 +43,7 @@ dependencies {
     implementation 'androidx.test:core:1.4.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'com.google.android.libraries.places:places:2.4.0'
+    implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'
     def gson_version = "2.9.0"
     def room_version = "2.4.2"
     def jgrapht_version = "1.5.0"

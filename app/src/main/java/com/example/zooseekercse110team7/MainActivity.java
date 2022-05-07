@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (yourActivity){
             case Map:
-                intent = new Intent(this, CurrentMapLoc.class);
+                intent = new Intent(this, MapsActivity.class);
                 startActivity(intent);
                 break;
             case Planner:
