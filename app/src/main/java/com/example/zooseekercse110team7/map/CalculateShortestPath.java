@@ -36,7 +36,10 @@ public class CalculateShortestPath {
         int i = 1;
         String out = "";
         for (IdentifiedWeightedEdge e : path.getEdgeList()) {
-            out += (i + ". Walk " + g.graph.getEdgeWeight(e) + " meters along " + g.eInfo.get(e.getId()).street + " from '" + g.vInfo.get(g.graph.getEdgeSource(e).toString()).name + "' to '" + g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name + "'.\n");
+            //Conversion approximated to 5 decimal points and converted to int.
+            double mToFt = 3.28084 * (g.graph.getEdgeWeight(e));
+            int distInFeet = (int)mToFt;
+            out += ("Proceed on " + g.eInfo.get(e.getId()).street + " " + distInFeet + " ft towards " + g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name + ".\n");
 
             i++;
         }
