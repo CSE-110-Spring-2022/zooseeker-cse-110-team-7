@@ -37,7 +37,7 @@ public class PlannerActivity extends AppCompatActivity {
             }
         };
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-        viewModel.getNodeItems().observe(this, nameObserver);
+        viewModel.getLiveNodeItems().observe(this, nameObserver);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +54,13 @@ public class PlannerActivity extends AppCompatActivity {
         setNumberItemsTextView();
 
         NodeViewAdapter nodeViewer = new NodeViewAdapter();
-        viewModel.getNodeItems().observe(this, nodeViewer::setPlannerItems);//
+        viewModel.getLiveNodeItems().observe(this, nodeViewer::setItems);//
 
         recyclerView = findViewById(R.id.node_viewer);//gets the recycler view from `activity_planer.xml`
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(nodeViewer);
 
-//        nodeViewer.setPlannerItems(NodeItem.loadJSON(this, "sample_node_info.json"));
+//        nodeViewer.setItems(NodeItem.loadJSON(this, "sample_node_info.json"));
     }
 
     public void onMapClicked(View view){

@@ -17,9 +17,9 @@ import java.util.List;
  * https://developer.android.com/topic/libraries/architecture/viewmodel
  * */
 public class NodeViewModel extends AndroidViewModel {
-    //`LiveData` is just a fancy Observeractiv
+    //`LiveData` is just a fancy Observer
     //https://developer.android.com/topic/libraries/architecture/livedata
-    private LiveData<List<NodeItem>> nodeItems;
+    private List<NodeItem> nodeItems;
     private final NodeDao nodeDao;
 
     public NodeViewModel(@NonNull Application application){
@@ -29,15 +29,19 @@ public class NodeViewModel extends AndroidViewModel {
         nodeDao = db.nodeDao();
     }
 
-    public LiveData<List<NodeItem>> getNodeItems(){
+    public List<NodeItem> getAllNodeItems(){
         if(nodeItems == null){
-            loadUsers();
+            loadAllNodeItems();
         }
 
         return nodeItems;
     }
 
-    private void loadUsers(){ nodeItems = nodeDao.getAllLive(); }
+    public LiveData<List<NodeItem>> getLiveNodeItems(){
+        return nodeDao.getAllLive();
+    }
+
+    private void loadAllNodeItems(){ nodeItems = nodeDao.getAll(); }
 
     public void deleteItem(NodeItem nodeItem){
         nodeItem.onPlanner = true;

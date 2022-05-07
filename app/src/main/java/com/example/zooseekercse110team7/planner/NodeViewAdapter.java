@@ -35,15 +35,13 @@ import java.util.function.Consumer;
  * and delete button)
  * */
 public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewHolder>{
-    private List<NodeItem> plannerItems = Collections.emptyList();
+    private List<NodeItem> nodeItems = Collections.emptyList();
 
-
-    public void setPlannerItems(List<NodeItem> newPlannerItems){
-        plannerItems.clear();
-        plannerItems = newPlannerItems;
+    public void setItems(List<NodeItem> newItems){
+        nodeItems.clear();
+        nodeItems = newItems;
         notifyDataSetChanged();
     }
-
 
     @NonNull
     @Override
@@ -57,16 +55,16 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setItem(plannerItems.get(position));
+        holder.setItem(nodeItems.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return plannerItems.size();
+        return nodeItems.size();
     }
 
 //    @Override
-//    public long getItemId(int position){ return plannerItems.get(position).id; }
+//    public long getItemId(int position){ return nodeItems.get(position).id; }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private NodeItem nodeItem;      // current node item -- useful if helper functions used
