@@ -1,6 +1,7 @@
 package com.example.zooseekercse110team7.map;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -18,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.zooseekercse110team7.MapsActivity;
+import com.example.zooseekercse110team7.PlannerActivity;
 import com.example.zooseekercse110team7.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -205,6 +209,15 @@ public class CurrentMapLoc extends AppCompatActivity
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
+
+        Button backButton = (Button)findViewById(R.id.back_button);;
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CurrentMapLoc.this, PlannerActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     // [END maps_current_place_on_map_ready]
 

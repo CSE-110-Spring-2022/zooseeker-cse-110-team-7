@@ -22,8 +22,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //AssetLoader assets = new AssetLoader("sample_zoo_graph.json","sample_node_info.json","sample_edge_info.json");
-
         //Intent intent = new Intent(this, TodoListActivity.class);
 
         Intent intent;
