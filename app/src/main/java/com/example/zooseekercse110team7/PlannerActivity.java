@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -59,5 +61,10 @@ public class PlannerActivity extends AppCompatActivity {
         recyclerView.setAdapter(nodeViewer);
 
 //        nodeViewer.setPlannerItems(NodeItem.loadJSON(this, "sample_node_info.json"));
+    }
+
+    public void onMapClicked(View view){
+        Intent intent = new Intent(PlannerActivity.this, MapsActivity.class);
+        startActivity(intent);
     }
 }

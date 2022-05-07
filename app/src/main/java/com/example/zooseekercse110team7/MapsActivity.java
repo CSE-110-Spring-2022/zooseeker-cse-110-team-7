@@ -130,18 +130,7 @@ public class MapsActivity extends AppCompatActivity implements
         return true;
     }
 
-    public void onBackClicked(View view){
-        /*
-        Button backButton = (Button)findViewById(R.id.back_button);;
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CurrentMapLoc.this, PlannerActivity.class);
-                startActivity(intent);
-            }
-        });
-
-         */
+    public void onPlannerClicked(View view){
         Intent intent = new Intent(MapsActivity.this, PlannerActivity.class);
         startActivity(intent);
     }
@@ -158,7 +147,7 @@ public class MapsActivity extends AppCompatActivity implements
     /**
      * Called when the Animate To Sydney button is clicked.
      */
-    public void onGoToSydney(View view) {
+    public void onGoToZooEntrance(View view) {
         if (!checkReady()) {
             return;
         }
