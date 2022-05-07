@@ -60,7 +60,6 @@ public class PlannerActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(nodeViewer);
 
-        nodeViewer.setOnDeleteButtonClicked(viewModel::deleteItem);
 //        nodeViewer.setPlannerItems(NodeItem.loadJSON(this, "sample_node_info.json"));
     }
 
