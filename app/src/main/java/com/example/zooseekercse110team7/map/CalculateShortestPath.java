@@ -32,5 +32,16 @@ public class CalculateShortestPath {
         }
     }
 
+    public String getShortestPath() {
+        int i = 1;
+        String out = "";
+        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
+            out += (i + ". Walk " + g.graph.getEdgeWeight(e) + " meters along " + g.eInfo.get(e.getId()).street + " from '" + g.vInfo.get(g.graph.getEdgeSource(e).toString()).name + "' to '" + g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name + "'.\n");
+
+            i++;
+        }
+
+        return out;
+    }
 
 }
