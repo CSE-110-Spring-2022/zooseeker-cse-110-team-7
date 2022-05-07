@@ -66,6 +66,14 @@
             android:layout_weight="0.5"
             android:onClick="onPlannerClicked"
             android:text="Planner" />
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:onClick="onSearchClicked"
+            android:text="Search" />
     </LinearLayout>
 
     <LinearLayout

@@ -134,6 +134,12 @@ public class MapsActivity extends AppCompatActivity implements
         Intent intent = new Intent(MapsActivity.this, PlannerActivity.class);
         startActivity(intent);
     }
+
+    public void onSearchClicked(View view){
+        Intent intent = new Intent(MapsActivity.this, SearchActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Called when the Go To Bondi button is clicked.
      */
