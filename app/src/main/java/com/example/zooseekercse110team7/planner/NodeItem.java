@@ -68,7 +68,7 @@ public class NodeItem {
     public boolean completed, onPlanner;//booleans to check if it's completed or on the planner
 
     //constructor
-    NodeItem(String id, String name, String kind, List<String> tags){
+    public NodeItem(String id, String name, String kind, List<String> tags){
         this.id = id;
         this.name = name;
         this.kind = kind;
@@ -108,5 +108,13 @@ public class NodeItem {
             return Collections.emptyList();
         }
 
+    }
+
+    /**
+     * Determines if this and another NodeItem are the same by getting the strings
+     * @return True (they are equal) False (they are NOT equal)
+     * */
+    public boolean equals(NodeItem nodeItem){
+        return this.toString().equals(nodeItem.toString());
     }
 }

@@ -26,7 +26,7 @@ public class TodoListItem {
     @NonNull
     public String text; public boolean completed; public int order;
 
-    TodoListItem(String text, boolean completed, int order){
+    public TodoListItem(String text, boolean completed, int order){
         this.text = text;
         this.completed = completed;
         this.order = order;
