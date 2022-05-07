@@ -34,16 +34,17 @@ public class CalculateShortestPath {
 
     public String getShortestPath() {
         int i = 1;
-        String out = "";
+        String out = "From " + start + " to " + goal + ":\n";
         for (IdentifiedWeightedEdge e : path.getEdgeList()) {
             //Conversion approximated to 5 decimal points and converted to int.
             double mToFt = 3.28084 * (g.graph.getEdgeWeight(e));
             int distInFeet = (int)mToFt;
-            out += ("Proceed on " + g.eInfo.get(e.getId()).street + " " + distInFeet + " ft towards " + g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name + ".\n");
+            out += ("\t" + i + ". Proceed on " + g.eInfo.get(e.getId()).street + " " + distInFeet + " ft towards " + g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name + ".\n");
 
             i++;
         }
 
+        out += "\n";
         return out;
     }
 
