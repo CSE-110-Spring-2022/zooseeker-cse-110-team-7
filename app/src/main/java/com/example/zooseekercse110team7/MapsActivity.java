@@ -114,6 +114,7 @@ public class MapsActivity extends AppCompatActivity implements
         if(plannedItems.size() > 1){
             //get directions
             AssetLoader g = new AssetLoader("sample_zoo_graph.json","sample_node_info.json","sample_edge_info.json", getApplicationContext());
+
             if(goalCounter < plannedItems.size()){
                 directions =
                         new CalculateShortestPath(
@@ -128,6 +129,16 @@ public class MapsActivity extends AppCompatActivity implements
             else{
                 directionsTextview.setText("Reached end of plan.");
             }
+
+            CalculateShortestPath directions =
+                    new CalculateShortestPath(
+                            plannedItems.get(0).id,
+                            plannedItems.get(1).id,
+                            g);
+            directions.printShortestPath();
+        }else{
+            //use current position of user as the source destination
+
         }
     }
 

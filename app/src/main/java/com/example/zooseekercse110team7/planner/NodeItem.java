@@ -23,10 +23,10 @@ import java.util.List;
 
 /**
  * String   id          - unique id
- * String   name        - name of the exhibit/intersection/etc.
- * String   kind        - category the node belongs to
- * String   tags        - string of comma separated tags
- * bool     completed   - flag that determines if the user completed item
+ * String   name        - name of the exhibit/intersection/etc. Example: "Gorillas"
+ * String   kind        - category the node belongs to, Example: "exhibit"
+ * String   tags        - string of comma separated tags, Example: "mammal, furry"
+ * bool     completed   - flag that determines if the user completed/visited the item
  * bool     onPlanner   - flag that determines if item was added to the planner by the user
  * */
 @Entity(tableName = "node_items")
@@ -38,10 +38,9 @@ public class NodeItem {
 
     @TypeConverters(StringListToGsonConverter.class)
     public List<String> tags;
-
     /**
      * This subclass parses an array of strings into a comma separated string and parses comma
-     * separated strings into a list
+     * separated strings into a list. This is mainly used by the `NodeDatabase`.
      * */
     public static class StringListToGsonConverter{
         @TypeConverter
@@ -59,13 +58,7 @@ public class NodeItem {
         }
     }
 
-    /**
-     * Note: `tags` is a String and NOT a list -- use pattern matching using LIKE
-     *        https://www.sqlitetutorial.net/sqlite-like/
-     * */
-
-
-    public boolean completed, onPlanner;//booleans to check if it's completed or on the planner
+    public boolean completed, onPlanner;
 
     //constructor
     public NodeItem(String id, String name, String kind, List<String> tags){
@@ -94,6 +87,11 @@ public class NodeItem {
 
     /**
      * Parses the JSON file
+     *
+     * @param context the context within the application -- activity
+     * @param path location of the JSON file
+     *
+     * @return list of `NodeItem`s
      * */
     public static List<NodeItem> loadJSON(Context context, String path){
         Log.d("NodeItem_Load_JSON", path);
@@ -111,7 +109,10 @@ public class NodeItem {
     }
 
     /**
-     * Determines if this and another NodeItem are the same by getting the strings
+     * Determines if THIS and another NodeItem are equal in terms of strings.
+     * Note: it checks if the id's are the same!
+     *
+     * @param nodeItem a `NodeItem` to compare
      * @return True (they are equal) False (they are NOT equal)
      * */
     public boolean equals(NodeItem nodeItem){
