@@ -111,8 +111,11 @@ public class SearchActivity extends AppCompatActivity {
         nodeViewAdapter.setOnAddButtonClicked(viewModel::addItem);
     }
 
+    /*
     public void onBackClicked(View view){
         Intent intent = new Intent(SearchActivity.this, PlannerActivity.class);
         startActivity(intent);
     }
+
+     */
 }
