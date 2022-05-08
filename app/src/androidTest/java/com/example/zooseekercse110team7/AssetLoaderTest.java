@@ -29,8 +29,8 @@ public class AssetLoaderTest {
         assertEquals("sample_node_info.json", assets.getNodeFile());
         assertEquals("sample_edge_info.json", assets.getEdgeFile());
 
-        //assertNotNull(assets.getGraph());
-        //assertNotNull(assets.getEdgeMap());
-        //assertNotNull(assets.getVertexMap());
+        assertNotNull(assets.getGraph());
+        assertNotNull(assets.getEdgeMap());
+        assertNotNull(assets.getVertexMap());
     }
 }
