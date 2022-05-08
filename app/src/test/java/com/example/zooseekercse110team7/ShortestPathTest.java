@@ -14,20 +14,6 @@ import org.junit.runner.RunWith;
 public class ShortestPathTest {
 
     @Test
-    public void testPrint(){
-        String start = "entrance_exit_gate";
-        String goal = "elephant_odyssey";
-        AssetLoader assets = new AssetLoader(
-                "sample_zoo_graph.json",
-                "sample_node_info.json",
-                "sample_edge_info.json",
-                null);
-        CalculateShortestPath tester = new CalculateShortestPath(start, goal, assets);
-
-        tester.printShortestPath();
-    }
-
-    @Test
     public void testShortPathReturn(){
         String start = "entrance_exit_gate";
         String goal = "elephant_odyssey";

@@ -84,6 +84,10 @@ public class MapsActivity extends AppCompatActivity implements
     private PolylineOptions currPolylineOptions;
     private boolean isCanceled = false;
     // [END_EXCLUDE]
+    private CalculateShortestPath directions;
+    private List<NodeItem> plannedItems;
+    int startCounter = 0;
+    int goalCounter = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,20 +101,33 @@ public class MapsActivity extends AppCompatActivity implements
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         //AssetLoader g = new AssetLoader("sample_zoo_graph.json","sample_node_info.json","sample_edge_info.json");
         NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
         NodeDao nodeDao = db.nodeDao();
-        List<NodeItem> plannedItems = nodeDao.getByOnPlanner(true);
+        plannedItems = nodeDao.getByOnPlanner(true);
+
+    }
+
+    //Called when Directions is clicked. Displays directions for pairs of destinations in order each time it's clicked.
+    public void onDirectionsClicked(View view) {
+        TextView directionsTextview = (TextView) findViewById(R.id.directions_text);;
         if(plannedItems.size() > 1){
             //get directions
             AssetLoader g = new AssetLoader("sample_zoo_graph.json","sample_node_info.json","sample_edge_info.json", getApplicationContext());
-            CalculateShortestPath directions =
-                    new CalculateShortestPath(
-                            plannedItems.get(0).id,
-                            plannedItems.get(1).id,
-                            g);
-            directions.printShortestPath();
+            if(goalCounter < plannedItems.size()){
+                directions =
+                        new CalculateShortestPath(
+                                plannedItems.get(startCounter).id,
+                                plannedItems.get(goalCounter).id,
+                                g);
+                String path = directions.getShortestPath();
+                directionsTextview.setText(path);
+                startCounter += 1;
+                goalCounter += 1;
+            }
+            else{
+                directionsTextview.setText("Reached end of plan.");
+            }
         }
     }
 
@@ -173,28 +190,7 @@ public class MapsActivity extends AppCompatActivity implements
         changeCamera(CameraUpdateFactory.newCameraPosition(ZOO));
     }
 
-    /**
-     * Called when the Animate To Sydney button is clicked.
-     */
-    public void onGoToZooEntrance(View view) {
-        if (!checkReady()) {
-            return;
-        }
 
-        changeCamera(CameraUpdateFactory.newCameraPosition(ZOO), new CancelableCallback() {
-            @Override
-            public void onFinish() {
-                Toast.makeText(getBaseContext(), "Animation to Sydney complete", Toast.LENGTH_SHORT)
-                        .show();
-            }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(getBaseContext(), "Animation to Sydney canceled", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
-    }
 
     private void changeCamera(CameraUpdate update) {
         changeCamera(update, null);

@@ -20,6 +20,8 @@ public class CalculateShortestPath {
         this.path = DijkstraShortestPath.findPathBetween(this.g.graph, start, goal);
     }
 
+    //Old version of prints.
+    /*
     public void printShortestPath(){
         System.out.printf("The shortest path from '%s' to '%s' is:\n", start, goal);
         Log.d("ShortestPath", "The shortest path from "+start+" to "+goal+" is:");
@@ -41,6 +43,8 @@ public class CalculateShortestPath {
             i++;
         }
     }
+
+     */
 
     public String getShortestPath() {
         int i = 1;
