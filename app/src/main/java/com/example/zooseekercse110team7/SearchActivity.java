@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SearchView;
@@ -107,5 +109,10 @@ public class SearchActivity extends AppCompatActivity {
         setSearchViewListener();
 
         nodeViewAdapter.setOnAddButtonClicked(viewModel::addItem);
+    }
+
+    public void onBackClicked(View view){
+        Intent intent = new Intent(SearchActivity.this, PlannerActivity.class);
+        startActivity(intent);
     }
 }

@@ -70,4 +70,9 @@ public class PlannerActivity extends AppCompatActivity {
         Intent intent = new Intent(PlannerActivity.this, MapsActivity.class);
         startActivity(intent);
     }
+
+    public void onSearchClicked(View view){
+        Intent intent = new Intent(PlannerActivity.this, SearchActivity.class);
+        startActivity(intent);
+    }
 }
