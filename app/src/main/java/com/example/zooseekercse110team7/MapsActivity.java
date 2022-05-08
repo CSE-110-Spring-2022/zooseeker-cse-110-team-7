@@ -88,6 +88,7 @@ public class MapsActivity extends AppCompatActivity implements
     private List<NodeItem> plannedItems;
     int startCounter = 0;
     int goalCounter = 1;
+    NodeDao nodeDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,21 +102,27 @@ public class MapsActivity extends AppCompatActivity implements
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //AssetLoader g = new AssetLoader("sample_zoo_graph.json","sample_node_info.json","sample_edge_info.json");
         NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
-        NodeDao nodeDao = db.nodeDao();
-        plannedItems = nodeDao.getByOnPlanner(true);
-
+        nodeDao = db.nodeDao();
     }
 
     //Called when Directions is clicked. Displays directions for pairs of destinations in order each time it's clicked.
     public void onDirectionsClicked(View view) {
-        TextView directionsTextview = (TextView) findViewById(R.id.directions_text);;
+        plannedItems = nodeDao.getByOnPlanner(true);
+        NodeItem defaultStart = nodeDao.get("entrance_exit_gate");
+        NodeItem defaultEnd = nodeDao.get("entrance_plaza");
+        TextView directionsTextview = (TextView) findViewById(R.id.directions_text);
+        AssetLoader g = new AssetLoader(
+                "sample_zoo_graph.json",
+                "sample_node_info.json",
+                "sample_edge_info.json",
+                getApplicationContext());
+
         if(plannedItems.size() > 1){
             //get directions
-            AssetLoader g = new AssetLoader("sample_zoo_graph.json","sample_node_info.json","sample_edge_info.json", getApplicationContext());
-
+            //sort through list of `NodeItems`
             if(goalCounter < plannedItems.size()){
+                //TODO: sort list based on user location from least to greatest for optimized path
                 directions =
                         new CalculateShortestPath(
                                 plannedItems.get(startCounter).id,
@@ -130,15 +137,29 @@ public class MapsActivity extends AppCompatActivity implements
                 directionsTextview.setText("Reached end of plan.");
             }
 
-            CalculateShortestPath directions =
+//            CalculateShortestPath directions =
+//                    new CalculateShortestPath(
+//                            plannedItems.get(0).id,
+//                            plannedItems.get(1).id,
+//                            g);
+            //directions.printShortestPath();
+        }else if(plannedItems.size() == 1){
+            directions =
                     new CalculateShortestPath(
+                            defaultStart.id,
                             plannedItems.get(0).id,
-                            plannedItems.get(1).id,
                             g);
-            directions.printShortestPath();
+            String path = directions.getShortestPath();
+            directionsTextview.setText(path);
         }else{
-            //use current position of user as the source destination
-
+            //calculate default
+            directions =
+                    new CalculateShortestPath(
+                            defaultStart.id,
+                            defaultEnd.id,
+                            g);
+            String path = directions.getShortestPath();
+            directionsTextview.setText(path);
         }
     }
 
