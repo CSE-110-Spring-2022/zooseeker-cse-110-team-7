@@ -106,8 +106,11 @@ public class SearchActivity extends AppCompatActivity {
         setSearchViewListener();
     }
 
+    /*
     public void onBackClicked(View view){
         Intent intent = new Intent(SearchActivity.this, PlannerActivity.class);
         startActivity(intent);
     }
+
+     */
 }
