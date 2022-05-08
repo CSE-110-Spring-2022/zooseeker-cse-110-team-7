@@ -53,7 +53,7 @@ public class CalculateShortestPath {
             //Conversion approximated to 5 decimal points and converted to int.
             double mToFt = 3.28084 * (g.graph.getEdgeWeight(e));
             int distInFeet = (int)mToFt;
-            out += ("\t" + i + ". Proceed on " + g.eInfo.get(e.getId()).street + " " + distInFeet + " ft" + " to "
+            out += ("\t" + i + ". Proceed on " + g.eInfo.get(e.getId()).street + " " + distInFeet + " ftgit" + " to "
                     + g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name + ".\n");
 
             i++;

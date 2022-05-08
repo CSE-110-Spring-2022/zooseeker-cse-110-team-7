@@ -159,9 +159,12 @@ public class MapsActivity extends AppCompatActivity implements
         plannedItems.add(defaultStart);
 
 
+        /*
         for(int i = 0; i < plannedItems.size(); i++){
             path += ("\n" + plannedItems.get(i).id + "\n");
         }
+
+         */
 
         if(plannedItems.size() > 0){ // calculate for multiple things
             //get directions by iterating through list of `NodeItems`
