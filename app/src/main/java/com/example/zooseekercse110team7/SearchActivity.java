@@ -15,6 +15,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.zooseekercse110team7.planner.NodeItem;
+import com.example.zooseekercse110team7.planner.NodeSearchViewAdapter;
+import com.example.zooseekercse110team7.planner.NodeSearchViewModel;
 import com.example.zooseekercse110team7.planner.NodeViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeViewModel;
 
@@ -28,10 +30,10 @@ public class SearchActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
 
     private static final String TAG = "SearchActivity";
-    private NodeViewModel viewModel;
+    private NodeSearchViewModel viewModel;
     private TextView selectedCountTextView;
     private List<NodeItem> nodeItems;
-    private NodeViewAdapter nodeViewAdapter = new NodeViewAdapter();
+    private NodeSearchViewAdapter nodeViewAdapter = new NodeSearchViewAdapter();
 
 
     private void setSelectedCountTextView() {
@@ -92,15 +94,18 @@ public class SearchActivity extends AppCompatActivity {
 
         //Observer item count
         selectedCountTextView = findViewById(R.id.selected_count);
-        viewModel = new ViewModelProvider(this).get(NodeViewModel.class);//
+        viewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);//
 
-        nodeItems = viewModel.getAllNodeItems();
-        nodeViewAdapter.setItems(new ArrayList<>(nodeItems));
+        //nodeItems = viewModel.getLiveNodeItems();
+//        nodeViewAdapter.setItems(new ArrayList<>(nodeItems));
+        viewModel.getLiveNodeItems().observe(this,nodeViewAdapter::setItems);
 
         recyclerView = findViewById(R.id.search_node_viewer);//gets the recycler view from `activity_search.xml`
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(nodeViewAdapter);
 
         setSearchViewListener();
+
+        nodeViewAdapter.setOnAddButtonClicked(viewModel::addItem);
     }
 }

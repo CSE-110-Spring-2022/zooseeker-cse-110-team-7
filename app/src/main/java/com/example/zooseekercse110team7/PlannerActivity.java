@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.zooseekercse110team7.planner.NodeItem;
+import com.example.zooseekercse110team7.planner.NodeSearchViewAdapter;
+import com.example.zooseekercse110team7.planner.NodeSearchViewModel;
 import com.example.zooseekercse110team7.planner.NodeViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeViewModel;
 
@@ -60,6 +62,7 @@ public class PlannerActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(nodeViewer);
 
+        nodeViewer.setOnDeleteButtonClicked(viewModel::deleteItem);
 //        nodeViewer.setItems(NodeItem.loadJSON(this, "sample_node_info.json"));
     }
 
