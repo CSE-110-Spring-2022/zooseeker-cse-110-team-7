@@ -19,9 +19,9 @@ jobs:
         java-version: '11'
         distribution: 'zulu'
         
+    # local prperties isssue is fixed with this
     - name: Touch local properties
       run: touch local.properties
-
     - name: Add Api Key
       run: echo "apiKey=\"\"" >> local.properties
       
