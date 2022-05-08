@@ -165,11 +165,11 @@ public class MapsActivity extends AppCompatActivity implements
 
         if(plannedItems.size() > 0){ // calculate for multiple things
             //get directions by iterating through list of `NodeItems`
+            //TODO: sort list based on user location from least to greatest for optimized path
             int startCounter = 0, goalCounter = 1;
             while(goalCounter < plannedItems.size()){
                 Log.d("Directions", "Counter: " + String.valueOf(goalCounter) +
                         "\tList Size: " + String.valueOf(plannedItems.size()));
-                //TODO: sort list based on user location from least to greatest for optimized path
                 directions =
                         new CalculateShortestPath(
                                 plannedItems.get(startCounter).id,
@@ -207,6 +207,7 @@ public class MapsActivity extends AppCompatActivity implements
         //Let user know they've reach the end of their plans
         path += "Reached end of plan.";
         directionsTextview.setText(path);
+        //make text scrollable if there is too much text
         directionsTextview.setMovementMethod(new ScrollingMovementMethod());
     }
 
