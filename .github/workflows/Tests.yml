@@ -18,12 +18,9 @@ jobs:
       with:
         java-version: '11'
         distribution: 'zulu'
-        cache: gradle
-
+        
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew --stacktrace build
       
     - name: Node Database Test
       run: ./gradlew NodeDatabaseTest
