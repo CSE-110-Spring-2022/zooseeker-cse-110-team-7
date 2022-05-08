@@ -17,20 +17,49 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+
+/**
+ * This class updates the Recycler Viewer (UI list). It extends to the RecyclerView
+ * Adapter to be able to update it. It holds all the important methods dealing with the
+ * implementation of Recycler Viewer. The basic methods for a successful implementation are:
+ * - onCreateViewHolder
+ * - onBindHolder
+ * - getItemCount
+ *
+ * The ViewHolder is a java class that stores the reference to the card layout views that have to be
+ * dynamically modified during the execution of the program by a list of data obtained by the
+ * database
+ * Note: 'card layout' refers to the how an item is displayed in terms of the UI (i.e name, kind,
+ * and delete button)
+ * */
 public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewAdapter.ViewHolder>{
     private List<NodeItem> nodeItems = Collections.emptyList();
     private NodeSearchViewModel viewModel;
 
+    //constructor -- sets view model
     public NodeSearchViewAdapter(NodeSearchViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
+    /**
+     * Sets a list of new `nodeItems` for the `ViewHolder` to use
+     *
+     * @param newItems list of new `nodeItems` to use
+     * */
     public void setItems(List<NodeItem> newItems){
         nodeItems.clear();
         nodeItems = newItems;
         notifyDataSetChanged();
     }
 
+    /**
+     * Creates a `ViewHolder` with xml item that will be within the `ViewHolder`
+     *
+     * @param parent layout xml
+     * @param viewType *Unknown*
+     *
+     * @return a `ViewHolder` with defined children templates
+     * */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,6 +69,14 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
         return new ViewHolder(view);
     }
 
+    /**
+     * Allows you to more easily write code that interacts with views within the `ViewHolder`.
+     * Here, you can figure out what the user has interacted with by getting the position of the
+     * view element within the viewer.
+     *
+     * @param holder the current `ViewHolder` being inspected
+     * @param position the Nth element within the viewer/Recycler
+     * */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         NodeItem nodeItem = nodeItems.get(position);
@@ -59,18 +96,30 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
         holder.setItem(nodeItem);
     }
 
+    /**
+     * Returns the number of items currently in the viewhodler. It's context (not the object)
+     * describes what it's counting (i.e number of items in the planner, or number of total items)
+     *
+     * @return an integer of the number of items on the `nodeItems` list
+     * */
     @Override
     public int getItemCount() {
         return nodeItems.size();
     }
 
+    /* depreciated -- maybe reused in the future */
 //    @Override
 //    public long getItemId(int position){ return plannerItems.get(position).id; }
 
+    /**
+     * This subclass describes an item view and metadata about its place within the RecyclerView
+     * */
     public class ViewHolder extends RecyclerView.ViewHolder{
         private NodeItem nodeItem;      // current node item -- useful if helper functions used
-        private final TextView nameTextView, kindTextView/*, numberItemsTextView*/; // text views for `name` and `kind`
-        public final CheckBox checkBox;
+        private final TextView
+                nameTextView,           // text view for the name of a node
+                kindTextView;           // text view for the kind node it is (i.e "exhibit")
+        public final CheckBox checkBox; // check box to add item to planner
 
         //constructor
         public ViewHolder(@NonNull View itemView){
@@ -84,26 +133,22 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
          * Displays the exhibit the user wants to visit. It also prevents and Null Exceptions.
          * */
         public void setItem(NodeItem nodeItem){
-            //Log.d("Set_Item", nodeItem.toString());
-            //String count = "POI: " + String.valueOf(getItemCount());
-            //setNumberItemsTextViewLog.d("Set_Count", count);
+            Log.d("NodeSearchAdapter", "Attempting to set items");
             this.nodeItem = nodeItem;
             try{
                 nameTextView.setText(nodeItem.name);
                 kindTextView.setText(nodeItem.kind);
-                // numberItemsTextView.setText(count);
-                // Log.d("Set_Count", "View Has: " + numberItemsTextView.getText());
+                Log.d("NodeSearchAdapter", "|-> Items Set");
             }catch (NullPointerException e){
-                Log.e("Setting",e.toString());
-                nameTextView.setText("NULL");
-                kindTextView.setText("NULL");
-//                numberItemsTextView.setText("NULL");
+                Log.e("NodeSearchAdapter", "|-> ERROR: Items Not Set");
+                e.printStackTrace();
             }
-
         }
 
         /**
-         * Return the current node item
+         * Return the current node item the user interacted with
+         *
+         * @return a `NodeItem`
          * */
         public NodeItem getNodeItem(){ return nodeItem; }
     }

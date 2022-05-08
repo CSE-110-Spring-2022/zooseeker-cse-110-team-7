@@ -39,31 +39,63 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
     private List<NodeItem> nodeItems = Collections.emptyList();
     private Consumer<NodeItem> onDeleteButtonClicked;
 
+    /**
+     * Similar to an observer, but allows an action to be performed. Here, it "deletes" a UI element
+     * based on a `NodeItem`
+     *
+     * @param onDeleteButtonClicked a `NodeItem` data from which a UI element was clicked
+     * */
     public void setOnDeleteButtonClicked(Consumer<NodeItem> onDeleteButtonClicked) {
         this.onDeleteButtonClicked = onDeleteButtonClicked;
     }
 
+    /**
+     * Sets a list of new `nodeItems` for the `ViewHolder` to use
+     *
+     * @param newItems list of new `nodeItems` to use
+     * */
     public void setItems(List<NodeItem> newItems){
         nodeItems.clear();
         nodeItems = newItems;
         notifyDataSetChanged();
     }
 
+    /**
+     * Creates a `ViewHolder` with xml item that will be within the `ViewHolder`
+     *
+     * @param parent layout xml
+     * @param viewType *Unknown*
+     *
+     * @return a `ViewHolder` with defined children templates
+     * */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //numberItemsTextView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_planner,null).findViewById(R.id.number_items_tv);
         View view = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.node_item, parent, false);
         return new ViewHolder(view);
     }
 
+    /**
+     * Allows you to more easily write code that interacts with views within the `ViewHolder`.
+     * Here, you can figure out what the user has interacted with by getting the position of the
+     * view element within the viewer.
+     *
+     * @param holder the current `ViewHolder` being inspected
+     * @param position the Nth element within the viewer/Recycler
+     * */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.setItem(nodeItems.get(position));
     }
 
+    /**
+     * Returns the number of items currently in the viewhodler. It's context (not the object)
+     * describes what it's counting (i.e number of items in the planner, or number of total items)
+     *
+     * @return an integer of the number of items on the `nodeItems` list
+     * */
     @Override
     public int getItemCount() {
         return nodeItems.size();
@@ -71,11 +103,15 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
 
 //    @Override
 //    public long getItemId(int position){ return nodeItems.get(position).id; }
-
+    /**
+     * This subclass describes an item view and metadata about its place within the RecyclerView
+     * */
     public class ViewHolder extends RecyclerView.ViewHolder{
         private NodeItem nodeItem;      // current node item -- useful if helper functions used
-        private final TextView nameTextView, kindTextView/*, numberItemsTextView*/; // text views for `name` and `kind`
-        private final CheckBox checkBox;
+        private final TextView
+                nameTextView,           // text view for the name of a node
+                kindTextView;           // text view for the kind node it is (i.e "exhibit")
+        private final CheckBox checkBox;// check box to remove item to planner
 
         //constructor
         public ViewHolder(@NonNull View itemView){
@@ -83,7 +119,8 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
             nameTextView = itemView.findViewById(R.id.node_name_tv);//note: 'tv' means 'text view'
             kindTextView = itemView.findViewById(R.id.node_kind_tv);
             checkBox = itemView.findViewById(R.id.checkBox);
-            //numberItemsTextView = itemView.findViewById(R.id.number_items_tv); // <-- will be null because it's in terms of `node_item.xml`
+
+            //check box listener
             checkBox.setOnCheckedChangeListener((view, isChecked) -> {
                 if(onDeleteButtonClicked == null){ return; }
                 onDeleteButtonClicked.accept(nodeItem);
@@ -94,20 +131,15 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
          * Displays the exhibit the user wants to visit. It also prevents and Null Exceptions.
          * */
         public void setItem(NodeItem nodeItem){
-            //Log.d("Set_Item", nodeItem.toString());
-            //String count = "POI: " + String.valueOf(getItemCount());
-            //setNumberItemsTextViewLog.d("Set_Count", count);
+            Log.d("NodeSearchAdapter", "Attempting to set items");
             this.nodeItem = nodeItem;
             try{
                 nameTextView.setText(nodeItem.name);
                 kindTextView.setText(nodeItem.kind);
-               // numberItemsTextView.setText(count);
-               // Log.d("Set_Count", "View Has: " + numberItemsTextView.getText());
+                Log.d("NodeAdapter", "|-> Items Set");
             }catch (NullPointerException e){
-                Log.e("Setting",e.toString());
-                nameTextView.setText("NULL");
-                kindTextView.setText("NULL");
-//                numberItemsTextView.setText("NULL");
+                Log.e("NodeAdapter", "|-> ERROR: Items Not Set");
+                e.printStackTrace();
             }
 
         }

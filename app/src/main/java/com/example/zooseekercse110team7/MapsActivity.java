@@ -111,6 +111,8 @@ public class MapsActivity extends AppCompatActivity implements
                             plannedItems.get(1).id,
                             g);
             directions.printShortestPath();
+        }else{
+            //use current position of user as the source destination
         }
     }
 
