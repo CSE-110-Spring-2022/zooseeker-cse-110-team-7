@@ -63,8 +63,8 @@ public class MapsActivity extends AppCompatActivity implements
                     .tilt(50)
                     .build();
 
-    public static final CameraPosition SYDNEY =
-            new CameraPosition.Builder().target(new LatLng(-33.87365, 151.20689))
+    public static final CameraPosition ZOO =
+            new CameraPosition.Builder().target(new LatLng(32.735294, -117.14931))
                     .zoom(15.5f)
                     .bearing(0)
                     .tilt(25)
@@ -112,8 +112,8 @@ public class MapsActivity extends AppCompatActivity implements
         map.getUiSettings().setMyLocationButtonEnabled(true);
         // [END_EXCLUDE]
 
-        // Show Sydney
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-33.87365, 151.20689), 10));
+        // Show Zoo
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(32.735294, -117.14931), 17));
 
     }
 
@@ -147,7 +147,7 @@ public class MapsActivity extends AppCompatActivity implements
         if (!checkReady()) {
             return;
         }
-        changeCamera(CameraUpdateFactory.newCameraPosition(BONDI));
+        changeCamera(CameraUpdateFactory.newCameraPosition(ZOO));
     }
 
     /**
@@ -158,7 +158,7 @@ public class MapsActivity extends AppCompatActivity implements
             return;
         }
 
-        changeCamera(CameraUpdateFactory.newCameraPosition(SYDNEY), new CancelableCallback() {
+        changeCamera(CameraUpdateFactory.newCameraPosition(ZOO), new CancelableCallback() {
             @Override
             public void onFinish() {
                 Toast.makeText(getBaseContext(), "Animation to Sydney complete", Toast.LENGTH_SHORT)
