@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -86,9 +87,8 @@ public class MapsActivity extends AppCompatActivity implements
     // [END_EXCLUDE]
     private CalculateShortestPath directions;
     private List<NodeItem> plannedItems;
-    int startCounter = 0;
-    int goalCounter = 1;
     NodeDao nodeDao;
+    AssetLoader g;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,54 +102,50 @@ public class MapsActivity extends AppCompatActivity implements
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        g = new AssetLoader(
+                "sample_zoo_graph.json",
+                "sample_node_info.json",
+                "sample_edge_info.json",
+                getApplicationContext());                       // parses JSON files
+
         NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
         nodeDao = db.nodeDao();
     }
 
-    //Called when Directions is clicked. Displays directions for pairs of destinations in order each time it's clicked.
+    // Called when Directions is clicked. Displays directions for pairs of destinations in order
+    // each time it's clicked.
     public void onDirectionsClicked(View view) {
-        plannedItems = nodeDao.getByOnPlanner(true);
-        NodeItem defaultStart = nodeDao.get("entrance_exit_gate");
-        NodeItem defaultEnd = nodeDao.get("entrance_plaza");
-        TextView directionsTextview = (TextView) findViewById(R.id.directions_text);
-        AssetLoader g = new AssetLoader(
-                "sample_zoo_graph.json",
-                "sample_node_info.json",
-                "sample_edge_info.json",
-                getApplicationContext());
+        plannedItems = nodeDao.getByOnPlanner(true);    // get items on planner
+        NodeItem defaultStart = nodeDao.get("entrance_exit_gate");  // get entrance/exit
+        NodeItem defaultEnd = nodeDao.get("entrance_plaza");        // get entrance plaza
+        TextView directionsTextview =
+                (TextView) findViewById(R.id.directions_text); // text view to display directions
+        String path = "";
 
-        if(plannedItems.size() > 1){
-            //get directions
-            //sort through list of `NodeItems`
-            if(goalCounter < plannedItems.size()){
+        if(plannedItems.size() > 1){ // calculate for multiple things
+            //get directions by iterating through list of `NodeItems`
+            int startCounter = 0, goalCounter = 1;
+            while(goalCounter < plannedItems.size()){
+                Log.d("Directions", "Counter: " + String.valueOf(goalCounter) +
+                        "\tList Size: " + String.valueOf(plannedItems.size()));
                 //TODO: sort list based on user location from least to greatest for optimized path
                 directions =
                         new CalculateShortestPath(
                                 plannedItems.get(startCounter).id,
                                 plannedItems.get(goalCounter).id,
                                 g);
-                String path = directions.getShortestPath();
+                path += directions.getShortestPath();
                 directionsTextview.setText(path);
                 startCounter += 1;
                 goalCounter += 1;
             }
-            else{
-                directionsTextview.setText("Reached end of plan.");
-            }
-
-//            CalculateShortestPath directions =
-//                    new CalculateShortestPath(
-//                            plannedItems.get(0).id,
-//                            plannedItems.get(1).id,
-//                            g);
-            //directions.printShortestPath();
-        }else if(plannedItems.size() == 1){
+        }else if(plannedItems.size() == 1){ // calculate if they want to see 1 thing only
             directions =
                     new CalculateShortestPath(
                             defaultStart.id,
                             plannedItems.get(0).id,
                             g);
-            String path = directions.getShortestPath();
+            path = directions.getShortestPath();
             directionsTextview.setText(path);
         }else{
             //calculate default
@@ -158,9 +154,14 @@ public class MapsActivity extends AppCompatActivity implements
                             defaultStart.id,
                             defaultEnd.id,
                             g);
-            String path = directions.getShortestPath();
+            path = directions.getShortestPath();
             directionsTextview.setText(path);
         }
+
+        //Let user know they've reach the end of their plans
+        path += "Reached end of plan.";
+        directionsTextview.setText(path);
+        directionsTextview.setMovementMethod(new ScrollingMovementMethod());
     }
 
     // [START_EXCLUDE silent]
