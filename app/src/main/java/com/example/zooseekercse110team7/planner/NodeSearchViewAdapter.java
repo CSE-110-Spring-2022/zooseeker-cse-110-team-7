@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,23 +18,17 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewAdapter.ViewHolder>{
-    private List<NodeItem> plannerItems = Collections.emptyList();
-    private Consumer<NodeItem> onAddButtonClicked;
+    private List<NodeItem> nodeItems = Collections.emptyList();
 
-    public void setItems(List<NodeItem> newPlannerItems){
-        plannerItems.clear();
-        plannerItems = newPlannerItems;
+    public void setItems(List<NodeItem> newItems){
+        nodeItems.clear();
+        nodeItems = newItems;
         notifyDataSetChanged();
-    }
-
-    public void setOnAddButtonClicked(Consumer<NodeItem> onAddButtonClicked){
-        this.onAddButtonClicked = onAddButtonClicked;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //numberItemsTextView = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_planner,null).findViewById(R.id.number_items_tv);
         View view = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.node_search_item, parent, false);
@@ -42,12 +37,26 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setItem(plannerItems.get(position));
+        NodeItem nodeItem = nodeItems.get(position);
+        if (nodeItem.onPlanner) {
+            holder.checkBox.setChecked(true);
+        }
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (holder.checkBox.isChecked()) {
+                    nodeItem.onPlanner = true;
+                } else {
+                    nodeItem.onPlanner = false;
+                }
+            }
+        });
+        holder.setItem(nodeItem);
     }
 
     @Override
     public int getItemCount() {
-        return plannerItems.size();
+        return nodeItems.size();
     }
 
 //    @Override
@@ -56,19 +65,14 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
     public class ViewHolder extends RecyclerView.ViewHolder{
         private NodeItem nodeItem;      // current node item -- useful if helper functions used
         private final TextView nameTextView, kindTextView/*, numberItemsTextView*/; // text views for `name` and `kind`
-        private final Button addButton;
+        public final CheckBox checkBox;
 
         //constructor
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             nameTextView = itemView.findViewById(R.id.node_name_tv2);//note: 'tv' means 'text view'
             kindTextView = itemView.findViewById(R.id.node_kind_tv2);
-            addButton = itemView.findViewById(R.id.add_btn);
-            //numberItemsTextView = itemView.findViewById(R.id.number_items_tv); // <-- will be null because it's in terms of `node_item.xml`
-            addButton.setOnClickListener((view)->{
-                if(onAddButtonClicked == null){ return; }
-                onAddButtonClicked.accept(nodeItem);
-            });
+            checkBox = itemView.findViewById(R.id.checkBox);
         }
 
         /**

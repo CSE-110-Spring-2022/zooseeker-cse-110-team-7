@@ -29,14 +29,6 @@ public class NodeViewModel extends AndroidViewModel {
         nodeDao = db.nodeDao();
     }
 
-    public List<NodeItem> getAllNodeItems(){
-        if(nodeItems == null){
-            loadAllNodeItems();
-        }
-
-        return nodeItems;
-    }
-
     public LiveData<List<NodeItem>> getLiveNodeItems(){
         return nodeDao.getAllLive();
     }

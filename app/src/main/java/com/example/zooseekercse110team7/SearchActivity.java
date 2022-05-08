@@ -97,7 +97,6 @@ public class SearchActivity extends AppCompatActivity {
 
         setSearchViewListener();
 
-        nodeViewAdapter.setOnAddButtonClicked(viewModel::addItem);
     }
 
 }
