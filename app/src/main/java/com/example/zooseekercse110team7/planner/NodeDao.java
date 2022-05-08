@@ -7,6 +7,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import org.w3c.dom.Node;
+
 import java.util.List;
 
 
@@ -36,6 +38,28 @@ public interface NodeDao {
     LiveData<List<NodeItem>> getAllLive();
     @Query("SELECT * FROM `node_items` WHERE `id`=:id")
     NodeItem get(String id);
+
+    /**
+     * Finds items based on conditions
+     * @param onPlannerBools list of booleans such that when querying it finds `onPlanner`
+     *                       values equal to any value within the list
+     * @param kinds list of Strings that filter nodes if `kind` equals to one of the String elements
+     *              in the list. Example: {"exhibit", "intersection"} will filter for `kind`s that
+     *              are either exhibit or intersection
+     * @param queryString String that the user has typed related to the tags
+     * */
+    @Query("SELECT * FROM `node_items` " +
+            "WHERE onPlanner IN (:onPlannerBools) " +
+            "AND kind IN (:kinds) " +
+            "AND (tags LIKE :queryString OR name LIKE :queryString)")
+    List<NodeItem> getByFilter(List<Boolean> onPlannerBools,
+                               List<String> kinds,
+                               String queryString);
+    @Query("SELECT * FROM `node_items` WHERE onPlanner IN (:onPlannerBools) " +
+            "AND kind IN (:kinds)")
+    List<NodeItem> getByKind(List<Boolean> onPlannerBools, List<String> kinds);
+    @Query("SELECT * FROM `node_items` WHERE onPlanner IN (:onPlannerBools)")
+    List<NodeItem> getByOnPlanner(Boolean onPlannerBools);
 
     /**
      * The implementation of the method will update its parameters in the database if they already
