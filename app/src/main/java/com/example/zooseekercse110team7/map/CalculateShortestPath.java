@@ -1,5 +1,7 @@
 package com.example.zooseekercse110team7.map;
 
+import android.util.Log;
+
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
@@ -14,11 +16,13 @@ public class CalculateShortestPath {
         this.start = start;
         this.goal = goal;
         this.g = g;
+        Log.d("ShortestPath", "Calculating with " +start+ "," +goal);
         this.path = DijkstraShortestPath.findPathBetween(this.g.graph, start, goal);
     }
 
     public void printShortestPath(){
         System.out.printf("The shortest path from '%s' to '%s' is:\n", start, goal);
+        Log.d("ShortestPath", "The shortest path from "+start+" to "+goal+" is:");
 
         int i = 1;
         for (IdentifiedWeightedEdge e : path.getEdgeList()) {
@@ -28,6 +32,12 @@ public class CalculateShortestPath {
                     g.eInfo.get(e.getId()).street,
                     g.vInfo.get(g.graph.getEdgeSource(e).toString()).name,
                     g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name);
+            Log.d("ShortestPath", String.valueOf(i) + " Walk "+
+                    String.valueOf(g.graph.getEdgeWeight(e)) +
+                    " 0f meters along "+
+                    String.valueOf(g.eInfo.get(e.getId()).street)+" from "+
+                    String.valueOf(g.vInfo.get(g.graph.getEdgeSource(e).toString()).name)+" to "+
+                    String.valueOf(g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name));
             i++;
         }
     }

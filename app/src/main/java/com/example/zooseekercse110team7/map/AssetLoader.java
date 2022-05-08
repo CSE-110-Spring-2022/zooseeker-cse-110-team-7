@@ -3,6 +3,9 @@ package com.example.zooseekercse110team7.map;
 //import org.jgrapht.Graph;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.example.zooseekercse110team7.MainActivity;
 
 import java.util.Map;
@@ -18,14 +21,24 @@ public class AssetLoader {
     Map<String, ZooData.VertexInfo> vInfo;
     Map<String, ZooData.EdgeInfo> eInfo;
 
-    public AssetLoader(String zooGraph, String nodeInfo, String edgeInfo){
+    public AssetLoader(String zooGraph, String nodeInfo, String edgeInfo, Context aContext){
         this.zooGraphJSON = zooGraph;
         this.nodeInfoJSON = nodeInfo;
         this.edgeInfoJSON = edgeInfo;
 
-        graph = ZooData.loadZooGraphJSON(getApplicationContext(), zooGraphJSON);
-        vInfo = ZooData.loadVertexInfoJSON(nodeInfoJSON);
-        eInfo = ZooData.loadEdgeInfoJSON(edgeInfoJSON);
+        /**
+         * When testing, pass Context as `null` to as the application context changes between
+         * emulation and tests. Otherwise, from whichever activity you are on, you need to pass a
+         * Context that is `getApplicationContext()`. It Logs a Warning whenever it uses the
+         * context for testing.
+         * */
+        if(aContext == null){
+            Log.w("AssetLoaderConstructor", "WARNING: Using Context For Testing Not Emulation!");
+            aContext = getApplicationContext(); }
+
+        graph = ZooData.loadZooGraphJSON(aContext, zooGraphJSON);
+        vInfo = ZooData.loadVertexInfoJSON(aContext, nodeInfoJSON);
+        eInfo = ZooData.loadEdgeInfoJSON(aContext, edgeInfoJSON);
     }
 
     public String getZooFile(){

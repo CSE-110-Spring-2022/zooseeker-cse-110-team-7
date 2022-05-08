@@ -45,10 +45,11 @@ public class ZooData {
         public String street;
     }
 
-    public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(String path) {
+    public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(Context aContext,String path) {
         Map<String, ZooData.VertexInfo> indexedZooData = new HashMap<>();
+        //if(aContext == null){ aContext = getApplicationContext(); }
         try{
-            InputStream inputStream = getApplicationContext().getAssets().open(path);
+            InputStream inputStream = aContext.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
             Gson gson = new Gson();
             Type type = new TypeToken<List<ZooData.VertexInfo>>(){}.getType();
@@ -72,10 +73,11 @@ public class ZooData {
         return indexedZooData;
     }
 
-    public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(String path) {
+    public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(Context aContext, String path) {
         Map<String, ZooData.EdgeInfo> indexedZooData = new HashMap<>();
+        //if(aContext == null){ aContext = getApplicationContext(); }//if it gets the context from here, it's being tested
         try{
-            InputStream inputStream = getApplicationContext().getAssets().open(path);
+            InputStream inputStream = aContext.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
 
             Gson gson = new Gson();

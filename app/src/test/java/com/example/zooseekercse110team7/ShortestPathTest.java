@@ -17,7 +17,11 @@ public class ShortestPathTest {
     public void testPrint(){
         String start = "entrance_exit_gate";
         String goal = "elephant_odyssey";
-        AssetLoader assets = new AssetLoader("sample_zoo_graph.json","sample_node_info.json","sample_edge_info.json");
+        AssetLoader assets = new AssetLoader(
+                "sample_zoo_graph.json",
+                "sample_node_info.json",
+                "sample_edge_info.json",
+                null);
         CalculateShortestPath tester = new CalculateShortestPath(start, goal, assets);
 
         tester.printShortestPath();
@@ -27,7 +31,11 @@ public class ShortestPathTest {
     public void testShortPathReturn(){
         String start = "entrance_exit_gate";
         String goal = "elephant_odyssey";
-        AssetLoader assets = new AssetLoader("sample_zoo_graph.json","sample_node_info.json","sample_edge_info.json");
+        AssetLoader assets = new AssetLoader(
+                "sample_zoo_graph.json",
+                "sample_node_info.json",
+                "sample_edge_info.json",
+                null);
         CalculateShortestPath tester = new CalculateShortestPath(start, goal, assets);
 
         System.out.println(tester.getShortestPath());

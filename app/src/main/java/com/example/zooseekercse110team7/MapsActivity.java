@@ -21,7 +21,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.zooseekercse110team7.map.AssetLoader;
+import com.example.zooseekercse110team7.map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map.CurrentMapLoc;
+import com.example.zooseekercse110team7.planner.NodeDao;
+import com.example.zooseekercse110team7.planner.NodeDatabase;
+import com.example.zooseekercse110team7.planner.NodeItem;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +40,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This shows how to change the camera position for the map.
@@ -89,6 +97,21 @@ public class MapsActivity extends AppCompatActivity implements
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        //AssetLoader g = new AssetLoader("sample_zoo_graph.json","sample_node_info.json","sample_edge_info.json");
+        NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
+        NodeDao nodeDao = db.nodeDao();
+        List<NodeItem> plannedItems = nodeDao.getByOnPlanner(true);
+        if(plannedItems.size() > 1){
+            //get directions
+            AssetLoader g = new AssetLoader("sample_zoo_graph.json","sample_node_info.json","sample_edge_info.json", getApplicationContext());
+            CalculateShortestPath directions =
+                    new CalculateShortestPath(
+                            plannedItems.get(0).id,
+                            plannedItems.get(1).id,
+                            g);
+            directions.printShortestPath();
+        }
     }
 
     // [START_EXCLUDE silent]
