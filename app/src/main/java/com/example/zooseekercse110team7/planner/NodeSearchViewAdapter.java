@@ -19,6 +19,11 @@ import java.util.function.Consumer;
 
 public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewAdapter.ViewHolder>{
     private List<NodeItem> nodeItems = Collections.emptyList();
+    private NodeSearchViewModel viewModel;
+
+    public NodeSearchViewAdapter(NodeSearchViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
 
     public void setItems(List<NodeItem> newItems){
         nodeItems.clear();
@@ -45,9 +50,9 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
             @Override
             public void onClick(View view) {
                 if (holder.checkBox.isChecked()) {
-                    nodeItem.onPlanner = true;
+                    viewModel.addItemToPlanner(nodeItem);
                 } else {
-                    nodeItem.onPlanner = false;
+                    viewModel.removeItemFromPlanner(nodeItem);
                 }
             }
         });

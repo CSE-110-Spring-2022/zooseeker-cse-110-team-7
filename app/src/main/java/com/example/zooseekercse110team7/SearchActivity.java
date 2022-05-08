@@ -34,7 +34,7 @@ public class SearchActivity extends AppCompatActivity {
     private static final String TAG = "SearchActivity";
     private NodeSearchViewModel viewModel;
     private List<NodeItem> nodeItems = new ArrayList<>();
-    private NodeSearchViewAdapter nodeViewAdapter = new NodeSearchViewAdapter();
+    private NodeSearchViewAdapter nodeViewAdapter;
 
     private List<NodeItem> filter(String filterString) {
         filterString = filterString.toLowerCase();
@@ -82,6 +82,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         viewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);//
+        nodeViewAdapter = new NodeSearchViewAdapter(viewModel);
 
         List<NodeItem> allItems = viewModel.getAllNodeItems();
         for (NodeItem item : allItems) {
