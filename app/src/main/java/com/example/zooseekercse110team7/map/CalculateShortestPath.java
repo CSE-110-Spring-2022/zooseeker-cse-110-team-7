@@ -53,13 +53,24 @@ public class CalculateShortestPath {
             //Conversion approximated to 5 decimal points and converted to int.
             double mToFt = 3.28084 * (g.graph.getEdgeWeight(e));
             int distInFeet = (int)mToFt;
-            out += ("\t" + i + ". Proceed on " + g.eInfo.get(e.getId()).street + " " + distInFeet + " ft towards " + g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name + ".\n");
+            out += ("\t" + i + ". Proceed on " + g.eInfo.get(e.getId()).street + " " + distInFeet + " ft" + " to "
+                    + g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name + ".\n");
 
             i++;
         }
 
         out += "\n";
         return out;
+    }
+
+    public int getShortestDist(){
+        int total = 0;
+        for(IdentifiedWeightedEdge e : path.getEdgeList()){
+            double mToFt = 3.28084 * (g.graph.getEdgeWeight(e));
+            int distInFeet = (int)mToFt;
+            total += distInFeet;
+        }
+        return total;
     }
 
 }

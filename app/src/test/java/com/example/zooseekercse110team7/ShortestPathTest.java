@@ -25,5 +25,16 @@ public class ShortestPathTest {
         CalculateShortestPath tester = new CalculateShortestPath(start, goal, assets);
 
         System.out.println(tester.getShortestPath());
+
+        String start2 = "lions";
+        String goal2 = "gorillas";
+        AssetLoader assets2 = new AssetLoader(
+                "sample_zoo_graph.json",
+                "sample_node_info.json",
+                "sample_edge_info.json",
+                null);
+        CalculateShortestPath tester2 = new CalculateShortestPath(start2, goal2, assets2);
+
+        System.out.println(tester2.getShortestPath());
     }
 }

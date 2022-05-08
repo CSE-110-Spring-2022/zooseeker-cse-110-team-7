@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.zooseekercse110team7.map.AssetLoader;
 import com.example.zooseekercse110team7.map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map.CurrentMapLoc;
+import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
 import com.example.zooseekercse110team7.planner.NodeDao;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
@@ -112,17 +113,57 @@ public class MapsActivity extends AppCompatActivity implements
         nodeDao = db.nodeDao();
     }
 
+
+    public List<NodeItem> sortPlannerList(List<NodeItem> input){
+        List<NodeItem> ret = new ArrayList<NodeItem>();
+        ret.add(input.get(0));
+        ret.add(input.get(1));
+        input.remove(0);
+        input.remove(0);
+
+        NodeItem current = ret.get(ret.size() - 1);
+
+        while(input.size() > 0){
+            CalculateShortestPath item = new CalculateShortestPath(current.id, input.get(0).id, g);
+            int shortestDist = item.getShortestDist();
+            int recordPosition = 0;
+            for(int i = 1; i < input.size(); i++){
+                CalculateShortestPath comparison = new CalculateShortestPath(current.id, input.get(i).id, g);
+                int compareWith = comparison.getShortestDist();
+                if(compareWith < shortestDist){
+                    shortestDist = compareWith;
+                    recordPosition = i;
+                }
+            }
+            ret.add(input.get(recordPosition));
+            current = ret.get(ret.size() - 1);
+            input.remove(recordPosition);
+        }
+        return ret;
+    }
+
     // Called when Directions is clicked. Displays directions for pairs of destinations in order
     // each time it's clicked.
     public void onDirectionsClicked(View view) {
         plannedItems = nodeDao.getByOnPlanner(true);    // get items on planner
         NodeItem defaultStart = nodeDao.get("entrance_exit_gate");  // get entrance/exit
         NodeItem defaultEnd = nodeDao.get("entrance_plaza");        // get entrance plaza
+        plannedItems.add(0, defaultEnd);
+        plannedItems.add(0,defaultStart);
+
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
         String path = "";
 
-        if(plannedItems.size() > 1){ // calculate for multiple things
+        plannedItems = sortPlannerList(plannedItems);
+        plannedItems.add(defaultStart);
+
+
+        for(int i = 0; i < plannedItems.size(); i++){
+            path += ("\n" + plannedItems.get(i).id + "\n");
+        }
+
+        if(plannedItems.size() > 0){ // calculate for multiple things
             //get directions by iterating through list of `NodeItems`
             int startCounter = 0, goalCounter = 1;
             while(goalCounter < plannedItems.size()){
@@ -139,7 +180,9 @@ public class MapsActivity extends AppCompatActivity implements
                 startCounter += 1;
                 goalCounter += 1;
             }
-        }else if(plannedItems.size() == 1){ // calculate if they want to see 1 thing only
+        }
+        /*
+        else if(plannedItems.size() == 1){ // calculate if they want to see 1 thing only
             directions =
                     new CalculateShortestPath(
                             defaultStart.id,
@@ -147,7 +190,8 @@ public class MapsActivity extends AppCompatActivity implements
                             g);
             path = directions.getShortestPath();
             directionsTextview.setText(path);
-        }else{
+        }
+        else{
             //calculate default
             directions =
                     new CalculateShortestPath(
@@ -157,6 +201,8 @@ public class MapsActivity extends AppCompatActivity implements
             path = directions.getShortestPath();
             directionsTextview.setText(path);
         }
+
+         */
 
         //Let user know they've reach the end of their plans
         path += "Reached end of plan.";
