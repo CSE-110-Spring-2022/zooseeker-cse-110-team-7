@@ -88,7 +88,7 @@
             android:id="@+id/directions_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Directions here" />
+            android:hint="Press 'Directions' for guidance to the Entrance Plaza. From there, add exhibits to your plan!" />
     </LinearLayout>
 
     <fragment
