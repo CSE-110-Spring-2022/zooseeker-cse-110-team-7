@@ -24,3 +24,10 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+      
+    - name: Node Database Test
+      run: ./gradlew NodeDatabaseTest
+      
+    - name: Android Test Results
+      uses: asadmansr/android-test-report-action@1.2.0
+      if: ${{ always() }}
