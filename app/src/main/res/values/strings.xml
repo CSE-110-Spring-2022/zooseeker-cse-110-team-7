@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CSE 110 Lab 5</string>
+    <string name="app_name">zooseeker-cse-110-team-7</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_current_map_loc">CurrentMapLoc</string>
