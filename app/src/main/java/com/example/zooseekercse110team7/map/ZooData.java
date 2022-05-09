@@ -47,7 +47,6 @@ public class ZooData {
 
     public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(Context aContext,String path) {
         Map<String, ZooData.VertexInfo> indexedZooData = new HashMap<>();
-        //if(aContext == null){ aContext = getApplicationContext(); }
         try{
             InputStream inputStream = aContext.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
@@ -75,7 +74,6 @@ public class ZooData {
 
     public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(Context aContext, String path) {
         Map<String, ZooData.EdgeInfo> indexedZooData = new HashMap<>();
-        //if(aContext == null){ aContext = getApplicationContext(); }//if it gets the context from here, it's being tested
         try{
             InputStream inputStream = aContext.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);

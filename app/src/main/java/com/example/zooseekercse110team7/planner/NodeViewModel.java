@@ -22,6 +22,7 @@ public class NodeViewModel extends AndroidViewModel {
     private List<NodeItem> nodeItems;
     private final NodeDao nodeDao;
 
+    //constructor
     public NodeViewModel(@NonNull Application application){
         super(application);
         Context context = getApplication().getApplicationContext();
@@ -39,9 +40,4 @@ public class NodeViewModel extends AndroidViewModel {
         nodeItem.onPlanner = false;
         nodeDao.update(nodeItem);
     }
-
-    //TODO: Add Node Item
-//    public void AddItem(/*params*/){
-//        // add item to database
-//    }
 }

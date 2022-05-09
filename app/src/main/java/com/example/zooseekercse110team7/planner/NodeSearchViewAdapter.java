@@ -107,10 +107,6 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
         return nodeItems.size();
     }
 
-    /* depreciated -- maybe reused in the future */
-//    @Override
-//    public long getItemId(int position){ return plannerItems.get(position).id; }
-
     /**
      * This subclass describes an item view and metadata about its place within the RecyclerView
      * */

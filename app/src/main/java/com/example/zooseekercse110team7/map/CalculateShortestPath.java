@@ -6,11 +6,10 @@ import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
 public class CalculateShortestPath {
-
-    private String start;
-    private String goal;
-    private AssetLoader g;
-    GraphPath<String, IdentifiedWeightedEdge> path;
+    private String start;   // starting position id
+    private String goal;    // end position id
+    private AssetLoader g;  // Asset Loader which loads information from the JSON files
+    GraphPath<String, IdentifiedWeightedEdge> path; // optimized path from position and information
 
     public CalculateShortestPath(String start, String goal, AssetLoader g){
         this.start = start;
@@ -20,33 +19,8 @@ public class CalculateShortestPath {
         this.path = DijkstraShortestPath.findPathBetween(this.g.graph, start, goal);
     }
 
-    //Old version of prints.
-    /*
-    public void printShortestPath(){
-        System.out.printf("The shortest path from '%s' to '%s' is:\n", start, goal);
-        Log.d("ShortestPath", "The shortest path from "+start+" to "+goal+" is:");
-
-        int i = 1;
-        for (IdentifiedWeightedEdge e : path.getEdgeList()) {
-            System.out.printf("  %d. Walk %.0f meters along %s from '%s' to '%s'.\n",
-                    i,
-                    g.graph.getEdgeWeight(e),
-                    g.eInfo.get(e.getId()).street,
-                    g.vInfo.get(g.graph.getEdgeSource(e).toString()).name,
-                    g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name);
-            Log.d("ShortestPath", String.valueOf(i) + " Walk "+
-                    String.valueOf(g.graph.getEdgeWeight(e)) +
-                    " 0f meters along "+
-                    String.valueOf(g.eInfo.get(e.getId()).street)+" from "+
-                    String.valueOf(g.vInfo.get(g.graph.getEdgeSource(e).toString()).name)+" to "+
-                    String.valueOf(g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name));
-            i++;
-        }
-    }
-
-     */
-
     public String getShortestPath() {
+        Log.d("ShortestPath", "Getting Shortest Path");
         int i = 1;
         String out = "From " + start + " to " + goal + ":\n";
         for (IdentifiedWeightedEdge e : path.getEdgeList()) {
@@ -57,19 +31,27 @@ public class CalculateShortestPath {
                     + g.vInfo.get(g.graph.getEdgeTarget(e).toString()).name + ".\n");
 
             i++;
+            Log.d("ShortestPath", "|->["+String.valueOf(i)+"] Out: " + out);
         }
 
         out += "\n";
+
+        Log.d("ShortestPath", "|-> Returning Out: " + out);
+
         return out;
     }
 
     public int getShortestDist(){
+        Log.d("ShortestPath", "Calculating Shortest Distance");
         int total = 0;
         for(IdentifiedWeightedEdge e : path.getEdgeList()){
+            /*what does 3.28084 mean? and what is `mToFt`?*/
             double mToFt = 3.28084 * (g.graph.getEdgeWeight(e));
             int distInFeet = (int)mToFt;
             total += distInFeet;
+            Log.d("ShortestPath", "|-> Total: " + String.valueOf(total));
         }
+        Log.d("ShortestPath", "|-> Returning Total: " + String.valueOf(total));
         return total;
     }
 

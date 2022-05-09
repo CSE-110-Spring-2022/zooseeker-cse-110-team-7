@@ -22,6 +22,8 @@ import java.util.List;
 
 
 /**
+ * Database Entity for `node_items` which contains the fields:
+ *
  * String   id          - unique id
  * String   name        - name of the exhibit/intersection/etc. Example: "Gorillas"
  * String   kind        - category the node belongs to, Example: "exhibit"

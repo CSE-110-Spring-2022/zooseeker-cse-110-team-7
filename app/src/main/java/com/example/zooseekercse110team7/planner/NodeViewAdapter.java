@@ -101,8 +101,6 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
         return nodeItems.size();
     }
 
-//    @Override
-//    public long getItemId(int position){ return nodeItems.get(position).id; }
     /**
      * This subclass describes an item view and metadata about its place within the RecyclerView
      * */
