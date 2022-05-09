@@ -22,16 +22,11 @@ jobs:
     # local prperties isssue is fixed with this
     - name: Touch local properties
       run: touch local.properties
-
       
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      
     - name: Build with Gradle
       run: ./gradlew build  
-      
-    - name: Node Database Test
-      run: ./gradlew NodeDatabaseTest
       
     - name: Android Test Results
       uses: asadmansr/android-test-report-action@v1.2.0
