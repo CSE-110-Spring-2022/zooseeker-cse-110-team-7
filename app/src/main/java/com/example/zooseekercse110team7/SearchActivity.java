@@ -37,23 +37,7 @@ public class SearchActivity extends AppCompatActivity {
     private NodeSearchViewAdapter nodeViewAdapter;
 
     private List<NodeItem> filter(String filterString) {
-        filterString = filterString.toLowerCase();
-        List<NodeItem> finalList = new ArrayList<NodeItem>();
-        Log.d(TAG, "nodeitemsize: " + nodeItems.size());
-        if (filterString.isEmpty()) {
-            Log.d(TAG, "returning item: " + nodeItems.size());
-            finalList.addAll(nodeItems);
-            return finalList;
-        }
-        for (NodeItem nodeItem: nodeItems) {
-            Log.d(TAG, "comparing item: " + nodeItem.name);
-            if (nodeItem.name.toLowerCase().startsWith(filterString)) {
-                Log.d(TAG, "item matched: " + nodeItem.name);
-                finalList.add(nodeItem);
-            }
-        }
-        Log.d(TAG, "returning finalList: " + finalList.size());
-        return finalList;
+        return viewModel.getAllFilteredNodeItems(filterString);
     }
 
     private void setSearchViewListener() {
@@ -71,6 +55,7 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 Log.d(TAG, "new text = " + newText);
                 nodeViewAdapter.setItems(filter(newText));
+                recyclerView.invalidate();
                 return false;
             }
         });
@@ -84,12 +69,8 @@ public class SearchActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);//
         nodeViewAdapter = new NodeSearchViewAdapter(viewModel);
 
-        List<NodeItem> allItems = viewModel.getAllNodeItems();
-        for (NodeItem item : allItems) {
-            if (item.kind.equals("exhibit")) {
-                nodeItems.add(item);
-            }
-        }
+        nodeItems = viewModel.getAllFilteredNodeItems("");
+
         nodeViewAdapter.setItems(new ArrayList<>(nodeItems));
 
         recyclerView = findViewById(R.id.search_node_viewer);//gets the recycler view from `activity_search.xml`
