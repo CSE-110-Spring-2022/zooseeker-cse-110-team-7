@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,6 @@ import java.util.List;
  * https://developer.android.com/topic/libraries/architecture/viewmodel
  * */
 public class NodeSearchViewModel extends AndroidViewModel{
-    private List<NodeItem> nodeItems;
     private final NodeDao nodeDao;
 
     //constructor
@@ -29,11 +29,26 @@ public class NodeSearchViewModel extends AndroidViewModel{
     }
 
     public List<NodeItem> getAllNodeItems(){
-        if(nodeItems == null){
-            nodeItems = nodeDao.getAll();
-        }
+        return nodeDao.getAll();
+    }
 
-        return nodeItems;
+    public List<NodeItem> getAllFilteredNodeItems(String filter){
+        String queryString;
+        if (filter.isEmpty()) {
+            queryString = "%";
+        }
+        else {
+            queryString = "%" + filter.toLowerCase() + "%";
+        }
+        List<Boolean> onPlannerBools = new ArrayList<>();
+        onPlannerBools.add(true);
+        onPlannerBools.add(false);
+        List<String> kinds = new ArrayList<>();
+        kinds.add("exhibit");
+        kinds.add("intersection");
+        kinds.add("undefined");
+
+        return nodeDao.getByFilter(onPlannerBools, kinds, queryString);
     }
 
     public void addItemToPlanner(NodeItem nodeItem){

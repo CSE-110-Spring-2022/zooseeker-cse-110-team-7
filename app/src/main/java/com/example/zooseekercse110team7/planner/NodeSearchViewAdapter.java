@@ -82,6 +82,8 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
         NodeItem nodeItem = nodeItems.get(position);
         if (nodeItem.onPlanner) {
             holder.checkBox.setChecked(true);
+        } else {
+            holder.checkBox.setChecked(false);
         }
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
