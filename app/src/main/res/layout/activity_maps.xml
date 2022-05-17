@@ -44,23 +44,23 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/directions_button"
+            android:id="@+id/next_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:onClick="onDirectionsClicked"
+            android:onClick="onNextClicked"
             android:text="Next" />
 
         <Button
-            android:id="@+id/currentLoc"
+            android:id="@+id/back_step_plan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:onClick="onGoToBondi"
+            android:onClick="onBackClicked"
             android:layout_weight="0.5"
             android:text="Back" />
 
         <Button
-            android:id="@+id/back_button"
+            android:id="@+id/planner_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
