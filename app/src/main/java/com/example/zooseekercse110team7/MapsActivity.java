@@ -118,8 +118,8 @@ public class MapsActivity extends AppCompatActivity implements
         List<NodeItem> ret = new ArrayList<NodeItem>();
 
         ret.add(input.get(0));
-        ret.add(input.get(1));
-        input.remove(0);
+        //ret.add(input.get(1));
+        //input.remove(0);
         input.remove(0);
 
 
@@ -165,10 +165,11 @@ public class MapsActivity extends AppCompatActivity implements
 
         // add entrance at start of planner and exit at end of planner
         plannedItems.add(0,defaultStart);
-        plannedItems.add(defaultEnd);
 
-        if(plannedItems.size() > 2){
+
+        if(plannedItems.size() > 1){
             plannedItems = sortPlannerList(plannedItems); // sort planned items
+            plannedItems.add(defaultEnd);
         }
         else{
             path += "Nothing in plan.";
