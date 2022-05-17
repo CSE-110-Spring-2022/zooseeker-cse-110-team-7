@@ -54,7 +54,7 @@ public interface NodeDao {
             "AND (tags LIKE :queryString OR name LIKE :queryString)")
     List<NodeItem> getByFilter(List<Boolean> onPlannerBools,
                                List<String> kinds,
-                               String queryString);
+                               String queryString);//%a_string%
     @Query("SELECT * FROM `node_items` WHERE onPlanner IN (:onPlannerBools) " +
             "AND kind IN (:kinds)")
     List<NodeItem> getByKind(List<Boolean> onPlannerBools, List<String> kinds);

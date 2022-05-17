@@ -150,14 +150,23 @@ public class MapsActivity extends AppCompatActivity implements
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
         plannedItems = nodeDao.getByOnPlanner(true);    // get items on planner
-        NodeItem defaultStart = nodeDao.get("entrance_exit_gate");  // get entrance/exit
-        NodeItem defaultEnd = nodeDao.get("entrance_plaza");        // get entrance plaza
+
+        //`kind` requirements to get entrance/exit gate
+        List<Boolean> onPlannerBools = new ArrayList<>(); onPlannerBools.add(true); onPlannerBools.add(false);
+        List<String> kinds = new ArrayList<>(); kinds.add("gate");
+
+        //getting entrance and exit gate
+        NodeItem defaultStart = nodeDao.getByKind(onPlannerBools, kinds).get(0);  // get entrance/exit
+        NodeItem defaultEnd = defaultStart;        // get exit gate
+
+
 
         String path = "";   // directions received
 
-        // sort planned items
-        plannedItems.add(0, defaultEnd);
+        // add entrance at start of planner and exit at end of planner
         plannedItems.add(0,defaultStart);
+        plannedItems.add(defaultEnd);
+
         if(plannedItems.size() > 2){
             plannedItems = sortPlannerList(plannedItems); // sort planned items
         }
