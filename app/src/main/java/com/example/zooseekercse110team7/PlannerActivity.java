@@ -20,14 +20,17 @@ import com.example.zooseekercse110team7.planner.NodeSearchViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeSearchViewModel;
 import com.example.zooseekercse110team7.planner.NodeViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeViewModel;
+import com.example.zooseekercse110team7.planner.RouteSummaryViewAdapter;
+import com.example.zooseekercse110team7.planner.RouteSummaryViewModel;
 
 import java.util.List;
 
 public class PlannerActivity extends AppCompatActivity {
     // Exposed for testing purposes later
-    public RecyclerView recyclerView;
+    public RecyclerView recyclerView, routeSummaryView;
+    private NodeViewModel viewModel; private RouteSummaryViewModel routeViewModel;
 
-    private NodeViewModel viewModel;
+
     private TextView numberItemsTextView;
     private void setNumberItemsTextView() {
         final Observer<List<NodeItem>> nameObserver = new Observer<List<NodeItem>>() {
@@ -41,6 +44,7 @@ public class PlannerActivity extends AppCompatActivity {
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         viewModel.getLiveNodeItems().observe(this, nameObserver);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +67,24 @@ public class PlannerActivity extends AppCompatActivity {
         recyclerView.setAdapter(nodeViewer);
 
         nodeViewer.setOnDeleteButtonClicked(viewModel::deleteItem);
-//        nodeViewer.setItems(NodeItem.loadJSON(this, "sample_node_info.json"));
+
+        /*-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-*/
+        //TODO: Update UI
+        routeViewModel = new ViewModelProvider(this).get(RouteSummaryViewModel.class);
+        RouteSummaryViewAdapter routeSummaryViewAdapter = new RouteSummaryViewAdapter();
+//        routeViewModel
+        routeSummaryView = findViewById(R.id.route_summary_viewer);
+        routeSummaryView.setLayoutManager(new LinearLayoutManager(this));
+        routeSummaryView.setAdapter(routeSummaryViewAdapter);
+    }
+
+    public void onClearAllClicked(View view){
+        if(recyclerView == null || viewModel == null){
+            Log.d("Planner", "Model and RecyclerView are NULL!\nNot Clearing!");
+            return;
+        }
+
+        viewModel.clearPlanner();
     }
 
     public void onMapClicked(View view){

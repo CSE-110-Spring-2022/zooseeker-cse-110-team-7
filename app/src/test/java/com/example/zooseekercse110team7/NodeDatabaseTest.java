@@ -1,6 +1,7 @@
 package com.example.zooseekercse110team7;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -27,7 +28,8 @@ import java.util.List;
  * Tests the Database
  * - Update [Complete] Note: this is another synonym for Add
  * - Delete [Complete]
- * - Find   [Complete]
+ * - Find   [Complete] Note: this is another synonym for Query
+ * - Clear  [Incomplete]
  * */
 @RunWith(AndroidJUnit4.class)
 public class NodeDatabaseTest {
@@ -188,6 +190,49 @@ public class NodeDatabaseTest {
             assertEquals(2, items.size());
             assertTrue(items.get(0).equals(n1));
             assertTrue(items.get(1).equals(n3));
+        }
+    }
+
+    @Test
+    public void ClearTest(){
+        /* SETUP */
+        List<String> empty_tags = new ArrayList<>();
+        NodeItem n1 = new NodeItem("n1", "node1", "exhibit", empty_tags);
+        NodeItem n2 = new NodeItem("n2", "node2", "exhibit", empty_tags);
+        NodeItem n3 = new NodeItem("n3", "node3", "exhibit", empty_tags);
+        NodeItem n4 = new NodeItem("n4", "node4", "exhibit", empty_tags);
+        nodeDao.insert(n1); nodeDao.insert(n2); nodeDao.insert(n3); nodeDao.insert(n4);
+
+        /* SIMPLE CLEAR ALL -- ALL ADDED TO PLANER */
+        {
+            n1.onPlanner = true; nodeDao.update(n1); assertTrue(nodeDao.get(n1.id).onPlanner);
+            n2.onPlanner = true; nodeDao.update(n2); assertTrue(nodeDao.get(n2.id).onPlanner);
+            n3.onPlanner = true; nodeDao.update(n3); assertTrue(nodeDao.get(n3.id).onPlanner);
+            n4.onPlanner = true; nodeDao.update(n4); assertTrue(nodeDao.get(n4.id).onPlanner);
+
+            int itemsCleared = nodeDao.clearPlanner();
+            assertEquals(4, itemsCleared);
+
+            assertFalse(nodeDao.get(n1.id).onPlanner);
+            assertFalse(nodeDao.get(n2.id).onPlanner);
+            assertFalse(nodeDao.get(n3.id).onPlanner);
+            assertFalse(nodeDao.get(n4.id).onPlanner);
+        }
+
+        /* COMPLEX CLEAR ALL -- SOME ADDED TO PLANER */
+        {
+            n1.onPlanner = true; nodeDao.update(n1); assertTrue(nodeDao.get(n1.id).onPlanner);
+            n2.onPlanner = false; nodeDao.update(n2); assertFalse(nodeDao.get(n2.id).onPlanner);
+            n3.onPlanner = true; nodeDao.update(n3); assertTrue(nodeDao.get(n3.id).onPlanner);
+            n4.onPlanner = false; nodeDao.update(n4); assertFalse(nodeDao.get(n4.id).onPlanner);
+
+            int itemsCleared = nodeDao.clearPlanner();
+            assertEquals(2, itemsCleared);
+
+            assertFalse(nodeDao.get(n1.id).onPlanner);
+            assertFalse(nodeDao.get(n2.id).onPlanner);
+            assertFalse(nodeDao.get(n3.id).onPlanner);
+            assertFalse(nodeDao.get(n4.id).onPlanner);
         }
     }
 }
