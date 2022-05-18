@@ -20,13 +20,15 @@ import com.example.zooseekercse110team7.planner.NodeSearchViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeSearchViewModel;
 import com.example.zooseekercse110team7.planner.NodeViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeViewModel;
+import com.example.zooseekercse110team7.planner.RouteSummaryViewAdapter;
+import com.example.zooseekercse110team7.planner.RouteSummaryViewModel;
 
 import java.util.List;
 
 public class PlannerActivity extends AppCompatActivity {
     // Exposed for testing purposes later
-    public RecyclerView recyclerView;
-    private NodeViewModel viewModel;
+    public RecyclerView recyclerView, routeSummaryView;
+    private NodeViewModel viewModel; private RouteSummaryViewModel routeViewModel;
 
 
     private TextView numberItemsTextView;
@@ -65,7 +67,15 @@ public class PlannerActivity extends AppCompatActivity {
         recyclerView.setAdapter(nodeViewer);
 
         nodeViewer.setOnDeleteButtonClicked(viewModel::deleteItem);
-//        nodeViewer.setItems(NodeItem.loadJSON(this, "sample_node_info.json"));
+
+        /*-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-*/
+        //TODO: Update UI
+        routeViewModel = new ViewModelProvider(this).get(RouteSummaryViewModel.class);
+        RouteSummaryViewAdapter routeSummaryViewAdapter = new RouteSummaryViewAdapter();
+//        routeViewModel
+        routeSummaryView = findViewById(R.id.route_summary_viewer);
+        routeSummaryView.setLayoutManager(new LinearLayoutManager(this));
+        routeSummaryView.setAdapter(routeSummaryViewAdapter);
     }
 
     public void onClearAllClicked(View view){
