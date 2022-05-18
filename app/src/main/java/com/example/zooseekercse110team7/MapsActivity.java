@@ -82,14 +82,14 @@ public class MapsActivity extends AppCompatActivity implements
     // [END_EXCLUDE]
 
     private GoogleMap map;
-    // [START_EXCLUDE silent]
     private PolylineOptions currPolylineOptions;
     private boolean isCanceled = false;
-    // [END_EXCLUDE]
     private CalculateShortestPath directions;
     private List<NodeItem> plannedItems;
     NodeDao nodeDao;
     AssetLoader g;
+    int startCounter = 0;
+    int goalCounter = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,10 +116,12 @@ public class MapsActivity extends AppCompatActivity implements
 
     public List<NodeItem> sortPlannerList(List<NodeItem> input){
         List<NodeItem> ret = new ArrayList<NodeItem>();
+
         ret.add(input.get(0));
-        ret.add(input.get(1));
+        //ret.add(input.get(1));
+        //input.remove(0);
         input.remove(0);
-        input.remove(0);
+
 
         NodeItem current = ret.get(ret.size() - 1);
 
@@ -144,49 +146,97 @@ public class MapsActivity extends AppCompatActivity implements
 
     // Called when Directions is clicked. Displays directions for pairs of destinations in order
     // each time it's clicked.
-    public void onDirectionsClicked(View view) {
-        plannedItems = nodeDao.getByOnPlanner(true);    // get items on planner
-        NodeItem defaultStart = nodeDao.get("entrance_exit_gate");  // get entrance/exit
-        NodeItem defaultEnd = nodeDao.get("entrance_plaza");        // get entrance plaza
+    public void onNextClicked(View view) {
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
+        plannedItems = nodeDao.getByOnPlanner(true);    // get items on planner
+
+        //`kind` requirements to get entrance/exit gate
+        List<Boolean> onPlannerBools = new ArrayList<>(); onPlannerBools.add(true); onPlannerBools.add(false);
+        List<String> kinds = new ArrayList<>(); kinds.add("gate");
+
+        //getting entrance and exit gate
+        NodeItem defaultStart = nodeDao.getByKind(onPlannerBools, kinds).get(0);  // get entrance/exit
+        NodeItem defaultEnd = defaultStart;        // get exit gate
+
+
+
         String path = "";   // directions received
 
-        // sort planned items
-        plannedItems.add(0, defaultEnd);
+        // add entrance at start of planner and exit at end of planner
         plannedItems.add(0,defaultStart);
-        plannedItems = sortPlannerList(plannedItems); // sort planned items
-        plannedItems.add(defaultStart);               // add default start
+
+
+        if(plannedItems.size() > 1){
+            plannedItems = sortPlannerList(plannedItems); // sort planned items
+            plannedItems.add(defaultEnd);
+        }
+        else{
+            path += "Nothing in plan.";
+            directionsTextview.setText(path);
+            return;
+        }
+        //plannedItems.add(defaultStart);               // add default start
 
 
         /* Find Optimized Path */
-        if(plannedItems.size() > 0){
+        if(goalCounter < plannedItems.size()){
             //get directions by iterating through list of `NodeItems`
-            int startCounter = 0, goalCounter = 1;
+            Log.d("Directions", "Counter: " + String.valueOf(goalCounter) +
+                    "\tList Size: " + String.valueOf(plannedItems.size()));
 
-            while(goalCounter < plannedItems.size()){
-                Log.d("Directions", "Counter: " + String.valueOf(goalCounter) +
-                        "\tList Size: " + String.valueOf(plannedItems.size()));
+            directions =
+                    new CalculateShortestPath(
+                            plannedItems.get(startCounter).id,
+                            plannedItems.get(goalCounter).id,
+                            g);
 
-                directions =
-                        new CalculateShortestPath(
-                                plannedItems.get(startCounter).id,
-                                plannedItems.get(goalCounter).id,
-                                g);
-
-                path += directions.getShortestPath();
-                directionsTextview.setText(path);
-                startCounter += 1;
-                goalCounter += 1;
-            }
+            path += directions.getShortestPath();
+            directionsTextview.setText(path);
+            startCounter += 1;
+            goalCounter += 1;
         }
 
         //Let user know they've reach the end of their plans
-        path += "Reached end of plan.";
-        directionsTextview.setText(path);
+        else{
+            path += "Reached end of plan.";
+            directionsTextview.setText(path);
+        }
         //make text scrollable if there is too much text
         directionsTextview.setMovementMethod(new ScrollingMovementMethod());
+
+
     }
+
+    public void onBackClicked(View view){
+        TextView directionsTextview =
+                (TextView) findViewById(R.id.directions_text); // text view to display directions
+        String path = "";
+        if(startCounter == 0){
+            path += "No directions to go back to.";
+            directionsTextview.setText(path);
+        }
+        else{
+            startCounter -= 1;
+            goalCounter -= 1;
+            // Find Optimized Path
+            //get directions by iterating through list of `NodeItems`
+            Log.d("Directions", "Counter: " + String.valueOf(goalCounter) +
+                    "\tList Size: " + String.valueOf(plannedItems.size()));
+
+            directions =
+                    new CalculateShortestPath(
+                            plannedItems.get(startCounter).id,
+                            plannedItems.get(goalCounter).id,
+                            g);
+
+            path += directions.getShortestPath();
+            directionsTextview.setText(path);
+        }
+    }
+
+
+
 
     // [START_EXCLUDE silent]
     @Override
@@ -240,12 +290,14 @@ public class MapsActivity extends AppCompatActivity implements
     /**
      * Called when the Go To Bondi button is clicked.
      */
+    /*
     public void onGoToBondi(View view) {
         if (!checkReady()) {
             return;
         }
         changeCamera(CameraUpdateFactory.newCameraPosition(ZOO));
     }
+     */
 
 
 

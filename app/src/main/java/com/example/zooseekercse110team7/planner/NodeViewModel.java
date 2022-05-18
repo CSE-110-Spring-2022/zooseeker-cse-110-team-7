@@ -40,4 +40,8 @@ public class NodeViewModel extends AndroidViewModel {
         nodeItem.onPlanner = false;
         nodeDao.update(nodeItem);
     }
+
+    public void clearPlanner(){
+        nodeDao.clearPlanner();
+    }
 }

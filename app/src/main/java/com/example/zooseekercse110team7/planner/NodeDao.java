@@ -54,7 +54,7 @@ public interface NodeDao {
             "AND (tags LIKE :queryString OR name LIKE :queryString)")
     List<NodeItem> getByFilter(List<Boolean> onPlannerBools,
                                List<String> kinds,
-                               String queryString);
+                               String queryString);//%a_string%
     @Query("SELECT * FROM `node_items` WHERE onPlanner IN (:onPlannerBools) " +
             "AND kind IN (:kinds)")
     List<NodeItem> getByKind(List<Boolean> onPlannerBools, List<String> kinds);
@@ -68,6 +68,15 @@ public interface NodeDao {
      * */
     @Query("SELECT kind FROM `node_items`")
     List<String> getAllKindNames();
+
+    /**
+     * The implementation of this method will set all `NodeItem`s `onPlanner` field to false. This
+     * will indicate that there are no items on the planner.
+     *
+     * @return the number of updated items that had `onPlanner` equal to true/one
+     * */
+    @Query("UPDATE `node_items` SET onPlanner=0 WHERE onPlanner=1")
+    int clearPlanner();
 
     /**
      * The implementation of the method will update its parameters in the database if they already
