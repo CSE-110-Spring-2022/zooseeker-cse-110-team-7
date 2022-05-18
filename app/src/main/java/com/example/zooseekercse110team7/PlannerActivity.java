@@ -26,8 +26,9 @@ import java.util.List;
 public class PlannerActivity extends AppCompatActivity {
     // Exposed for testing purposes later
     public RecyclerView recyclerView;
-
     private NodeViewModel viewModel;
+
+
     private TextView numberItemsTextView;
     private void setNumberItemsTextView() {
         final Observer<List<NodeItem>> nameObserver = new Observer<List<NodeItem>>() {
@@ -41,6 +42,7 @@ public class PlannerActivity extends AppCompatActivity {
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         viewModel.getLiveNodeItems().observe(this, nameObserver);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,15 @@ public class PlannerActivity extends AppCompatActivity {
 
         nodeViewer.setOnDeleteButtonClicked(viewModel::deleteItem);
 //        nodeViewer.setItems(NodeItem.loadJSON(this, "sample_node_info.json"));
+    }
+
+    public void onClearAllClicked(View view){
+        if(recyclerView == null || viewModel == null){
+            Log.d("Planner", "Model and RecyclerView are NULL!\nNot Clearing!");
+            return;
+        }
+
+        viewModel.clearPlanner();
     }
 
     public void onMapClicked(View view){

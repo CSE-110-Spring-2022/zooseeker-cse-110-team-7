@@ -62,6 +62,15 @@ public interface NodeDao {
     List<NodeItem> getByOnPlanner(Boolean onPlannerBools);
 
     /**
+     * The implementation of this method will set all `NodeItem`s `onPlanner` field to false. This
+     * will indicate that there are no items on the planner.
+     *
+     * @return the number of updated items that had `onPlanner` equal to true/one
+     * */
+    @Query("UPDATE `node_items` SET onPlanner=0 WHERE onPlanner=1")
+    int clearPlanner();
+
+    /**
      * The implementation of the method will update its parameters in the database if they already
      * exists (checked by primary keys). If they don't already exists, this option will not change
      * the database
