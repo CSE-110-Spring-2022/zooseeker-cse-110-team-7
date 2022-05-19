@@ -62,6 +62,14 @@ public interface NodeDao {
     List<NodeItem> getByOnPlanner(Boolean onPlannerBools);
 
     /**
+     * Retrieves all the values from the `kind` field in the database as a list of Strings.
+     *
+     * @return a List of Strings with all the `kind` values.
+     * */
+    @Query("SELECT kind FROM `node_items`")
+    List<String> getAllKindNames();
+
+    /**
      * The implementation of this method will set all `NodeItem`s `onPlanner` field to false. This
      * will indicate that there are no items on the planner.
      *
