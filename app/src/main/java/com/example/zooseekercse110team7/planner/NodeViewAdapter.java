@@ -2,6 +2,7 @@ package com.example.zooseekercse110team7.planner;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.SystemClock;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import java.util.function.Consumer;
 public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewHolder>{
     private List<NodeItem> nodeItems = Collections.emptyList();
     private Consumer<NodeItem> onDeleteButtonClicked;
+    private long mLastClickTime = 0;
 
     /**
      * Similar to an observer, but allows an action to be performed. Here, it "deletes" a UI element
@@ -121,6 +123,15 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
             //check box listener
             checkBox.setOnCheckedChangeListener((view, isChecked) -> {
                 if(onDeleteButtonClicked == null){ return; }
+                Log.d("NodeAdapter", "Clicked Item: " + nodeItem.name);
+
+                /* THIS IS UI THREAD PROBLEM WHERE IT DOUBLE CLICKS */
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+                    checkBox.setChecked(false);//if we want to remove, it would be true
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+
                 onDeleteButtonClicked.accept(nodeItem);
             });
         }
@@ -129,12 +140,14 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
          * Displays the exhibit the user wants to visit. It also prevents and Null Exceptions.
          * */
         public void setItem(NodeItem nodeItem){
-            Log.d("NodeSearchAdapter", "Attempting to set items");
+            Log.d("NodeAdapter", "Attempting to set items");
             this.nodeItem = nodeItem;
             try{
                 nameTextView.setText(nodeItem.name);
                 kindTextView.setText(nodeItem.kind);
+                checkBox.setChecked(!nodeItem.onPlanner);
                 Log.d("NodeAdapter", "|-> Items Set");
+                Log.d("NodeAdapter","|-> [Item] Name: " + nameTextView.getText() + "\tIs Checked: " + checkBox.isChecked() + "\tonPlanner: " + nodeItem.onPlanner);
             }catch (NullPointerException e){
                 Log.e("NodeAdapter", "|-> ERROR: Items Not Set");
                 e.printStackTrace();
