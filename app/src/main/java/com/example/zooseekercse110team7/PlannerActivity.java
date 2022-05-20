@@ -19,6 +19,7 @@ import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.NodeViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeViewModel;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
+import com.example.zooseekercse110team7.routesummary.RouteItem;
 import com.example.zooseekercse110team7.routesummary.RouteSummary;
 import com.example.zooseekercse110team7.routesummary.RouteSummaryViewAdapter;
 import com.example.zooseekercse110team7.routesummary.RouteSummaryViewModel;
@@ -42,6 +43,7 @@ public class PlannerActivity extends AppCompatActivity {
         final Observer<List<NodeItem>> nodeObserver = new Observer<List<NodeItem>>() {
             @Override
             public void onChanged(@Nullable final List<NodeItem> newName) {
+                Log.d("Planner", "Database Updated!");
                 // Update the UI, in this case, a TextView.
                 String number = "POI: " + String.valueOf(newName.size());
                 numberItemsTextView.setText(number);
@@ -49,9 +51,21 @@ public class PlannerActivity extends AppCompatActivity {
 
                 // Update the graph and route summary
                 graph_path.setNodeItems(viewModel.getNodePlannerItems());
+                if(GlobalDebug.DEBUG){
+                    List<NodeItem> itemList = viewModel.getNodePlannerItems();
+                    for(NodeItem item: itemList){
+                        Log.d("Planner", item.toString());
+                    }
+                }
                 graph_path.updateGraph();
 
                 summary.updateRouteSummary(graph_path.getPath());
+                if(GlobalDebug.DEBUG){
+                    List<RouteItem> itemList = summary.getItems();
+                    for(RouteItem item: itemList){
+                        Log.d("Planner", item.toString());
+                    }
+                }
                 adapter.notifyView();
             }
         };
@@ -100,8 +114,9 @@ public class PlannerActivity extends AppCompatActivity {
     }
 
     public void onClearAllClicked(View view){
-        if(recyclerView == null || viewModel == null || routeViewModel == null){
-            Log.d("Planner", "Model and RecyclerView are NULL!\nNot Clearing!");
+        Log.d("NodeViewModel[Clear Button]", "Clear Button Clicked!");
+        if(recyclerView == null || viewModel == null){
+            Log.d("NodeViewModel[Clear Button]", "Model and RecyclerView are NULL!\nNot Clearing!");
             return;
         }
 

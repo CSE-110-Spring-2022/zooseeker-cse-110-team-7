@@ -16,4 +16,12 @@ public class RouteItem {
         this.distance = dist;
     }
 
+    @Override
+    public String toString() {
+        return "RouteItem{" +
+                "toExhibitName='" + toExhibitName + '\'' +
+                ", fromExhibitName='" + fromExhibitName + '\'' +
+                ", distance='" + distance + '\'' +
+                '}';
+    }
 }

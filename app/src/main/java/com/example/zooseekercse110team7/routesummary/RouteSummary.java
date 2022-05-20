@@ -1,5 +1,7 @@
 package com.example.zooseekercse110team7.routesummary;
 
+import android.util.Log;
+
 import com.example.zooseekercse110team7.map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
 import com.example.zooseekercse110team7.planner.NodeItem;
@@ -24,7 +26,7 @@ public class RouteSummary {
         return instance;
     }
 
-    List<RouteItem> getItems() {
+    public List<RouteItem> getItems() {
         return items;
     }
 
@@ -47,13 +49,14 @@ public class RouteSummary {
                 RouteItem routeItem = new RouteItem(target, source, distance);
 
                 //check if source is already in list
-                boolean containsSource = false;
-                for (RouteItem item: items) {
-                    if (item.fromExhibitName == source) { containsSource = true; }
-                }
-                if (!containsSource) {
-                    items.add(routeItem);
-                }
+//                boolean containsSource = false;
+//                for (RouteItem item: items) {
+//                    if (item.fromExhibitName == source) { containsSource = true; }
+//                }
+//                if (!containsSource) {
+//                    items.add(routeItem);
+//                }
+                items.add(routeItem);
             }
         }
     }
