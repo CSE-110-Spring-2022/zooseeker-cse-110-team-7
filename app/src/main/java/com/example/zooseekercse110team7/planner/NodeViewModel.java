@@ -2,6 +2,7 @@ package com.example.zooseekercse110team7.planner;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -42,6 +43,7 @@ public class NodeViewModel extends AndroidViewModel {
     }
 
     public void clearPlanner(){
+        Log.d("NodeViewModel", "Clearing Items On Planner...");
         nodeDao.clearPlanner();
     }
 }

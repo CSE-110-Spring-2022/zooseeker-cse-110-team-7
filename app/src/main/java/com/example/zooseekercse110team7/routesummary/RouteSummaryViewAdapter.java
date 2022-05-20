@@ -62,6 +62,7 @@ public class RouteSummaryViewAdapter extends RecyclerView.Adapter <RouteSummaryV
         return RouteSummary.getInstance().getItems().size();
     }
     public void notifyView() {
+        Log.d("RouteSummaryViewAdapter", "Notified of Change");
         notifyDataSetChanged();
     }
     /**
@@ -88,9 +89,9 @@ public class RouteSummaryViewAdapter extends RecyclerView.Adapter <RouteSummaryV
          * Displays the exhibit the user wants to visit. It also prevents and Null Exceptions.
          * */
         public void setItem(RouteItem routeItem){
-            Log.d("NodeSearchAdapter", "Attempting to set items");
+            Log.d("RouteSummaryViewAdapter", "Attempting to set item");
             this.routeItem = routeItem;
-
+            Log.d("RouteSummaryViewAdapter", routeItem.toString());
             try{
                 toExhibitTextView.setText(routeItem.toExhibitName);
                 fromExhibitTextView.setText(routeItem.fromExhibitName);

@@ -3,6 +3,7 @@ package com.example.zooseekercse110team7.map;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.zooseekercse110team7.GlobalDebug;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
@@ -18,8 +19,8 @@ public class GraphPathSingleton {
     private static GraphPathSingleton instance = new GraphPathSingleton();
     private List<NodeItem> plannedItems;
     private List<CalculateShortestPath> directions = new ArrayList<>();
-    int startCounter = 0;
-    int goalCounter = 1;
+    int startCounter;
+    int goalCounter;
     AssetLoader g;
 
     private GraphPathSingleton() {
@@ -30,7 +31,9 @@ public class GraphPathSingleton {
         return instance;
     }
     public void setNodeItems(List<NodeItem> items) {
+        Log.d("GraphPathSingleton", "Setting Items...");
         plannedItems = items;
+        Log.d("GraphPathSingleton", "Items Set");
     }
     public void loadAssets(Context context) {
         g = new AssetLoader(
@@ -40,9 +43,19 @@ public class GraphPathSingleton {
                 context);
     }
     public void updateGraph() {
+        startCounter = 0;
+        goalCounter = 1;
 
         // get items on planner
         //plannedItems.clear();
+        directions.clear();
+
+        if(GlobalDebug.DEBUG){
+            Log.d("GraphPathSingleton", "Items In Planner...");
+            for(NodeItem item: plannedItems){
+                Log.d("GraphPathSingleton", item.toString());
+            }
+        }
 
         //`kind` requirements to get entrance/exit gate
         List<Boolean> onPlannerBools = new ArrayList<>(); onPlannerBools.add(true); onPlannerBools.add(false);
@@ -66,7 +79,7 @@ public class GraphPathSingleton {
             plannedItems.add(defaultEnd);
         }
         else{
-            Log.d("Plan empty", "Nothing in plan.");
+            Log.d("GraphPathSingleton", "Nothing in plan.");
 
             return;
         }
