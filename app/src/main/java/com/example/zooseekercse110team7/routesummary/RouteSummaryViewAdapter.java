@@ -1,4 +1,4 @@
-package com.example.zooseekercse110team7.planner;
+package com.example.zooseekercse110team7.routesummary;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,12 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zooseekercse110team7.R;
+import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
+import com.example.zooseekercse110team7.planner.NodeItem;
+
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
 
 import java.util.Collections;
 import java.util.List;
 
 public class RouteSummaryViewAdapter extends RecyclerView.Adapter <RouteSummaryViewAdapter.ViewHolder>{
-    private List<RouteItem> routeItems = Collections.emptyList();
 
     /**
      * Creates a `ViewHolder` with xml item that will be within the `ViewHolder`
@@ -44,7 +48,7 @@ public class RouteSummaryViewAdapter extends RecyclerView.Adapter <RouteSummaryV
      * */
     @Override
     public void onBindViewHolder(@NonNull RouteSummaryViewAdapter.ViewHolder holder, int position) {
-        holder.setItem(routeItems.get(position));
+        holder.setItem(RouteSummary.getInstance().getRouteItem(position));
     }
 
     /**
@@ -55,9 +59,11 @@ public class RouteSummaryViewAdapter extends RecyclerView.Adapter <RouteSummaryV
      * */
     @Override
     public int getItemCount() {
-        return routeItems.size();
+        return RouteSummary.getInstance().getItems().size();
     }
-
+    public void notifyView() {
+        notifyDataSetChanged();
+    }
     /**
      * This subclass describes an item view and metadata about its place within the RecyclerView
      * */
@@ -84,6 +90,7 @@ public class RouteSummaryViewAdapter extends RecyclerView.Adapter <RouteSummaryV
         public void setItem(RouteItem routeItem){
             Log.d("NodeSearchAdapter", "Attempting to set items");
             this.routeItem = routeItem;
+
             try{
                 toExhibitTextView.setText(routeItem.toExhibitName);
                 fromExhibitTextView.setText(routeItem.fromExhibitName);

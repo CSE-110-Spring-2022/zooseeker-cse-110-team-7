@@ -19,7 +19,7 @@ import java.util.List;
  * */
 
 @Dao
-public interface NodeDao {
+public interface NodeDao extends ReadOnlyNodeDao{
     /**
      * Inserts item to database
      * */

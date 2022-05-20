@@ -131,7 +131,8 @@ public class NodeViewAdapter extends RecyclerView.Adapter <NodeViewAdapter.ViewH
         public void setItem(NodeItem nodeItem){
             Log.d("NodeSearchAdapter", "Attempting to set items");
             this.nodeItem = nodeItem;
-            try{
+            try {
+                checkBox.setChecked(!nodeItem.onPlanner);
                 nameTextView.setText(nodeItem.name);
                 kindTextView.setText(nodeItem.kind);
                 Log.d("NodeAdapter", "|-> Items Set");
