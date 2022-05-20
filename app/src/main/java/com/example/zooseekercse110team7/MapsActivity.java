@@ -5,8 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -119,7 +121,6 @@ public class MapsActivity extends AppCompatActivity implements
         nodeDao = db.nodeDao();
 
     }
-
 
     public List<NodeItem> sortPlannerList(List<NodeItem> input){
         List<NodeItem> ret = new ArrayList<NodeItem>();

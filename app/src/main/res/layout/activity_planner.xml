@@ -86,10 +86,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/route_summary_viewer"
+
         android:layout_width="177dp"
         android:layout_height="665dp"
 
         android:layout_marginTop="5dp"
+
         android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
