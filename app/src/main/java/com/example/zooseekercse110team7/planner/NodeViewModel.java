@@ -29,7 +29,7 @@ public class NodeViewModel extends AndroidViewModel {
         NodeDatabase db = NodeDatabase.getSingleton(context);
         nodeDao = db.nodeDao();
     }
-
+    public List<NodeItem> getNodePlannerItems() { return nodeDao.getByOnPlanner(true); }
     public LiveData<List<NodeItem>> getLiveNodeItems(){
         return nodeDao.getAllLive();
     }

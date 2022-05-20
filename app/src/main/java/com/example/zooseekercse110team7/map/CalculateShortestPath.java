@@ -54,5 +54,8 @@ public class CalculateShortestPath {
         Log.d("ShortestPath", "|-> Returning Total: " + String.valueOf(total));
         return total;
     }
+    public GraphPath getPath() {
+        return path;
+    }
 
 }

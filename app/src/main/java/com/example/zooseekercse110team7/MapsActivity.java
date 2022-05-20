@@ -1,6 +1,7 @@
 package com.example.zooseekercse110team7;
 
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import com.example.zooseekercse110team7.map.AssetLoader;
 import com.example.zooseekercse110team7.map.CalculateShortestPath;
@@ -31,6 +33,8 @@ import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
 import com.example.zooseekercse110team7.planner.NodeDao;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
+import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
+import com.example.zooseekercse110team7.routesummary.RouteSummary;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -88,10 +92,12 @@ public class MapsActivity extends AppCompatActivity implements
     private boolean isCanceled = false;
     private CalculateShortestPath directions;
     private List<NodeItem> plannedItems;
-    NodeDao nodeDao;
+    ReadOnlyNodeDao nodeDao;
     AssetLoader g;
     int startCounter = 0;
     int goalCounter = 1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +119,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
         nodeDao = db.nodeDao();
+
     }
 
     public List<NodeItem> sortPlannerList(List<NodeItem> input){
@@ -144,6 +151,10 @@ public class MapsActivity extends AppCompatActivity implements
         }
         return ret;
     }
+    /*
+     * We need to update the graph when the planner changes so that we know the distance hints
+     * updateGraph calculates the directions and graph without updating UI
+     */
 
     // Called when Directions is clicked. Displays directions for pairs of destinations in order
     // each time it's clicked.
