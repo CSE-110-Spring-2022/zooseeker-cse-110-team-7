@@ -22,8 +22,8 @@ public class AssetLoader {
     private String nodeInfoJSON;
     private String edgeInfoJSON;
     Graph<String, IdentifiedWeightedEdge> graph;
-    Map<String, ZooData.VertexInfo> vInfo;
-    Map<String, ZooData.EdgeInfo> eInfo;
+    Map<String, VertexInfo> vInfo;
+    Map<String, EdgeInfo> eInfo;
 
     public AssetLoader(String zooGraph, String nodeInfo, String edgeInfo, Context aContext){
         this.zooGraphJSON = zooGraph;
@@ -61,11 +61,11 @@ public class AssetLoader {
         return this.graph;
     }
 
-    public Map<String, ZooData.VertexInfo> getVertexMap(){
+    public Map<String, VertexInfo> getVertexMap(){
         return this.vInfo;
     }
 
-    public Map<String, ZooData.EdgeInfo> getEdgeMap(){
+    public Map<String, EdgeInfo> getEdgeMap(){
         return this.eInfo;
     }
 }

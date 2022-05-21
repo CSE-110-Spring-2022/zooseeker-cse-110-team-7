@@ -30,6 +30,17 @@ public class IdentifiedWeightedEdge extends DefaultWeightedEdge {
         }
     }
 
-
+    public String getEdgeTarget(){
+        String str = this.toString();
+        int start = str.lastIndexOf(':');
+        int end = str.lastIndexOf(')');
+        return str.substring(start+2, end);
+    }
+    public String getEdgeSource(){
+        String str = this.toString();
+        int start = str.indexOf('(');
+        int end = str.indexOf(' ');
+        return str.substring(start+1, end);
+    }
 }
 

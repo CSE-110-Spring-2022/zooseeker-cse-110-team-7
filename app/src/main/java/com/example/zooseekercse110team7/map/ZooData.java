@@ -25,34 +25,16 @@ import org.jgrapht.nio.json.JSONImporter;
 
 public class ZooData {
 
-    public static class VertexInfo {
-        public static enum Kind {
-            // The SerializedName annotation tells GSON how to convert
-            // from the strings in our JSON to this Enum.
-            @SerializedName("gate") GATE,
-            @SerializedName("exhibit") EXHIBIT,
-            @SerializedName("intersection") INTERSECTION
-        }
 
-        public String id;
-        public Kind kind;
-        public String name;
-        public List<String> tags;
-    }
 
-    public static class EdgeInfo {
-        public String id;
-        public String street;
-    }
-
-    public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(Context aContext,String path) {
-        Map<String, ZooData.VertexInfo> indexedZooData = new HashMap<>();
+    public static Map<String, VertexInfo> loadVertexInfoJSON(Context aContext,String path) {
+        Map<String, VertexInfo> indexedZooData = new HashMap<>();
         try{
             InputStream inputStream = aContext.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
             Gson gson = new Gson();
-            Type type = new TypeToken<List<ZooData.VertexInfo>>(){}.getType();
-            List<ZooData.VertexInfo> zooData = gson.fromJson(reader, type);
+            Type type = new TypeToken<List<VertexInfo>>(){}.getType();
+            List<VertexInfo> zooData = gson.fromJson(reader, type);
 
             // This code is equivalent to:
             //
@@ -72,15 +54,15 @@ public class ZooData {
         return indexedZooData;
     }
 
-    public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(Context aContext, String path) {
-        Map<String, ZooData.EdgeInfo> indexedZooData = new HashMap<>();
+    public static Map<String, EdgeInfo> loadEdgeInfoJSON(Context aContext, String path) {
+        Map<String, EdgeInfo> indexedZooData = new HashMap<>();
         try{
             InputStream inputStream = aContext.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
 
             Gson gson = new Gson();
-            Type type = new TypeToken<List<ZooData.EdgeInfo>>(){}.getType();
-            List<ZooData.EdgeInfo> zooData = gson.fromJson(reader, type);
+            Type type = new TypeToken<List<EdgeInfo>>(){}.getType();
+            List<EdgeInfo> zooData = gson.fromJson(reader, type);
 
             indexedZooData = zooData
                     .stream()
