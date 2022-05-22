@@ -1,5 +1,7 @@
 package com.example.zooseekercse110team7.map;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -42,7 +44,7 @@ public class GraphPathSingleton {
                 "sample_edge_info.json",
                 context);
     }
-    public void updateGraph() {
+    public void updateGraph(ReadOnlyNodeDao nodeDao) {
         startCounter = 0;
         goalCounter = 1;
 
@@ -55,6 +57,7 @@ public class GraphPathSingleton {
             for(NodeItem item: plannedItems){
                 Log.d("GraphPathSingleton", item.toString());
             }
+            Log.d("GraphPathSingleton", "-- End of Items --");
         }
 
         //`kind` requirements to get entrance/exit gate
@@ -63,9 +66,14 @@ public class GraphPathSingleton {
 
         //getting entrance and exit gate
         if (plannedItems.isEmpty()) { return; }
-        NodeItem defaultStart = plannedItems.get(0);  // get entrance/exit
+        /**
+         * ❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌
+         * NODE DAO WAS REQUIRED HERE -- FIX
+         * */
+        Log.d("GraphPathSingleton", "Setting Default Start & End");
+        NodeItem defaultStart = nodeDao.getByKind(onPlannerBools, kinds).get(0);  // get entrance/exit
         NodeItem defaultEnd = defaultStart;        // get exit gate
-
+        Log.d("GraphPathSingleton", "Defaults Set");
 
 
         String path = "";   // directions received

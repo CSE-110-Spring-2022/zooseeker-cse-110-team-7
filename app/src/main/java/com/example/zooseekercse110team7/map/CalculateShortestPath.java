@@ -17,6 +17,7 @@ public class CalculateShortestPath {
         this.g = g;
         Log.d("ShortestPath", "Calculating with " +start+ "," +goal);
         this.path = DijkstraShortestPath.findPathBetween(this.g.graph, start, goal);
+        Log.d("ShortestPath", "Path Calculated");
     }
 
     public String getShortestPath() {

@@ -108,6 +108,13 @@ public class NodeSearchViewModel extends AndroidViewModel{
 //        kinds.add("intersection");
 //        kinds.add("undefined");
 
+        if(GlobalDebug.DEBUG){
+            Log.d("SearchViewModel", "GETTING DATABASE ITEMS");
+            List<NodeItem> nodes = nodeDao.getAll();
+            for(NodeItem node: nodes){
+                Log.d("SearchViewModel", node.toString());
+            }
+        }
         return nodeDao.getByFilter(onPlannerBools, getListOfStringFilters()/*kinds*/, queryString);
     }
 
