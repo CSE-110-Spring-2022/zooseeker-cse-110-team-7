@@ -55,8 +55,8 @@ public class NodeDatabaseTest {
         /* SETUP */
         List<String> some_tags = new ArrayList<>(); some_tags.add("tag1"); some_tags.add("tag2");
         List<String> empty_tags = new ArrayList<>();
-        NodeItem n1 = new NodeItem("n1", "regular_node", "exhibit", some_tags);
-        NodeItem n2 = new NodeItem("n2", "empty_node", "exhibit", empty_tags);
+        NodeItem n1 = new NodeItem("n1", null,"regular_node", "exhibit", some_tags, 0,0);
+        NodeItem n2 = new NodeItem("n2", null,"empty_node", "exhibit", empty_tags, 0, 0);
         nodeDao.insert(n1); nodeDao.insert(n2);
 
         /* CHECK INSERT */
@@ -91,8 +91,8 @@ public class NodeDatabaseTest {
         /* SETUP */
         List<String> some_tags = new ArrayList<>(); some_tags.add("tag1"); some_tags.add("tag2");
         List<String> empty_tags = new ArrayList<>();
-        NodeItem n1 = new NodeItem("n1", "regular_node", "exhibit", some_tags);
-        NodeItem n2 = new NodeItem("n2", "empty_node", "exhibit", empty_tags);
+        NodeItem n1 = new NodeItem("n1", null,"regular_node", "exhibit", some_tags,0,0);
+        NodeItem n2 = new NodeItem("n2", null,"empty_node", "exhibit", empty_tags,0,0);
         nodeDao.insert(n1); nodeDao.insert(n2);
 
         /* DELETE ITEM 1 */
@@ -131,9 +131,9 @@ public class NodeDatabaseTest {
         List<String> some_tags = new ArrayList<>(); some_tags.add("AA"); some_tags.add("AB");
         List<String> some_tags_2 = new ArrayList<>(); some_tags_2.add("BB"); some_tags_2.add("AC");
         List<String> empty_tags = new ArrayList<>();
-        NodeItem n1 = new NodeItem("n1", "regular_node", "exhibit", some_tags);
-        NodeItem n2 = new NodeItem("n2", "empty_node", "undefined", empty_tags);
-        NodeItem n3 = new NodeItem("n3", "place", "intersection", some_tags_2);
+        NodeItem n1 = new NodeItem("n1", null,"regular_node", "exhibit", some_tags,0,0);
+        NodeItem n2 = new NodeItem("n2", null,"empty_node", "undefined", empty_tags,0,0);
+        NodeItem n3 = new NodeItem("n3", null,"place", "intersection", some_tags_2,0,0);
         n1.onPlanner = true; n2.onPlanner = true;
         nodeDao.insert(n1); nodeDao.insert(n2); nodeDao.insert(n3);
         List<Boolean> onPlannerBools = new ArrayList<>();
@@ -197,10 +197,10 @@ public class NodeDatabaseTest {
     public void ClearTest(){
         /* SETUP */
         List<String> empty_tags = new ArrayList<>();
-        NodeItem n1 = new NodeItem("n1", "node1", "exhibit", empty_tags);
-        NodeItem n2 = new NodeItem("n2", "node2", "exhibit", empty_tags);
-        NodeItem n3 = new NodeItem("n3", "node3", "exhibit", empty_tags);
-        NodeItem n4 = new NodeItem("n4", "node4", "exhibit", empty_tags);
+        NodeItem n1 = new NodeItem("n1", null,"node1", "exhibit", empty_tags,0,0);
+        NodeItem n2 = new NodeItem("n2", null,"node2", "exhibit", empty_tags,0,0);
+        NodeItem n3 = new NodeItem("n3", null,"node3", "exhibit", empty_tags,0,0);
+        NodeItem n4 = new NodeItem("n4", null,"node4", "exhibit", empty_tags,0,0);
         nodeDao.insert(n1); nodeDao.insert(n2); nodeDao.insert(n3); nodeDao.insert(n4);
 
         /* SIMPLE CLEAR ALL -- ALL ADDED TO PLANER */

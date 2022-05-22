@@ -1,5 +1,7 @@
 package com.example.zooseekercse110team7;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -57,7 +59,15 @@ public class PlannerActivity extends AppCompatActivity {
                         Log.d("Planner", item.toString());
                     }
                 }
-                graph_path.updateGraph();
+
+                /**
+                 * ❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌
+                 * SHOULD NOT NEED NODEDAO -- WAS REQUIRED TO GET DEFAULT START AND END
+                 * GO WITHIN METHOD TO SEE SIMILAR COMMENT
+                 * */
+                NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
+                ReadOnlyNodeDao nodeDao = db.nodeDao();
+                graph_path.updateGraph(nodeDao);
 
                 summary.updateRouteSummary(graph_path.getPath());
                 if(GlobalDebug.DEBUG){
