@@ -85,11 +85,11 @@ public class Path {
     //https://stackoverflow.com/questions/222413/find-the-shortest-path-in-a-graph-which-visits-certain-nodes
     public List<RouteItem> getShortestPath(String source, List<NodeItem> mustVisitItems, String destination){
         List<String> nodeNameList = new ArrayList<>();
-        nodeNameList.add(source);
+        //nodeNameList.add(source);
         for(NodeItem item: mustVisitItems){
             nodeNameList.add(item.id);
         }
-        nodeNameList.add(destination);
+        //nodeNameList.add(destination);
         int nodeId = 0;
         int matrixLength = graph.getMatrixSize(); // length of matrix is number of items to visit PLUS start and end position
         int[][] distance = new int[matrixLength][matrixLength];
@@ -142,7 +142,7 @@ public class Path {
             }
         });
 
-        //TODO: check that we are getting edges by name or by id for node items
+
         Node u = new Node(source, 0,0);
         queue.add(u);
         distance[graph.getId(u.name)][0] = 0;
@@ -154,12 +154,12 @@ public class Path {
             for(IdentifiedWeightedEdge neighbor: neighbors){
                 int newBitmask = u.bitmask;
                 if(neighborInList(graph.getNeighborName(neighbor,u.name),nodeNameList)){
-                    int vid = graph.getId(u.name);
-                    newBitmask = u.bitmask | (1 << vid);
+                    int vid = graph.getId(graph.getNeighborName(neighbor, u.name));
+                    newBitmask |= (1 << vid);
                 }
                 int newCost = (int)Math.round(u.cost) + (int)Math.round(graph.getEdgeWeight(u.name, graph.getNeighborName(neighbor,u.name)));
-                if(newCost < distance[graph.getId(graph.getNeighborName(neighbor,u.name))][newBitmask]){//TODO: have a way to get neighbor name
-                    distance[graph.getId(graph.getNeighborName(neighbor,u.name))][newBitmask] = newCost;//TODO
+                if(newCost < distance[graph.getId(graph.getNeighborName(neighbor,u.name))][newBitmask]){
+                    distance[graph.getId(graph.getNeighborName(neighbor,u.name))][newBitmask] = newCost;
                     queue.add(new Node(graph.getNeighborName(neighbor,u.name), newBitmask, newCost));
                 }
             }
@@ -167,12 +167,25 @@ public class Path {
 
         int bitmaskResult = distance[graph.getId(destination)][(1<<mustVisitItems.size()) - 1];
         String result = Integer.toBinaryString(bitmaskResult);
-        String resultWithPadding = String.format("%32s", result).replaceAll(" ", "0");  // 32-bit Integer
+        String resultWithPadding = String.format("%7s", result).replaceAll(" ", "0");  // 32-bit Integer
+        Map<String, Integer> idMap = graph.getIdMap();
         return null;
+
+        //if it works then we can run the algorithim again, but now from last item in planner to the exit
     }
 
     private boolean neighborInList(String neighbor, List<String> nodeNameList){
         return nodeNameList.contains(neighbor);
+    }
+
+    private void setBitmask(int distance[][], int index, int bitMask, int bitLength){
+        String bits = Integer.toBinaryString(bitMask);
+        String bitString = String.format("%32s", bits).replaceAll(" ", "0");  // 32-bit Integer
+        int bitmaskLength = distance[index].length;
+        int offset = bitString.length() - bitLength;
+        for(int i=0; i<bitmaskLength; i++){
+            distance[index][i] = Integer.parseInt(String.valueOf(bitString.charAt(offset+i)));
+        }
     }
 
 }

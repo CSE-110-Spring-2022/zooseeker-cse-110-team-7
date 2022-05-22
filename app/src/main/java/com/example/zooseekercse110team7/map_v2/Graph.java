@@ -2,6 +2,7 @@ package com.example.zooseekercse110team7.map_v2;
 
 import android.util.Pair;
 
+import com.example.zooseekercse110team7.GlobalDebug;
 import com.example.zooseekercse110team7.map.AssetLoader;
 import com.example.zooseekercse110team7.map.EdgeInfo;
 import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
@@ -57,6 +58,11 @@ public class Graph {
     public Integer getId(String vertex){
         return idMap.get(vertex);
     }
+
+    /**
+     * ONLY NEEDED FOR DEBUGGING -- SHOULD NOT BE CALLED TO RETRIEVE
+     * */
+    public Map<String, Integer> getIdMap(){ return (GlobalDebug.DEBUG)?idMap:null; }
 
     public int getMatrixSize(){ return idMap.size(); }
 

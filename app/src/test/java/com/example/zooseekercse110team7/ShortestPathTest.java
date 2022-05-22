@@ -79,6 +79,6 @@ public class ShortestPathTest {
         String[] tags = {"alligator", "reptile", "gator"};
         NodeItem n = new NodeItem("gators", "Alligators", "exhibit", Arrays.asList(tags));
         List<NodeItem> nodeList = new ArrayList<>(); nodeList.add(n);
-        path.getShortestPath("entrance_exit_gate", nodeList,"entrance_exit_gate");
+        path.getShortestPath("entrance_exit_gate", nodeList,"lions");
     }
 }
