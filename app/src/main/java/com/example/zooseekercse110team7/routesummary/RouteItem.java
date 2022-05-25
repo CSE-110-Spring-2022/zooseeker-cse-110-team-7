@@ -10,7 +10,7 @@ import org.jgrapht.GraphPath;
  * */
 public class RouteItem {
     String toExhibitName, fromExhibitName, distance;
-    RouteItem(String dest, String source, String dist){
+    public RouteItem(String dest, String source, String dist){//TODO: change order -> source, dest, dist
         this.toExhibitName = dest;
         this.fromExhibitName = source;
         this.distance = dist;

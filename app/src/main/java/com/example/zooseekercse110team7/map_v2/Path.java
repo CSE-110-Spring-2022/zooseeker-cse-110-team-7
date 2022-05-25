@@ -6,6 +6,9 @@ import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -20,172 +23,52 @@ import java.util.Set;
  * https://www.baeldung.com/cs/shortest-path-to-nodes-graph
  * */
 public class Path {
-    Graph graph;
-    public Path(Graph graph){ this.graph = graph; }
+    private final MapGraph mapGraph;
+    private Double pathCost;
 
-    public void calculatePath(String source, List<NodeItem> mustVisitItems, String destination){
+    public Path(MapGraph mapGraph){ this.mapGraph = mapGraph; }
 
-//        Log.d("Path", "Starting Calculations");
-        List<String> nodeNameList = new ArrayList<>();
-        nodeNameList.add(source);
-        for(NodeItem item: mustVisitItems){
-            nodeNameList.add(item.id);
-        }
-        nodeNameList.add(destination);
-
-//        Set<IdentifiedWeightedEdge> neighbors;
-//        for(String vertex: nodeNameList){
-//            neighbors = graph.getEdges(vertex);
-//            for(IdentifiedWeightedEdge neighbor: neighbors){
-//
-//            }
-//        }
-//
-//        Log.d("Path", "Creating Map");
-//        Map<String, Map<String, Double>> vtDistances = new HashMap<String, Map<String, Double>>();
-//        for(String item: nodeNameList){
-//            vtDistances.put(item, graph.getNeighborsMap(item));
-//        }
-//
-//        Log.d("Path", "Creating TSP");
-//        TSP tsp = new TSP(vtDistances);
-//        String[] aPath = tsp.findShortestPath();
-//
-//        Log.d("Path", "Resulting Path: ");
-//        for(String routeItem: aPath){
-//            Log.d("Path", routeItem);
-//        }
+    private double getPathCost(String refrencePoint, String currentDestination){
+        GraphPath<String, IdentifiedWeightedEdge> path;
+        path = DijkstraShortestPath.findPathBetween(mapGraph.getGraph(), refrencePoint, currentDestination);
+        return path.getWeight(); //sum of all weights leading to path
     }
 
-    private class Node{
-        long x, y;
-        int nodeId;
-        String name;
-        int bitmask;
-        double cost;
-        public Node(){}
-        public Node(String name, int bitmask, int cost){
-            this.name = name;
-            this.bitmask = bitmask;
-            this.cost = cost;
+    private List<String> nodeListToStringList(List<NodeItem> nodeList){
+        List<String> stringList = new ArrayList<>();
+        for(NodeItem item: nodeList){
+            stringList.add(item.id);
         }
-        public Node(String name, int x, int y, int nodeId){
-            this.name = name;
-            this.x = x;
-            this.y = y;
-            this.nodeId = nodeId;
-            this.cost = 0.0;
-        }
-        public Node(String name, int nodeId){
-            this.name = name;
-            this.nodeId = nodeId;
-        }
+        return stringList;
     }
-//
+
     //https://stackoverflow.com/questions/222413/find-the-shortest-path-in-a-graph-which-visits-certain-nodes
     public List<RouteItem> getShortestPath(String source, List<NodeItem> mustVisitItems, String destination){
-        List<String> nodeNameList = new ArrayList<>();
-        //nodeNameList.add(source);
-        for(NodeItem item: mustVisitItems){
-            nodeNameList.add(item.id);
-        }
-        //nodeNameList.add(destination);
-        int nodeId = 0;
-        int matrixLength = graph.getMatrixSize(); // length of matrix is number of items to visit PLUS start and end position
-        int[][] distance = new int[matrixLength][matrixLength];
+        List<String> remainingNames = nodeListToStringList(mustVisitItems);
 
-        //SET VALUES TO INFINITY
-        for(int i=0; i < matrixLength; i++){
-            for(int j=0; j < matrixLength; j++){
-                distance[i][j] = Integer.MAX_VALUE;
-            }
-        }
-
-//        Node[] nodeList = new Node[matrixLength];
-//        for(int i=0; i < matrixLength; i++){
-//            nodeList[i] = new Node(nodeNameList.get(i), nodeId); nodeId++;
-//        }
-//
-//        //Set<IdentifiedWeightedEdge> edges = graph.getEdges(source);
-//        Node currentNodeEdge;
-//        for(Node node: nodeList){
-//            Set<IdentifiedWeightedEdge> edges = graph.getEdges(source);
-//            for(IdentifiedWeightedEdge edge: edges){
-//                currentNodeEdge = Arrays.asList(nodeList)
-//                        .stream()
-//                        .filter(aNode -> edge.getName().equals(aNode.name))
-//                        .findFirst();
-//                distance[node.nodeId][currentNodeEdge.nodeId]
-//                        = graph.getEdgeWeight(node.name, currentNodeEdge.name);
-//            }
-//        }
-//
-//
-//        //PRE COMPUTATION
-//        for(int i=1; i <= matrixLength; i ++){
-//            for(int j=1; j <= matrixLength; j++){
-//                for(int k=1; k <= matrixLength; k++){
-//                    distance[j][k] = Math.min(distance[j][k], distance[j][i] + distance[i][k]);
-//                }
-//            }
-//        }
-
-//        double shortest = Double.POSITIVE_INFINITY;
-//        Set<IdentifiedWeightedEdge> edges = graph.getEdges(source);
-//        shortest = Math.min(shortest, )
-
-        PriorityQueue<Node> queue = new PriorityQueue<>(matrixLength, new Comparator<Node>() {
-            @Override
-            public int compare(Node n1, Node n2) {
-                return (int)(n1.cost -n2.cost);//return lowest cost/edge weight
-                //Note: rounding because comparator requires an int
-            }
-        });
-
-
-        Node u = new Node(source, 0,0);
-        queue.add(u);
-        distance[graph.getId(u.name)][0] = 0;
-        while(!queue.isEmpty()){
-            u = queue.poll();
-
-            if(u.cost != distance[graph.getId(u.name)][u.bitmask]){ continue; }
-            Set<IdentifiedWeightedEdge> neighbors = graph.getEdges(u.name);
-            for(IdentifiedWeightedEdge neighbor: neighbors){
-                int newBitmask = u.bitmask;
-                if(neighborInList(graph.getNeighborName(neighbor,u.name),nodeNameList)){
-                    int vid = graph.getId(graph.getNeighborName(neighbor, u.name));
-                    newBitmask |= (1 << vid);
+        double totalCost = 0.0;
+        List<RouteItem> route = new ArrayList<>();
+        String bestItem = null;//will hold name of the item with the best cost in the current iteration
+        String currentReferencePoint = source;
+        double bestPathCost, costOfPath;
+        for(int i=0; i < mustVisitItems.size(); i++){
+            bestPathCost = Integer.MAX_VALUE;//set best cost to infinity
+            for(int j=0; j < remainingNames.size(); j++){//for each remaining item
+                costOfPath = getPathCost(currentReferencePoint, remainingNames.get(i)); // get cost from reference point to item
+                if(costOfPath < bestPathCost) { //if cost is less than our current best cost
+                    bestItem = remainingNames.get(i);//get the name of item (that caused best cost)
+                    bestPathCost = costOfPath;//set the best cost cost to the current cost
                 }
-                int newCost = (int)Math.round(u.cost) + (int)Math.round(graph.getEdgeWeight(u.name, graph.getNeighborName(neighbor,u.name)));
-                if(newCost < distance[graph.getId(graph.getNeighborName(neighbor,u.name))][newBitmask]){
-                    distance[graph.getId(graph.getNeighborName(neighbor,u.name))][newBitmask] = newCost;
-                    queue.add(new Node(graph.getNeighborName(neighbor,u.name), newBitmask, newCost));
-                }
-            }
-        }
+            }//end of Sub Loop
+            route.add(new RouteItem(bestItem, currentReferencePoint, Double.toString(bestPathCost))); // add item to ordered path
+            currentReferencePoint = bestItem; // set reference point to best item (new starting position)
+            totalCost += bestPathCost;// update total cost
+            remainingNames.remove(bestItem); // remove item from the remaining items
+        }//end of Main Loop
 
-        int bitmaskResult = distance[graph.getId(destination)][(1<<mustVisitItems.size()) - 1];
-        String result = Integer.toBinaryString(bitmaskResult);
-        String resultWithPadding = String.format("%7s", result).replaceAll(" ", "0");  // 32-bit Integer
-        Map<String, Integer> idMap = graph.getIdMap();
-        return null;
+        pathCost = totalCost;
 
-        //if it works then we can run the algorithim again, but now from last item in planner to the exit
-    }
-
-    private boolean neighborInList(String neighbor, List<String> nodeNameList){
-        return nodeNameList.contains(neighbor);
-    }
-
-    private void setBitmask(int distance[][], int index, int bitMask, int bitLength){
-        String bits = Integer.toBinaryString(bitMask);
-        String bitString = String.format("%32s", bits).replaceAll(" ", "0");  // 32-bit Integer
-        int bitmaskLength = distance[index].length;
-        int offset = bitString.length() - bitLength;
-        for(int i=0; i<bitmaskLength; i++){
-            distance[index][i] = Integer.parseInt(String.valueOf(bitString.charAt(offset+i)));
-        }
+        return route;
     }
 
 }

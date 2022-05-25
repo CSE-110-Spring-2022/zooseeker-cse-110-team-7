@@ -10,7 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.zooseekercse110team7.map.AssetLoader;
 import com.example.zooseekercse110team7.map.CalculateShortestPath;
-import com.example.zooseekercse110team7.map_v2.Graph;
+import com.example.zooseekercse110team7.map_v2.MapGraph;
 import com.example.zooseekercse110team7.map_v2.Path;
 import com.example.zooseekercse110team7.planner.NodeDao;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
@@ -54,19 +54,6 @@ public class ShortestPathTest {
     private NodeDao nodeDao;
     private NodeDatabase db;
 
-    @Before
-    public void CreateDatabase(){
-        Context context = ApplicationProvider.getApplicationContext();
-        db = Room.inMemoryDatabaseBuilder(context, NodeDatabase.class)
-                .allowMainThreadQueries()
-                .build();
-        nodeDao = db.nodeDao();
-    }
-
-    @After
-    public void CloseDatabase(){
-        db.close();
-    }
     @Test
     public void TestPath(){
         AssetLoader assetLoader = new AssetLoader(
@@ -74,8 +61,8 @@ public class ShortestPathTest {
                 "sample_node_info.json",
                 "sample_edge_info.json",
                 null);
-        Graph graph = new Graph(assetLoader);
-        Path path = new Path(graph);
+        MapGraph mapGraph = new MapGraph(assetLoader);
+        Path path = new Path(mapGraph);
         String[] tags = {"alligator", "reptile", "gator"};
         NodeItem n = new NodeItem("gators", "Alligators", "exhibit", Arrays.asList(tags));
         List<NodeItem> nodeList = new ArrayList<>(); nodeList.add(n);

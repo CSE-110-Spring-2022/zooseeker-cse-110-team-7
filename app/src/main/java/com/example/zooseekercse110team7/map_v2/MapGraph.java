@@ -8,6 +8,8 @@ import com.example.zooseekercse110team7.map.EdgeInfo;
 import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
 import com.example.zooseekercse110team7.map.VertexInfo;
 
+import org.jgrapht.Graph;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,15 +18,19 @@ import java.util.Set;
 /**
  * IMPORTANT NOTE: name = id of Node Items
  * */
-public class Graph {
+public class MapGraph {
     AssetLoader assetLoader;
     private Map<String, Integer> idMap;
 
-    public Graph(){}
-    public Graph(AssetLoader assetLoader){
+    public MapGraph(){}
+    public MapGraph(AssetLoader assetLoader){
         this.assetLoader = assetLoader;
         idMap = new HashMap<>();
         createIdMap();
+    }
+
+    public Graph<String, IdentifiedWeightedEdge> getGraph(){
+        return assetLoader.getGraph();
     }
 
     public double getEdgeWeight(String from, String to){
