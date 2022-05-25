@@ -19,11 +19,14 @@ import java.util.Set;
  * IMPORTANT NOTE: name = id of Node Items
  * */
 public class MapGraph {
+    public static MapGraph instance = new MapGraph();
+
     AssetLoader assetLoader;
     private Map<String, Integer> idMap;
 
-    public MapGraph(){}
-    public MapGraph(AssetLoader assetLoader){
+    private MapGraph(){}
+    public static MapGraph getInstance(){ return instance; }
+    public void setAssetLoader(AssetLoader assetLoader){
         this.assetLoader = assetLoader;
         idMap = new HashMap<>();
         createIdMap();

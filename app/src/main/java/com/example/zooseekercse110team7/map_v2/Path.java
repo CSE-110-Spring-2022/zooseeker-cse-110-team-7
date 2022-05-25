@@ -23,10 +23,16 @@ import java.util.Set;
  * https://www.baeldung.com/cs/shortest-path-to-nodes-graph
  * */
 public class Path {
-    private final MapGraph mapGraph;
+    private static Path instance = new Path();
+
+    private MapGraph mapGraph = MapGraph.getInstance();
     private Double pathCost;
 
-    public Path(MapGraph mapGraph){ this.mapGraph = mapGraph; }
+    private Path(){}
+    //public void setMapGraph(MapGraph mapGraph){ this.mapGraph = mapGraph; }
+    public static Path getInstance(){
+        return instance;
+    }
 
     private double getPathCost(String refrencePoint, String currentDestination){
         GraphPath<String, IdentifiedWeightedEdge> path;
@@ -54,9 +60,9 @@ public class Path {
         for(int i=0; i < mustVisitItems.size(); i++){
             bestPathCost = Integer.MAX_VALUE;//set best cost to infinity
             for(int j=0; j < remainingNames.size(); j++){//for each remaining item
-                costOfPath = getPathCost(currentReferencePoint, remainingNames.get(i)); // get cost from reference point to item
+                costOfPath = getPathCost(currentReferencePoint, remainingNames.get(j)); // get cost from reference point to item
                 if(costOfPath < bestPathCost) { //if cost is less than our current best cost
-                    bestItem = remainingNames.get(i);//get the name of item (that caused best cost)
+                    bestItem = remainingNames.get(j);//get the name of item (that caused best cost)
                     bestPathCost = costOfPath;//set the best cost cost to the current cost
                 }
             }//end of Sub Loop
@@ -66,9 +72,24 @@ public class Path {
             remainingNames.remove(bestItem); // remove item from the remaining items
         }//end of Main Loop
 
+        //go to destination
+        totalCost += bestPathCost = getPathCost(currentReferencePoint, destination);
+        route.add(new RouteItem(destination, currentReferencePoint, Double.toString(bestPathCost)));
+        //no need to update reference point as this is the last thing
+        //we aren't looking at the remaining names list
+
         pathCost = totalCost;
 
         return route;
     }
-
+    public List<RouteItem> getShortestPath(List<NodeItem> mustVisitItems){
+        String defaultSource = "entrance_exit_gate", defaultDestination = "entrance_exit_gate";//TODO
+        return this.getShortestPath(defaultSource, mustVisitItems, defaultDestination);
+    }
+    /**
+     * Returns the total cost of a path last calculated
+     *
+     * @return null if no path has previously been calculated, else a Double of the total cost
+     * */
+    public Double getTotalCost(){ return pathCost; }
 }

@@ -3,6 +3,7 @@ package com.example.zooseekercse110team7;
 import static org.junit.Assert.assertEquals;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -15,6 +16,7 @@ import com.example.zooseekercse110team7.map_v2.Path;
 import com.example.zooseekercse110team7.planner.NodeDao;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
+import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -51,9 +53,6 @@ public class ShortestPathTest {
         System.out.println(tester2.getShortestPath());
     }
 
-    private NodeDao nodeDao;
-    private NodeDatabase db;
-
     @Test
     public void TestPath(){
         AssetLoader assetLoader = new AssetLoader(
@@ -61,11 +60,16 @@ public class ShortestPathTest {
                 "sample_node_info.json",
                 "sample_edge_info.json",
                 null);
-        MapGraph mapGraph = new MapGraph(assetLoader);
-        Path path = new Path(mapGraph);
+
+        MapGraph.getInstance().setAssetLoader(assetLoader);
+        Path path = Path.getInstance();
+
         String[] tags = {"alligator", "reptile", "gator"};
         NodeItem n = new NodeItem("gators", "Alligators", "exhibit", Arrays.asList(tags));
-        List<NodeItem> nodeList = new ArrayList<>(); nodeList.add(n);
-        path.getShortestPath("entrance_exit_gate", nodeList,"lions");
+        NodeItem n2 = new NodeItem("elephant_odyssey", "Elephant Odyssey", "exhibit", Arrays.asList(tags));
+        NodeItem n3 = new NodeItem("arctic_foxes", "Arctic Foxes", "exhibit", Arrays.asList(tags));
+        List<NodeItem> nodeList = new ArrayList<>(); nodeList.add(n); nodeList.add(n2); nodeList.add(n3);
+        List<RouteItem> routeItems = path.getShortestPath("entrance_exit_gate", nodeList,"entrance_exit_gate");
+        routeItems = path.getShortestPath(nodeList);
     }
 }
