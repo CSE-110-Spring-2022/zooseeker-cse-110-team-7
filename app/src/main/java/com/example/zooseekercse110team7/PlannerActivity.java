@@ -50,16 +50,13 @@ public class PlannerActivity extends AppCompatActivity {
                 String number = "POI: " + String.valueOf(newName.size());
                 numberItemsTextView.setText(number);
 
-
-                // Update the graph and route summary
-                //graph_path.setNodeItems(viewModel.getNodePlannerItems());
                 if(GlobalDebug.DEBUG){
+                    Log.d("Planner", "Checking Items In Planner After DB Update");
                     List<NodeItem> itemList = viewModel.getNodePlannerItems();
                     for(NodeItem item: itemList){
                         Log.d("Planner", item.toString());
                     }
                 }
-                //graph_path.updateGraph();
 
                 summary.updateRouteSummary(viewModel.getNodePlannerItems());
                 if(GlobalDebug.DEBUG){

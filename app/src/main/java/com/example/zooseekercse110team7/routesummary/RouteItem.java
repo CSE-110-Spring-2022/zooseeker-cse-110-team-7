@@ -24,4 +24,7 @@ public class RouteItem {
                 ", distance='" + distance + '\'' +
                 '}';
     }
+
+    public String getSource(){ return fromExhibitName; }
+    public String getDestination(){ return toExhibitName; }
 }
