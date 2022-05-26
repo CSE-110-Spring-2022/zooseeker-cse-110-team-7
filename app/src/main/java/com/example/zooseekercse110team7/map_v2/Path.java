@@ -1,5 +1,6 @@
 package com.example.zooseekercse110team7.map_v2;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.example.zooseekercse110team7.planner.NodeItem;
@@ -50,7 +51,6 @@ public class Path {
      * */
     private double getPathCost(String referencePoint, String currentDestination){
         GraphPath<String, IdentifiedWeightedEdge> path;
-        Log.d("Path", referencePoint + "\t" + currentDestination);
         path = DijkstraShortestPath.findPathBetween(mapGraph.getGraph(), referencePoint, currentDestination);
         return path.getWeight(); //sum of all weights leading to path
     }
@@ -137,4 +137,9 @@ public class Path {
      * @return null if no path has previously been calculated, else a Double of the total cost
      * */
     public Double getTotalCost(){ return pathCost; }
+
+    //TODO
+    public List<RouteItem> getShortestLocationPath(Location source, List<NodeItem> mustVisitItems, String destination){
+        return null;
+    }
 }

@@ -179,7 +179,7 @@ public class MapGraph {
     /**
      * This function acts as a singular step within an iteration of a list. Upon call, the current
      * index decreases (if possible) and parses a list of `IdentifiedWeightedEdge` (edges) between
-     * two exhibits/locations into strings.
+     * two exhibits/locations into strings. The directions are in reverse order!
      *
      * @return Directions in the form of a String list
      * */
@@ -196,15 +196,22 @@ public class MapGraph {
         /* DECREASE CURRENT INDEX WITHIN PATH LIST */
         currentPathIndex = (currentPathIndex > 0)? currentPathIndex-1: currentPathIndex;
 
-        /* PARSE EDGES TO STRING OF DIRECTIONS */
+        /* PARSE EDGES TO STRING OF DIRECTIONS IN REVERSE*/
         RouteItem currentRoute = pathOfRouteItems.get(currentPathIndex);
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
                 .getPathEdges(currentRoute.getSource(), currentRoute.getDestination());
-        for(IdentifiedWeightedEdge edge: edges){
-            result.add((edge.toString() + " " + getEdgeWeight(edge) + "\n"));
+        for(int i= edges.size()-1; i >= 0; i --){
+            result.add(edges.get(i).toString() + " " + getEdgeWeight(edges.get(i)) + "\n");
         }
 
         return result;
     }
+
+    /**
+     * This function returns the most recent path that was calculated
+     *
+     * @return a list of `RouteItem`s in order of the path to take
+     * */
+    public List<RouteItem> getRecentPath(){ return pathOfRouteItems; }
 }
