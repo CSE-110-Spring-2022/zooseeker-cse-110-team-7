@@ -58,9 +58,9 @@ public class ShortestPathTest {
         Path path = Path.getInstance();
 
         String[] tags = {"alligator", "reptile", "gator"};
-        NodeItem n = new NodeItem("gators", "Alligators", "exhibit", Arrays.asList(tags));
-        NodeItem n2 = new NodeItem("elephant_odyssey", "Elephant Odyssey", "exhibit", Arrays.asList(tags));
-        NodeItem n3 = new NodeItem("arctic_foxes", "Arctic Foxes", "exhibit", Arrays.asList(tags));
+        NodeItem n = new NodeItem("koi", null,"Koi Fish", "exhibit", Arrays.asList(tags), 0, 0);
+        NodeItem n2 = new NodeItem("flamingo", null,"Flamingos", "exhibit", Arrays.asList(tags),0,0);
+        NodeItem n3 = new NodeItem("capuchin", null,"Capuchin Monkeys", "exhibit", Arrays.asList(tags),0,0);
         List<NodeItem> nodeList = new ArrayList<>(); nodeList.add(n); nodeList.add(n2); nodeList.add(n3);
         List<RouteItem> routeItems = path.getShortestPath("entrance_exit_gate", nodeList,"entrance_exit_gate");
         routeItems = path.getShortestPath(nodeList);
