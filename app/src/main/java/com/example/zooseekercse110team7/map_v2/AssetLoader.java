@@ -1,12 +1,10 @@
-package com.example.zooseekercse110team7.map;
+package com.example.zooseekercse110team7.map_v2;
 
 //import org.jgrapht.Graph;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 import android.content.Context;
 import android.util.Log;
-
-import com.example.zooseekercse110team7.MainActivity;
 
 import java.util.Map;
 
@@ -21,9 +19,9 @@ public class AssetLoader {
     private String zooGraphJSON;
     private String nodeInfoJSON;
     private String edgeInfoJSON;
-    Graph<String, IdentifiedWeightedEdge> graph;
-    Map<String, ZooData.VertexInfo> vInfo;
-    Map<String, ZooData.EdgeInfo> eInfo;
+    private Graph<String, IdentifiedWeightedEdge> graph;
+    private Map<String, VertexInfo> vInfo;
+    private Map<String, EdgeInfo> eInfo;
 
     public AssetLoader(String zooGraph, String nodeInfo, String edgeInfo, Context aContext){
         this.zooGraphJSON = zooGraph;
@@ -61,11 +59,11 @@ public class AssetLoader {
         return this.graph;
     }
 
-    public Map<String, ZooData.VertexInfo> getVertexMap(){
+    public Map<String, VertexInfo> getVertexMap(){
         return this.vInfo;
     }
 
-    public Map<String, ZooData.EdgeInfo> getEdgeMap(){
+    public Map<String, EdgeInfo> getEdgeMap(){
         return this.eInfo;
     }
 }

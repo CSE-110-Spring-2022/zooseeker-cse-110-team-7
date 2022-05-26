@@ -1,6 +1,4 @@
-package com.example.zooseekercse110team7.map;
-
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+package com.example.zooseekercse110team7.map_v2;
 
 import android.content.Context;
 
@@ -14,9 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.example.zooseekercse110team7.MainActivity;
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import org.jgrapht.Graph;
@@ -25,37 +21,16 @@ import org.jgrapht.nio.json.JSONImporter;
 
 public class ZooData {
 
-    public static class VertexInfo {
-        public static enum Kind {
-            // The SerializedName annotation tells GSON how to convert
-            // from the strings in our JSON to this Enum.
-            @SerializedName("gate") GATE,
-            @SerializedName("exhibit") EXHIBIT,
-            @SerializedName("intersection") INTERSECTION
-        }
 
-        public String id;
-        public String parent_id;
-        public Kind kind;
-        public String name;
-        public List<String> tags;
-        double lat;
-        double lng;
-    }
 
-    public static class EdgeInfo {
-        public String id;
-        public String street;
-    }
-
-    public static Map<String, ZooData.VertexInfo> loadVertexInfoJSON(Context aContext,String path) {
-        Map<String, ZooData.VertexInfo> indexedZooData = new HashMap<>();
+    public static Map<String, VertexInfo> loadVertexInfoJSON(Context aContext,String path) {
+        Map<String, VertexInfo> indexedZooData = new HashMap<>();
         try{
             InputStream inputStream = aContext.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
             Gson gson = new Gson();
-            Type type = new TypeToken<List<ZooData.VertexInfo>>(){}.getType();
-            List<ZooData.VertexInfo> zooData = gson.fromJson(reader, type);
+            Type type = new TypeToken<List<VertexInfo>>(){}.getType();
+            List<VertexInfo> zooData = gson.fromJson(reader, type);
 
             // This code is equivalent to:
             //
@@ -75,15 +50,15 @@ public class ZooData {
         return indexedZooData;
     }
 
-    public static Map<String, ZooData.EdgeInfo> loadEdgeInfoJSON(Context aContext, String path) {
-        Map<String, ZooData.EdgeInfo> indexedZooData = new HashMap<>();
+    public static Map<String, EdgeInfo> loadEdgeInfoJSON(Context aContext, String path) {
+        Map<String, EdgeInfo> indexedZooData = new HashMap<>();
         try{
             InputStream inputStream = aContext.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
 
             Gson gson = new Gson();
-            Type type = new TypeToken<List<ZooData.EdgeInfo>>(){}.getType();
-            List<ZooData.EdgeInfo> zooData = gson.fromJson(reader, type);
+            Type type = new TypeToken<List<EdgeInfo>>(){}.getType();
+            List<EdgeInfo> zooData = gson.fromJson(reader, type);
 
             indexedZooData = zooData
                     .stream()

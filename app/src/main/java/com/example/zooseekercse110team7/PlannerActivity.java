@@ -1,7 +1,5 @@
 package com.example.zooseekercse110team7;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -15,18 +13,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.zooseekercse110team7.map.GraphPathSingleton;
-import com.example.zooseekercse110team7.planner.NodeDatabase;
+import com.example.zooseekercse110team7.map_v2.Path;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.NodeViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeViewModel;
-import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 import com.example.zooseekercse110team7.routesummary.RouteSummary;
 import com.example.zooseekercse110team7.routesummary.RouteSummaryViewAdapter;
 import com.example.zooseekercse110team7.routesummary.RouteSummaryViewModel;
-
-import org.jgrapht.Graph;
 
 import java.util.List;
 
@@ -39,7 +33,8 @@ public class PlannerActivity extends AppCompatActivity {
     private TextView numberItemsTextView;
 
     RouteSummary summary = RouteSummary.getInstance();
-    GraphPathSingleton graph_path = GraphPathSingleton.getInstance();
+    //GraphPathSingleton graph_path = GraphPathSingleton.getInstance();
+    Path graph_path = Path.getInstance();
 
     private void nodeDaoObserver(RouteSummaryViewAdapter adapter) {
         final Observer<List<NodeItem>> nodeObserver = new Observer<List<NodeItem>>() {
@@ -50,26 +45,15 @@ public class PlannerActivity extends AppCompatActivity {
                 String number = "POI: " + String.valueOf(newName.size());
                 numberItemsTextView.setText(number);
 
-
-                // Update the graph and route summary
-                graph_path.setNodeItems(viewModel.getNodePlannerItems());
                 if(GlobalDebug.DEBUG){
+                    Log.d("Planner", "Checking Items In Planner After DB Update");
                     List<NodeItem> itemList = viewModel.getNodePlannerItems();
                     for(NodeItem item: itemList){
                         Log.d("Planner", item.toString());
                     }
                 }
 
-                /**
-                 * ❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌
-                 * SHOULD NOT NEED NODEDAO -- WAS REQUIRED TO GET DEFAULT START AND END
-                 * GO WITHIN METHOD TO SEE SIMILAR COMMENT
-                 * */
-                NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
-                ReadOnlyNodeDao nodeDao = db.nodeDao();
-                graph_path.updateGraph(nodeDao);
-
-                summary.updateRouteSummary(graph_path.getPath());
+                summary.updateRouteSummary(viewModel.getNodePlannerItems());
                 if(GlobalDebug.DEBUG){
                     List<RouteItem> itemList = summary.getItems();
                     for(RouteItem item: itemList){
@@ -95,8 +79,8 @@ public class PlannerActivity extends AppCompatActivity {
 
 
         //Added item count observer
-        graph_path.setNodeItems(viewModel.getNodePlannerItems());
-        graph_path.loadAssets(getApplicationContext());
+        //graph_path.setNodeItems(viewModel.getNodePlannerItems());
+        //graph_path.loadAssets(getApplicationContext());
 
 
         NodeViewAdapter nodeViewer = new NodeViewAdapter();

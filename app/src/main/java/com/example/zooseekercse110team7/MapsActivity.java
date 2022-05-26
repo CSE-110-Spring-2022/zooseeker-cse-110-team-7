@@ -1,40 +1,25 @@
 package com.example.zooseekercse110team7;
 
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import android.graphics.Color;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.SeekBar;
 import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
-import com.example.zooseekercse110team7.map.AssetLoader;
-import com.example.zooseekercse110team7.map.CalculateShortestPath;
-import com.example.zooseekercse110team7.map.CurrentMapLoc;
-import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
-import com.example.zooseekercse110team7.planner.NodeDao;
+import com.example.zooseekercse110team7.map_v2.AssetLoader;
+import com.example.zooseekercse110team7.depreciated_map.CalculateShortestPath;
+import com.example.zooseekercse110team7.map_v2.MapGraph;
+import com.example.zooseekercse110team7.map_v2.Path;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
-import com.example.zooseekercse110team7.routesummary.RouteSummary;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,7 +34,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -119,132 +103,39 @@ public class MapsActivity extends AppCompatActivity implements
 
         NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
         nodeDao = db.nodeDao();
-
+        Path.getInstance().getShortestPath(nodeDao.getByOnPlanner(true));//on startup get planner info
     }
-
-    public List<NodeItem> sortPlannerList(List<NodeItem> input){
-        List<NodeItem> ret = new ArrayList<NodeItem>();
-
-        ret.add(input.get(0));
-        //ret.add(input.get(1));
-        //input.remove(0);
-        input.remove(0);
-
-
-        NodeItem current = ret.get(ret.size() - 1);
-
-        while(input.size() > 0){
-            CalculateShortestPath item = new CalculateShortestPath(current.id, input.get(0).id, g);
-            int shortestDist = item.getShortestDist();
-            int recordPosition = 0;
-            for(int i = 1; i < input.size(); i++){
-                CalculateShortestPath comparison = new CalculateShortestPath(current.id, input.get(i).id, g);
-                int compareWith = comparison.getShortestDist();
-                if(compareWith < shortestDist){
-                    shortestDist = compareWith;
-                    recordPosition = i;
-                }
-            }
-            ret.add(input.get(recordPosition));
-            current = ret.get(ret.size() - 1);
-            input.remove(recordPosition);
-        }
-        return ret;
-    }
-    /*
-     * We need to update the graph when the planner changes so that we know the distance hints
-     * updateGraph calculates the directions and graph without updating UI
-     */
 
     // Called when Directions is clicked. Displays directions for pairs of destinations in order
     // each time it's clicked.
     public void onNextClicked(View view) {
+        Log.d("MapsActivity", "Next Button Clicked!");
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
-        plannedItems = nodeDao.getByOnPlanner(true);    // get items on planner
 
-        //`kind` requirements to get entrance/exit gate
-        List<Boolean> onPlannerBools = new ArrayList<>(); onPlannerBools.add(true); onPlannerBools.add(false);
-        List<String> kinds = new ArrayList<>(); kinds.add("gate");
-
-        //getting entrance and exit gate
-        NodeItem defaultStart = nodeDao.getByKind(onPlannerBools, kinds).get(0);  // get entrance/exit
-        NodeItem defaultEnd = defaultStart;        // get exit gate
-
-
-
-        String path = "";   // directions received
-
-        // add entrance at start of planner and exit at end of planner
-        plannedItems.add(0,defaultStart);
-
-
-        if(plannedItems.size() > 1){
-            plannedItems = sortPlannerList(plannedItems); // sort planned items
-            plannedItems.add(defaultEnd);
-        }
-        else{
-            path += "Nothing in plan.";
-            directionsTextview.setText(path);
-            return;
-        }
-        //plannedItems.add(defaultStart);               // add default start
-
-
-        /* Find Optimized Path */
-        if(goalCounter < plannedItems.size()){
-            //get directions by iterating through list of `NodeItems`
-            Log.d("Directions", "Counter: " + String.valueOf(goalCounter) +
-                    "\tList Size: " + String.valueOf(plannedItems.size()));
-
-            directions =
-                    new CalculateShortestPath(
-                            plannedItems.get(startCounter).id,
-                            plannedItems.get(goalCounter).id,
-                            g);
-
-            path += directions.getShortestPath();
-            directionsTextview.setText(path);
-            startCounter += 1;
-            goalCounter += 1;
+        String directions = "";
+        List<String> route = MapGraph.getInstance().getNextDirections();
+        for(String detail: route){
+            directions += detail;
         }
 
-        //Let user know they've reach the end of their plans
-        else{
-            path += "Reached end of plan.";
-            directionsTextview.setText(path);
-        }
-        //make text scrollable if there is too much text
-        directionsTextview.setMovementMethod(new ScrollingMovementMethod());
-
-
+        directionsTextview.setText(directions);
+        Log.d("MapsActivity", "Next Updated!");
     }
 
     public void onBackClicked(View view){
+        Log.d("MapsActivity", "Back Button Clicked!");
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
-        String path = "";
-        if(startCounter == 0){
-            path += "No directions to go back to.";
-            directionsTextview.setText(path);
-        }
-        else{
-            startCounter -= 1;
-            goalCounter -= 1;
-            // Find Optimized Path
-            //get directions by iterating through list of `NodeItems`
-            Log.d("Directions", "Counter: " + String.valueOf(goalCounter) +
-                    "\tList Size: " + String.valueOf(plannedItems.size()));
 
-            directions =
-                    new CalculateShortestPath(
-                            plannedItems.get(startCounter).id,
-                            plannedItems.get(goalCounter).id,
-                            g);
-
-            path += directions.getShortestPath();
-            directionsTextview.setText(path);
+        String directions = "";
+        List<String> route = MapGraph.getInstance().getPreviousDirections();
+        for(String detail: route){
+            directions += detail;
         }
+
+        directionsTextview.setText(directions);
+        Log.d("MapsActivity", "Back Updated!");
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.zooseekercse110team7.map;
+package com.example.zooseekercse110team7.depreciated_map;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
@@ -6,12 +6,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.zooseekercse110team7.GlobalDebug;
-import com.example.zooseekercse110team7.planner.NodeDatabase;
+import com.example.zooseekercse110team7.map_v2.AssetLoader;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
-import com.example.zooseekercse110team7.routesummary.RouteSummary;
-
-import org.jgrapht.GraphPath;
 
 import java.util.ArrayList;
 import java.util.List;

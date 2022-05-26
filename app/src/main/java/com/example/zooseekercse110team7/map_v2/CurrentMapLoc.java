@@ -1,4 +1,4 @@
-package com.example.zooseekercse110team7.map;
+package com.example.zooseekercse110team7.map_v2;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.zooseekercse110team7.MapsActivity;
 import com.example.zooseekercse110team7.PlannerActivity;
 import com.example.zooseekercse110team7.R;
 import com.google.android.gms.location.FusedLocationProviderClient;

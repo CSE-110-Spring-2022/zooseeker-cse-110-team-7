@@ -2,11 +2,11 @@ package com.example.zooseekercse110team7;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.zooseekercse110team7.map.CurrentMapLoc;
+import com.example.zooseekercse110team7.map_v2.AssetLoader;
+import com.example.zooseekercse110team7.map_v2.MapGraph;
 
 public class MainActivity extends AppCompatActivity {
     private final ACTIVITY yourActivity = ACTIVITY.Map;
@@ -21,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MapGraph.getInstance().setAssetLoader(new AssetLoader(
+                "sample_zoo_graph.json",
+                "sample_node_info.json",
+                "sample_edge_info.json",
+                getApplicationContext()));
 
         //Intent intent = new Intent(this, TodoListActivity.class);
 
