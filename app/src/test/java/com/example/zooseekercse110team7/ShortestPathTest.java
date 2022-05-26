@@ -24,7 +24,7 @@ public class ShortestPathTest {
     @Test
     public void testShortPathReturn(){
         String start = "entrance_exit_gate";
-        String goal = "elephant_odyssey";
+        String goal = "koi";
         AssetLoader assets = new AssetLoader(
                 "sample_zoo_graph.json",
                 "sample_node_info.json",
@@ -34,8 +34,8 @@ public class ShortestPathTest {
 
         System.out.println(tester.getShortestPath());
 
-        String start2 = "lions";
-        String goal2 = "gorillas";
+        String start2 = "flamingo";
+        String goal2 = "koi";
         AssetLoader assets2 = new AssetLoader(
                 "sample_zoo_graph.json",
                 "sample_node_info.json",

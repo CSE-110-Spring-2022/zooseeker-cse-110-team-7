@@ -24,6 +24,8 @@ import com.example.zooseekercse110team7.planner.NodeSearchViewModel;
 import com.example.zooseekercse110team7.planner.NodeViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeViewModel;
 
+import org.w3c.dom.Node;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,6 +74,11 @@ public class SearchActivity extends AppCompatActivity {
         nodeViewAdapter = new NodeSearchViewAdapter(viewModel);
 
         nodeItems = viewModel.getAllFilteredNodeItems("");
+        if(GlobalDebug.DEBUG){
+            for(NodeItem item: nodeItems){
+                Log.d("Search", item.toString());
+            }
+        }
 
         nodeViewAdapter.setItems(new ArrayList<>(nodeItems));
 

@@ -9,8 +9,11 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
+import com.example.zooseekercse110team7.GlobalDebug;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +38,8 @@ import java.util.List;
 public class NodeItem {
     @PrimaryKey (autoGenerate = false) @NonNull
     public String id;
+
+    public String parent_id;
     @NonNull
     public String name, kind;
 
@@ -60,14 +65,19 @@ public class NodeItem {
         }
     }
 
+    public double lat, lng;
+
     public boolean completed, onPlanner;
 
     //constructor
-    public NodeItem(String id, String name, String kind, List<String> tags){
+    public NodeItem(String id, String parent_id, String name, String kind, List<String> tags, double lat, double lng){
         this.id = id;
+        this.parent_id = parent_id;
         this.name = name;
         this.kind = kind;
         this.tags = tags;
+        this.lat = lat;
+        this.lng = lng;
         this.completed = false; // by default it's an uncompleted task
         this.onPlanner = false; // by default it's not added to the planner
     }
@@ -79,9 +89,12 @@ public class NodeItem {
     public String toString() {
         return "NodeItem{" +
                 "id='" + id + '\'' +
+                ", parent_id='" + parent_id + '\'' +
                 ", name='" + name + '\'' +
                 ", kind='" + kind + '\'' +
-                ", tags='" + tags + '\'' +
+                ", tags=" + tags +
+                ", lat=" + lat +
+                ", lng=" + lng +
                 ", completed=" + completed +
                 ", onPlanner=" + onPlanner +
                 '}';
@@ -102,7 +115,13 @@ public class NodeItem {
             Reader reader = new InputStreamReader(input);
             Gson gson = new Gson();
             Type type = new TypeToken<List<NodeItem>>(){}.getType();
-            return gson.fromJson(reader,type);
+            List<NodeItem> result = gson.fromJson(reader,type);
+            if(GlobalDebug.DEBUG){
+                for(NodeItem item: result){
+                    Log.d("NodeItem", item.toString());
+                }
+            }
+            return result;
         }catch (IOException e){
             e.printStackTrace();
             return Collections.emptyList();
