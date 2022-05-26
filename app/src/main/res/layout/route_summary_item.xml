@@ -5,69 +5,64 @@
     android:layout_width="match_parent"
     android:layout_height="100dp">
 
-    <TextView
-        android:id="@+id/to_exhibit_tv"
-        android:layout_width="121dp"
-        android:layout_height="26dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:hint="To Exhibit Name"
-        android:textSize="12sp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.089"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.932" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/from_exhibit_tv"
-        android:layout_width="121dp"
-        android:layout_height="31dp"
-        android:gravity="center"
-        android:hint="From Exhibit Name"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.055"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13" />
+        <LinearLayout
+            android:layout_width="133dp"
+            android:layout_height="96dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/distance_tv"
-        android:layout_width="40dp"
-        android:layout_height="20dp"
-        android:gravity="center"
-        android:hint="9999 ft."
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/from_exhibit_tv"
+                android:layout_width="121dp"
+                android:layout_height="31dp"
+                android:gravity="center"
+                android:hint="From Exhibit Name"
+                android:textColor="#000000"
+                android:textSize="12sp" />
 
-    <View
-        android:id="@+id/verticalDivider"
-        android:layout_width="1dp"
-        android:layout_height="198dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.609"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.04" />
+            <ImageView
+                android:id="@+id/arrowImage"
+                android:layout_width="24dp"
+                android:layout_height="29dp"
+                android:outlineAmbientShadowColor="#000000"
+                android:outlineSpotShadowColor="#000000"
+                android:rotation="-90"
+                app:srcCompat="@drawable/quantum_ic_arrow_back_grey600_24" />
 
-    <ImageView
-        android:id="@+id/arrowImage"
-        android:layout_width="24dp"
-        android:layout_height="29dp"
-        android:rotation="-90"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.317"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.563"
-        app:srcCompat="@drawable/quantum_ic_arrow_back_grey600_24" />
+            <TextView
+                android:id="@+id/to_exhibit_tv"
+                android:layout_width="121dp"
+                android:layout_height="26dp"
+                android:gravity="center"
+                android:hint="To Exhibit Name"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/verticalDivider"
+            android:layout_width="1dp"
+            android:layout_height="198dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/distance_tv"
+            android:layout_width="62dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:hint="9999 ft."
+            android:textColor="#000000"
+            android:textSize="12sp" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

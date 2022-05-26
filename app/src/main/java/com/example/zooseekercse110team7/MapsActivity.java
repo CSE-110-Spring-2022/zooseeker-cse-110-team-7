@@ -120,6 +120,7 @@ public class MapsActivity extends AppCompatActivity implements
         }
 
         directionsTextview.setText(directions);
+        Log.d("MapsActivity", "[Next Directions]" + directions);
         Log.d("MapsActivity", "Next Updated!");
     }
 
@@ -135,6 +136,7 @@ public class MapsActivity extends AppCompatActivity implements
         }
 
         directionsTextview.setText(directions);
+        Log.d("MapsActivity", "[Back Directions]" + directions);
         Log.d("MapsActivity", "Back Updated!");
     }
 
