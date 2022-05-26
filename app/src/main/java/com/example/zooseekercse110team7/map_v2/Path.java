@@ -50,6 +50,8 @@ public class Path {
      * */
     private double getPathCost(String referencePoint, String currentDestination){
         GraphPath<String, IdentifiedWeightedEdge> path;
+        Log.d("Path", referencePoint + "\t" + currentDestination);
+        //TODO: use parent id if item is part of a group
         path = DijkstraShortestPath.findPathBetween(mapGraph.getGraph(), referencePoint, currentDestination);
         return path.getWeight(); //sum of all weights leading to path
     }

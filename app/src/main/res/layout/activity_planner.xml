@@ -82,24 +82,42 @@
             android:layout_height="match_parent"
             android:keepScreenOn="false"
             android:orientation="horizontal"
-            android:showDividers="middle|beginning">
+            android:showDividers="middle|beginning"
+            android:weightSum="1">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/node_viewer"
-                android:layout_width="211dp"
+            <LinearLayout
+                android:layout_width="200dp"
                 android:layout_height="match_parent"
-                android:clipToPadding="false">
+                android:layout_weight=".5"
+                android:orientation="vertical"
+                android:weightSum="1">
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/node_viewer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/route_summary_viewer"
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
 
-                android:layout_width="199dp"
+            <LinearLayout
+                android:layout_width="181dp"
                 android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:orientation="vertical"
+                android:weightSum="1">
 
-                />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/route_summary_viewer"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    />
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
