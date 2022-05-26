@@ -66,7 +66,7 @@ public class Path {
     private List<String> nodeListToStringList(List<NodeItem> nodeList){
         List<String> stringList = new ArrayList<>();
         for(NodeItem item: nodeList){
-            stringList.add(item.id);
+            stringList.add(((item.parent_id==null)?item.id: item.parent_id)); // exhibit or exhibit group
         }
         return stringList;
     }
