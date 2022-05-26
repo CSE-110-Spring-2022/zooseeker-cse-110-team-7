@@ -50,6 +50,7 @@ public class Path {
      * */
     private double getPathCost(String referencePoint, String currentDestination){
         GraphPath<String, IdentifiedWeightedEdge> path;
+        Log.d("Path", referencePoint + "\t" + currentDestination);
         path = DijkstraShortestPath.findPathBetween(mapGraph.getGraph(), referencePoint, currentDestination);
         return path.getWeight(); //sum of all weights leading to path
     }
@@ -64,7 +65,7 @@ public class Path {
     private List<String> nodeListToStringList(List<NodeItem> nodeList){
         List<String> stringList = new ArrayList<>();
         for(NodeItem item: nodeList){
-            stringList.add(item.id);
+            stringList.add(((item.parent_id==null)?item.id: item.parent_id)); // exhibit or exhibit group
         }
         return stringList;
     }

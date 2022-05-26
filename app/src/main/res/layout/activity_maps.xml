@@ -54,6 +54,13 @@
             android:text="Next" />
 
         <Button
+            android:id="@+id/skip_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Skip" />
+
+        <Button
             android:id="@+id/back_step_plan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
