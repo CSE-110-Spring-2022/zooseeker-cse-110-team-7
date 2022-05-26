@@ -2,7 +2,6 @@ package com.example.zooseekercse110team7.map_v2;
 
 import android.util.Log;
 
-import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
@@ -10,14 +9,7 @@ import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
 
 /**
  * This is a singleton class (so it can be called anywhere) that is related to finding the shortest

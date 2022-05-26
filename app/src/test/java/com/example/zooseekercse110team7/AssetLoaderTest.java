@@ -1,15 +1,11 @@
 package com.example.zooseekercse110team7;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.zooseekercse110team7.map.AssetLoader;
-import com.example.zooseekercse110team7.map.ZooData;
-
-import org.junit.*;
+import com.example.zooseekercse110team7.map_v2.AssetLoader;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

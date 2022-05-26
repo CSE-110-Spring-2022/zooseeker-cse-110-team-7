@@ -1,10 +1,5 @@
 package com.example.zooseekercse110team7.routesummary;
 
-import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
-import com.example.zooseekercse110team7.planner.NodeItem;
-
-import org.jgrapht.GraphPath;
-
 /**
  * An itermediary class used by the Planner
  * */

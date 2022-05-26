@@ -2,19 +2,12 @@ package com.example.zooseekercse110team7;
 
 import static org.junit.Assert.assertEquals;
 
-import android.content.Context;
-import android.util.Log;
-
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.zooseekercse110team7.map.AssetLoader;
-import com.example.zooseekercse110team7.map.CalculateShortestPath;
+import com.example.zooseekercse110team7.map_v2.AssetLoader;
+import com.example.zooseekercse110team7.depreciated_map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map_v2.MapGraph;
 import com.example.zooseekercse110team7.map_v2.Path;
-import com.example.zooseekercse110team7.planner.NodeDao;
-import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 

@@ -13,19 +13,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.zooseekercse110team7.map.GraphPathSingleton;
 import com.example.zooseekercse110team7.map_v2.Path;
-import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.NodeViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeViewModel;
-import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 import com.example.zooseekercse110team7.routesummary.RouteSummary;
 import com.example.zooseekercse110team7.routesummary.RouteSummaryViewAdapter;
 import com.example.zooseekercse110team7.routesummary.RouteSummaryViewModel;
-
-import org.jgrapht.Graph;
 
 import java.util.List;
 

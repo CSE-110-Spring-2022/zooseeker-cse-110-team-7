@@ -1,42 +1,25 @@
 package com.example.zooseekercse110team7;
 
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import android.graphics.Color;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.SeekBar;
 import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
-import com.example.zooseekercse110team7.map.AssetLoader;
-import com.example.zooseekercse110team7.map.CalculateShortestPath;
-import com.example.zooseekercse110team7.map.CurrentMapLoc;
-import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
+import com.example.zooseekercse110team7.map_v2.AssetLoader;
+import com.example.zooseekercse110team7.depreciated_map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map_v2.MapGraph;
 import com.example.zooseekercse110team7.map_v2.Path;
-import com.example.zooseekercse110team7.planner.NodeDao;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
-import com.example.zooseekercse110team7.routesummary.RouteSummary;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,8 +34,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

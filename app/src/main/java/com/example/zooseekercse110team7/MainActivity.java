@@ -2,13 +2,10 @@ package com.example.zooseekercse110team7;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.zooseekercse110team7.map.AssetLoader;
-import com.example.zooseekercse110team7.map.CurrentMapLoc;
-import com.example.zooseekercse110team7.map.GraphPathSingleton;
+import com.example.zooseekercse110team7.map_v2.AssetLoader;
 import com.example.zooseekercse110team7.map_v2.MapGraph;
 
 public class MainActivity extends AppCompatActivity {

@@ -1,13 +1,7 @@
 package com.example.zooseekercse110team7.map_v2;
 
 import android.util.Log;
-import android.util.Pair;
 
-import com.example.zooseekercse110team7.GlobalDebug;
-import com.example.zooseekercse110team7.map.AssetLoader;
-import com.example.zooseekercse110team7.map.EdgeInfo;
-import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
-import com.example.zooseekercse110team7.map.VertexInfo;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import org.jgrapht.Graph;

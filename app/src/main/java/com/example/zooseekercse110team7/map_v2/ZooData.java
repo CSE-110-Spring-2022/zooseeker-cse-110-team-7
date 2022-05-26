@@ -1,6 +1,4 @@
-package com.example.zooseekercse110team7.map;
-
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+package com.example.zooseekercse110team7.map_v2;
 
 import android.content.Context;
 
@@ -14,9 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.example.zooseekercse110team7.MainActivity;
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import org.jgrapht.Graph;

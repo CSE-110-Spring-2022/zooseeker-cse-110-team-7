@@ -1,16 +1,9 @@
 package com.example.zooseekercse110team7.routesummary;
 
-import android.util.Log;
-
-import com.example.zooseekercse110team7.map.CalculateShortestPath;
-import com.example.zooseekercse110team7.map.IdentifiedWeightedEdge;
 import com.example.zooseekercse110team7.map_v2.Path;
 import com.example.zooseekercse110team7.planner.NodeItem;
 
-import org.jgrapht.GraphPath;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

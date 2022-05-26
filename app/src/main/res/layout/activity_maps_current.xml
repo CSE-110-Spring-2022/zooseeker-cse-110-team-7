@@ -30,7 +30,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp"
-        tools:context="com.example.zooseekercse110team7.map.CurrentMapLoc" />
+        tools:context="com.example.zooseekercse110team7.map_v2.CurrentMapLoc" />
 
     <LinearLayout
         android:id="@+id/validity"
