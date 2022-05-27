@@ -87,6 +87,12 @@ public class NodeSearchViewModel extends AndroidViewModel{
         return filterItems;
     }
 
+
+
+    public List<NodeItem> getAllSelectedNodeItems() {
+        return nodeDao.getByOnPlanner(true);
+    }
+
     public List<NodeItem> getAllFilteredNodeItems(String filter){
         String queryString;
         if (filter.isEmpty()) {
@@ -126,6 +132,10 @@ public class NodeSearchViewModel extends AndroidViewModel{
     public void removeItemFromPlanner(NodeItem nodeItem){
         nodeItem.onPlanner = false;
         nodeDao.update(nodeItem);
+    }
+
+    public void removeAllItemsFromPlanner() {
+        nodeDao.clearPlanner();
     }
 
     /**
