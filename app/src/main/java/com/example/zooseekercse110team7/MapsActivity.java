@@ -20,6 +20,7 @@ import com.example.zooseekercse110team7.map_v2.Path;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
+import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -113,7 +114,7 @@ public class MapsActivity extends AppCompatActivity implements
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
 
-        String directions = "";
+        String directions = "[Next]\n";
         List<String> route = MapGraph.getInstance().getNextDirections();
         for(String detail: route){
             directions += detail;
@@ -129,7 +130,7 @@ public class MapsActivity extends AppCompatActivity implements
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
 
-        String directions = "";
+        String directions = "[Back]\n";
         List<String> route = MapGraph.getInstance().getPreviousDirections();
         for(String detail: route){
             directions += detail;
@@ -138,6 +139,37 @@ public class MapsActivity extends AppCompatActivity implements
         directionsTextview.setText(directions);
         Log.d("MapsActivity", "[Back Directions]" + directions);
         Log.d("MapsActivity", "Back Updated!");
+    }
+
+
+    //What happens if you use default end and start, do you remove them?
+    // -- start and ends of a path aren't deleted! so this may be a double edged sword
+    //
+    public void onSkipClicked(View view){
+        //remove item from planner
+        String itemId = MapGraph.getInstance().getCurrentItemToVisitId();
+        boolean updateSuccess = UpdateNodeDaoRequest.getInstance()
+                .setContext(getApplicationContext())
+                .RequestPlannerSkip(itemId);
+
+        if(!updateSuccess){
+            Log.d("MapsActivity", "Skip Item Failed! -- Returning");
+            return;
+        }
+
+        //update path relative to current source
+        MapGraph.getInstance().updatePathWithRemovedItem(itemId);
+
+        //update view/text
+        String directions = "[Updated After Skip]\n";
+        List<String> route = MapGraph.getInstance().getCurrentDirections();
+        for(String detail: route){
+            directions += detail;
+        }
+        TextView directionsTextview =
+                (TextView) findViewById(R.id.directions_text); // text view to display directions
+        directionsTextview.setText(directions);
+
     }
 
 

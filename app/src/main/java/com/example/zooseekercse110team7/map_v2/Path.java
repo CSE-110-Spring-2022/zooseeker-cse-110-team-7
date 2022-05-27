@@ -64,6 +64,7 @@ public class Path {
      * */
     private List<String> nodeListToStringList(List<NodeItem> nodeList){
         List<String> stringList = new ArrayList<>();
+        if(nodeList == null){ return stringList; }
         for(NodeItem item: nodeList){
             stringList.add(((item.parent_id==null)?item.id: item.parent_id)); // exhibit or exhibit group
         }
@@ -95,7 +96,7 @@ public class Path {
         double bestPathCost, costOfPath;
 
         /* CALCULATE PATHS */
-        for(int i=0; i < mustVisitItems.size(); i++){
+        for(int i=0; mustVisitItems!=null && i < mustVisitItems.size(); i++){
             bestPathCost = Integer.MAX_VALUE;//set best cost to infinity
             for(int j=0; j < remainingNames.size(); j++){//for each remaining item
                 costOfPath = getPathCost(currentReferencePoint, remainingNames.get(j)); // get cost from reference point to item
