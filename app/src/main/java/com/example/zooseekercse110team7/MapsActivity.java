@@ -148,12 +148,13 @@ public class MapsActivity extends AppCompatActivity implements
     //
     public void onSkipClicked(View view){
         //remove item from planner
-        for (String direction: MapGraph.getInstance().getCurrentDirections()) {
-            Log.d("MapsActivity: Directions", direction);
-        }
-
-        if (MapGraph.getInstance().getCurrentDirections().size() == 1) { return; }
+//        for (String direction: MapGraph.getInstance().getCurrentDirections()) {
+//            Log.d("MapsActivity: Directions", direction);
+//        }
+//
+//        if (MapGraph.getInstance().getCurrentDirections().size() == 1) { return; }
         String itemId = MapGraph.getInstance().getCurrentItemToVisitId();
+        if(null == itemId){ return; }
         boolean updateSuccess = UpdateNodeDaoRequest.getInstance()
                 .setContext(getApplicationContext())
                 .RequestPlannerSkip(itemId);
@@ -172,9 +173,9 @@ public class MapsActivity extends AppCompatActivity implements
         for(String detail: route){
             directions += detail;
         }
-        if(MapGraph.getInstance().isFinishedRouteFlag()) {
-            directions += " Finished Planned Route!";
-        }
+//        if(MapGraph.getInstance().isFinishedRouteFlag()) {
+//            directions += " Finished Planned Route!";
+//        }
 
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
@@ -183,6 +184,9 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
+    public void onBriefDirectionsSwitch(View view){
+        Log.d("MapsActivity", "Toggled Brief Directions!");
+    }
 
 
     // [START_EXCLUDE silent]

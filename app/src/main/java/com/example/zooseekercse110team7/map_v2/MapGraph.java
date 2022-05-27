@@ -24,7 +24,7 @@ import java.util.Set;
  * */
 public class MapGraph {
     public static MapGraph instance = new MapGraph();
-    private boolean finishedRouteFlag;
+//    private boolean finishedRouteFlag;
 
     private MapGraph(){}
     public static MapGraph getInstance(){ return instance; }
@@ -224,6 +224,11 @@ public class MapGraph {
      * */
     public String getCurrentItemToVisitId(){
         //if(currentPathIndex - 1 < 0){}
+        if(pathOfRouteItems.isEmpty() || 1 == pathOfRouteItems.size()
+                || (isGoingBackwards && currentPathIndex+1 >= pathOfRouteItems.size())
+                || (!isGoingBackwards && currentPathIndex-1 < 0)){
+            return null;
+        }
         RouteItem currentRouteItem = pathOfRouteItems.get(((isGoingBackwards)?currentPathIndex+1:currentPathIndex-1));
         Log.d("MapGraph", "Current IDs: [Source] " + currentRouteItem.getSource() + "\t[Destination] "+ currentRouteItem.getDestination());
         Log.d("MapGraph","isGoingBackwards? [true]source : [false]destination -- Bool: " + isGoingBackwards.toString());
@@ -238,7 +243,7 @@ public class MapGraph {
         //save time by not calculating path
         //there is no need to update current path index as it will point to the next thing in the list
         //      and there are checks/safeguards in place
-        if(1 == pathOfRouteItems.size()){ pathOfRouteItems = new ArrayList<>(); return; }
+        if(1 == pathOfRouteItems.size() || pathOfRouteItems.isEmpty()){ pathOfRouteItems = new ArrayList<>(); return; }
 
 
 
@@ -247,8 +252,8 @@ public class MapGraph {
         String newSource = (!isGoingBackwards)?previousRouteItem.getSource():currentRouteItem.getSource();
         String newDestination = (!isGoingBackwards)?currentRouteItem.getDestination():previousRouteItem.getDestination();
 
-        finishedRouteFlag = ((currentRouteItem == pathOfRouteItems.get(0) && isGoingBackwards) ||
-                (currentRouteItem == pathOfRouteItems.get(0)) && !isGoingBackwards);
+//        finishedRouteFlag = ((currentRouteItem == pathOfRouteItems.get(0) && isGoingBackwards) ||
+//                (currentRouteItem == pathOfRouteItems.get(0)) && !isGoingBackwards);
 
         List<RouteItem> subpathRouteItems = Path.getInstance().notUpdateGraph().getShortestPath(newSource, null, newDestination);
         if(GlobalDebug.DEBUG){
@@ -288,7 +293,7 @@ public class MapGraph {
      * */
     public List<RouteItem> getRecentPath(){ return pathOfRouteItems; }
 
-    public boolean isFinishedRouteFlag() {
-        return finishedRouteFlag;
-    }
+//    public boolean isFinishedRouteFlag() {
+//        return finishedRouteFlag;
+//    }
 }
