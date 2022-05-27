@@ -13,7 +13,7 @@
         android:layout_marginBottom="2dp"
         android:hint="Node Name"
         android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/node_kind_tv2"
+        app:layout_constraintBottom_toTopOf="@+id/node_kind_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.785" />
