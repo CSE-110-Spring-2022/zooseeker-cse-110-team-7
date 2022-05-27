@@ -6,20 +6,20 @@
     android:layout_height="60dp">
 
     <TextView
-        android:id="@+id/node_name_tv2"
+        android:id="@+id/selected_node_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="2dp"
         android:hint="Node Name"
         android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/node_kind_tv2"
+        app:layout_constraintBottom_toTopOf="@+id/selected_node_kind_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.785" />
 
     <TextView
-        android:id="@+id/node_kind_tv2"
+        android:id="@+id/selected_node_kind_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -28,13 +28,5 @@
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

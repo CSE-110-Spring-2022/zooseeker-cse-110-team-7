@@ -8,18 +8,29 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_node_viewer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="218dp"
+        android:layout_height="665dp"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintVertical_bias="0"
+        app:layout_constraintEnd_toEndOf="@+id/selected_search_node_viewer"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintVertical_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search" >
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selected_search_node_viewer"
+        android:layout_width="177dp"
+        android:layout_height="665dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/search"/>
 
     <SearchView
         android:id="@+id/search"
