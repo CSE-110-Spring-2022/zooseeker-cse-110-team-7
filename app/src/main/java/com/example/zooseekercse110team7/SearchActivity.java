@@ -32,18 +32,26 @@ import java.util.List;
 import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity {
-    // Exposed for testing purposes later
+    // recycler view for all nodes
     public RecyclerView recyclerView;
+    // recycler view for selected nodes
     public RecyclerView selectedRecyclerView;
 
     private static final String TAG = "SearchActivity";
+    // view model for all nodes
     private NodeSearchViewModel viewModel;
+    // view model for selected nodes
     private NodeSearchViewModel selectedViewModel;
+    // all nodes list
     private List<NodeItem> nodeItems = new ArrayList<>();
+    // all nodes for the selected ones
     private List<NodeItem> selectedNodeItems = new ArrayList<>();
+    // all nodes nodesearchview adapter
     private NodeSearchViewAdapter nodeViewAdapter;
+    // selected nodes nodesearchview adapater
     private NodeSearchViewAdapter selectedNodeViewAdapter;
 
+    // filters the nodes by what customer wants
     private List<NodeItem> filter(String filterString) {
         return viewModel.getAllFilteredNodeItems(filterString);
     }
@@ -62,6 +70,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 Log.d(TAG, "new text = " + newText);
+                // sets selected items and shows on recyclerview
                 nodeViewAdapter.setItems(filter(newText));
                 recyclerView.invalidate();
                 return false;
@@ -69,6 +78,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    // sets selected items to selected and shows on selectedrecyclerview
     public void onSelectionChange(Boolean added) {
         selectedNodeViewAdapter.setItems(selectedViewModel.getAllSelectedNodeItems());
         selectedRecyclerView.invalidate();
@@ -80,12 +90,18 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        // creates view model for all nodes
         viewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);
+        //creates view model for selected nodes
         selectedViewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);
+        // creates node view adapter for all nodes
         nodeViewAdapter = new NodeSearchViewAdapter(viewModel, this::onSelectionChange);
+        // creates node view adapter for selected nodes
         selectedNodeViewAdapter = new NodeSearchViewAdapter(selectedViewModel);
 
+        // declares all nodeItems
         nodeItems = viewModel.getAllFilteredNodeItems("");
+        // declares all selectedNodeItems
         selectedNodeItems = selectedViewModel.getAllSelectedNodeItems();
         if(GlobalDebug.DEBUG){
             for(NodeItem item: nodeItems){
@@ -93,13 +109,17 @@ public class SearchActivity extends AppCompatActivity {
             }
         }
 
+        // sets all nodes
         nodeViewAdapter.setItems(new ArrayList<>(nodeItems));
+        // sets all selected nodes
         selectedNodeViewAdapter.setItems(new ArrayList<>(nodeItems));
 
+        // recycler view creation for all the nodes
         recyclerView = findViewById(R.id.search_node_viewer);//gets the recycler view from `activity_search.xml`
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(nodeViewAdapter);
 
+        // recycler view creation for the selected nodes 
         selectedRecyclerView = findViewById(R.id.selected_search_node_viewer);
         selectedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         selectedRecyclerView.setAdapter(selectedNodeViewAdapter);
