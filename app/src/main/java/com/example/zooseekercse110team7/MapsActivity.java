@@ -116,6 +116,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         String directions = "[Next]\n";
         List<String> route = MapGraph.getInstance().getNextDirections();
+
         for(String detail: route){
             directions += detail;
         }
@@ -147,6 +148,11 @@ public class MapsActivity extends AppCompatActivity implements
     //
     public void onSkipClicked(View view){
         //remove item from planner
+        for (String direction: MapGraph.getInstance().getCurrentDirections()) {
+            Log.d("MapsActivity: Directions", direction);
+        }
+
+        if (MapGraph.getInstance().getCurrentDirections().size() == 1) { return; }
         String itemId = MapGraph.getInstance().getCurrentItemToVisitId();
         boolean updateSuccess = UpdateNodeDaoRequest.getInstance()
                 .setContext(getApplicationContext())
