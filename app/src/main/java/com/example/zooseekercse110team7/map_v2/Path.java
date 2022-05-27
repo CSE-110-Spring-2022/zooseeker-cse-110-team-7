@@ -26,7 +26,7 @@ public class Path {
 
     private MapGraph mapGraph = MapGraph.getInstance();
     private Double pathCost;
-
+    private boolean shouldUpdateGraph = false;
     /**
      * Returns a list of the edges (`IdentifiedWeightedEdge`) within *a* calculated path
      *
@@ -120,11 +120,20 @@ public class Path {
 
         pathCost = totalCost;
 
-        mapGraph.setPath(route);
+        if (shouldUpdateGraph) {
+            shouldUpdateGraph = false;
+        }
+        else {
+            mapGraph.setPath(route);
+        }
         Log.w("Path", "WARNING! MapGraph's path is being updated -- function's usage has " +
                 "side effects to the graph");
 
         return route;
+    }
+    public Path notUpdateGraph() {
+        shouldUpdateGraph = true;
+        return this;
     }
     /* Different signature, default source and default destination included when ran */
     public List<RouteItem> getShortestPath(List<NodeItem> mustVisitItems){

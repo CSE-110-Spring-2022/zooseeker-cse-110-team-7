@@ -166,6 +166,10 @@ public class MapsActivity extends AppCompatActivity implements
         for(String detail: route){
             directions += detail;
         }
+        if(MapGraph.getInstance().isFinishedRouteFlag()) {
+            directions += " Finished Planned Route!";
+        }
+
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
         directionsTextview.setText(directions);

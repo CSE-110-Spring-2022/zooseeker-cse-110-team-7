@@ -24,6 +24,8 @@ import java.util.Set;
  * */
 public class MapGraph {
     public static MapGraph instance = new MapGraph();
+    private boolean finishedRouteFlag;
+
     private MapGraph(){}
     public static MapGraph getInstance(){ return instance; }
 
@@ -228,18 +230,27 @@ public class MapGraph {
         return (isGoingBackwards)?currentRouteItem.getSource():currentRouteItem.getDestination();
     }
 
+    public Boolean getGoingBackwards() {
+        return isGoingBackwards;
+    }
+
     public void updatePathWithRemovedItem(String id){
         //save time by not calculating path
         //there is no need to update current path index as it will point to the next thing in the list
         //      and there are checks/safeguards in place
         if(1 == pathOfRouteItems.size()){ pathOfRouteItems = new ArrayList<>(); return; }
 
+
+
         RouteItem previousRouteItem = pathOfRouteItems.get(((isGoingBackwards)?currentPathIndex+1:currentPathIndex-1));
         RouteItem currentRouteItem = pathOfRouteItems.get(currentPathIndex);
         String newSource = (!isGoingBackwards)?previousRouteItem.getSource():currentRouteItem.getSource();
         String newDestination = (!isGoingBackwards)?currentRouteItem.getDestination():previousRouteItem.getDestination();
 
-        List<RouteItem> subpathRouteItems = Path.getInstance().getShortestPath(newSource, null, newDestination);
+        finishedRouteFlag = ((currentRouteItem == pathOfRouteItems.get(0) && isGoingBackwards) ||
+                (currentRouteItem == pathOfRouteItems.get(0)) && !isGoingBackwards);
+
+        List<RouteItem> subpathRouteItems = Path.getInstance().notUpdateGraph().getShortestPath(newSource, null, newDestination);
         if(GlobalDebug.DEBUG){
             for(RouteItem item: subpathRouteItems){
                 Log.d("MapGraph", item.toString());
@@ -247,7 +258,8 @@ public class MapGraph {
         }
 
         //note: items slide down when removed
-        pathOfRouteItems.remove(currentPathIndex); pathOfRouteItems.remove(((isGoingBackwards)?currentPathIndex:currentPathIndex-1));
+        pathOfRouteItems.remove(pathOfRouteItems.get(currentPathIndex));
+        pathOfRouteItems.remove(((isGoingBackwards)?pathOfRouteItems.get(currentPathIndex):pathOfRouteItems.get(currentPathIndex-1)));
         if(currentPathIndex >= pathOfRouteItems.size()){
             if(!pathOfRouteItems.addAll(subpathRouteItems)){
                 Log.e("MapGraph", "ERROR 1: Subpath Cannot Be Inserted!");
@@ -263,6 +275,7 @@ public class MapGraph {
     public List<String> getCurrentDirections(){
         Integer originalIndex = currentPathIndex;
         Log.d("MapGraph", "[GetCurrentDirections] Original Index: " + originalIndex);
+        currentPathIndex += (isGoingBackwards) ? 1: -1;
         List<String> result = (isGoingBackwards)?getPreviousDirections():getNextDirections();
         currentPathIndex = originalIndex;
         return result;
@@ -274,4 +287,8 @@ public class MapGraph {
      * @return a list of `RouteItem`s in order of the path to take
      * */
     public List<RouteItem> getRecentPath(){ return pathOfRouteItems; }
+
+    public boolean isFinishedRouteFlag() {
+        return finishedRouteFlag;
+    }
 }
