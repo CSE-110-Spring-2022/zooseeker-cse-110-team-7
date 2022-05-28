@@ -9,6 +9,7 @@ import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class StringEdgeParser {
         return this;
     }
 
-    public String toPrettyEdgeString(IdentifiedWeightedEdge edge, Double distance){
+    public String toPrettyEdgeString(IdentifiedWeightedEdge edge, Double distance, IdentifiedWeightedEdge previousEdge){
         String errorString = "[Path Error] Cannot Find Path Details!";
         String result = "";
         String sourceId = edge.getEdgeSource();
@@ -49,6 +50,8 @@ public class StringEdgeParser {
         }
 
 
+        String previousStreet = (previousEdge != null)?getStreet(previousEdge):"";
+        String currentStreet = getStreet(edge);
         boolean sourceIsStreet = sourceItem.name.contains("/");
         boolean targetIsStreet = destinationItem.name.contains("/");
         if(sourceIsStreet && targetIsStreet){
@@ -61,17 +64,18 @@ public class StringEdgeParser {
                     result = "Proceed on " + getLast(streetSpliceSource) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
                 }
             }else{
-                //TODO: Small bug where it says "continue" instead of proceed when going onto a new street
-                // hippo -> entrance_exit_gate
-                //    2Proceed on Hippo Trail for 30.0ft towards Treetops Way / Hippo Trail
-                //    Continue [<--Here's the issue] on Treetops Way for 100.0ft towards Orangutan Trail
-                //    Continue on Treetops Way for 30.0ft towards Fern Canyon Trail
-                //    Proceed on Fern Canyon Trail for 30.0ft towards Treetops Way
-                //    1Proceed on Gate Path for 10.0ft towards Entrance and Exit Gate
                 if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
-                    result = "Continue on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    if(previousStreet.equals(currentStreet)){
+                        result = "Continue on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    }else{
+                        result = "Proceed on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    }
                 } else if (Objects.equals(getFirst(streetSpliceSource), getLast(streetSpliceTarget))) {
-                    result = "Proceed on " + getLast(streetSpliceSource) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    if(previousStreet.equals(currentStreet)){
+                        result = "Continue on " + getLast(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getFirst(streetSpliceTarget) + "\n";
+                    }else{
+                        result = "Proceed on " + getLast(streetSpliceSource) + " for " + distance.toString() + "ft towards " + getFirst(streetSpliceTarget) + "\n";
+                    }
                 }
             }
         }else if(sourceIsStreet || !targetIsStreet){
@@ -87,7 +91,7 @@ public class StringEdgeParser {
         return result;
     }
 
-    public String toPrettyEdgeStringReverse(IdentifiedWeightedEdge edge, Double distance){
+    public String toPrettyEdgeStringReverse(IdentifiedWeightedEdge edge, Double distance, IdentifiedWeightedEdge previousEdge){
         String errorString = "[Path Error] Cannot Find Path Details!";
         String result="";
         String sourceId = edge.getEdgeSource();
@@ -105,6 +109,8 @@ public class StringEdgeParser {
             return errorString;
         }
 
+        String previousStreet = (previousEdge != null)?getStreet(previousEdge):"";
+        String currentStreet = getStreet(edge);
         boolean sourceIsStreet = sourceItem.name.contains("/");
         boolean targetIsStreet = destinationItem.name.contains("/");
         if(sourceIsStreet && targetIsStreet){
@@ -117,17 +123,18 @@ public class StringEdgeParser {
                     result = "Proceed on " + getLast(streetSpliceSource) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
                 }
             }else{
-                //TODO: Small bug where it says "continue" instead of proceed when going onto a new street
-                // hippo -> entrance_exit_gate
-                //    2Proceed on Hippo Trail for 30.0ft towards Treetops Way / Hippo Trail
-                //    Continue [<--Here's the issue] on Treetops Way for 100.0ft towards Orangutan Trail
-                //    Continue on Treetops Way for 30.0ft towards Fern Canyon Trail
-                //    Proceed on Fern Canyon Trail for 30.0ft towards Treetops Way
-                //    1Proceed on Gate Path for 10.0ft towards Entrance and Exit Gate
                 if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
-                    result = "Continue on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    if(previousStreet.equals(currentStreet)){
+                        result = "Continue on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    }else{
+                        result = "Proceed on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    }
                 } else if (Objects.equals(getFirst(streetSpliceSource), getLast(streetSpliceTarget))) {
-                    result = "Proceed on " + getLast(streetSpliceSource) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    if(previousStreet.equals(currentStreet)){
+                        result = "Continue on " + getLast(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getFirst(streetSpliceTarget) + "\n";
+                    }else{
+                        result = "Proceed on " + getLast(streetSpliceSource) + " for " + distance.toString() + "ft towards " + getFirst(streetSpliceTarget) + "\n";
+                    }
                 }
             }
         }else if(sourceIsStreet || !targetIsStreet){
