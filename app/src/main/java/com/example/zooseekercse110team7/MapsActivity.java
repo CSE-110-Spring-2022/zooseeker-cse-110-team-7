@@ -17,6 +17,7 @@ import com.example.zooseekercse110team7.map_v2.AssetLoader;
 import com.example.zooseekercse110team7.depreciated_map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map_v2.MapGraph;
 import com.example.zooseekercse110team7.map_v2.Path;
+import com.example.zooseekercse110team7.map_v2.StringEdgeParser;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
@@ -96,7 +97,14 @@ public class MapsActivity extends AppCompatActivity implements
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        g = new AssetLoader(
+
+        /**
+         * [Note]: Loading the Assets Takes Precedence!
+         * Dependency: AssetLoader <-- MapGraph <-- Path
+         * */
+        g = AssetLoader
+                .getInstance()
+                .loadAssets(
                 "sample_zoo_graph.json",
                 "sample_node_info.json",
                 "sample_edge_info.json",
@@ -105,6 +113,7 @@ public class MapsActivity extends AppCompatActivity implements
         NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
         nodeDao = db.nodeDao();
         Path.getInstance().getShortestPath(nodeDao.getByOnPlanner(true));//on startup get planner info
+        StringEdgeParser.getInstance().setContext(getApplicationContext());
     }
 
     // Called when Directions is clicked. Displays directions for pairs of destinations in order

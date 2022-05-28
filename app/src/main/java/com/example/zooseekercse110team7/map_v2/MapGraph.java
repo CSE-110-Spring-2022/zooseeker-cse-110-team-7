@@ -29,20 +29,11 @@ public class MapGraph {
     private MapGraph(){}
     public static MapGraph getInstance(){ return instance; }
 
-    AssetLoader assetLoader;
+    private AssetLoader assetLoader = AssetLoader.getInstance();
     private List<RouteItem> pathOfRouteItems;   // list of items to
     private Integer currentPathIndex = 0;
     private Boolean isGoingBackwards = false;
     private Boolean isBrief = false;
-
-    /**
-     * Sets the asset loader that is used to build the graph
-     *
-     * @param assetLoader an `AssetLoader` object that has parsed JSON files
-     * */
-    public void setAssetLoader(AssetLoader assetLoader){
-        this.assetLoader = assetLoader;
-    }
 
     /**
      * Returns Java's built in Graph object using our JSON files as the data. Each item in the graph
@@ -174,7 +165,10 @@ public class MapGraph {
                 .getInstance()
                 .getPathEdges(currentRoute.getSource(), currentRoute.getDestination());
         for(IdentifiedWeightedEdge edge: edges){
-            result.add((edge.toString() + " " + getEdgeWeight(edge) + "\n"));
+            result.add(StringEdgeParser
+                    .getInstance()
+                    .toPrettyEdgeString(edge, getEdgeWeight(edge))
+            );
         }
 
         /* INCREASE CURRENT INDEX WITHIN PATH LIST */
@@ -211,7 +205,10 @@ public class MapGraph {
                 .getInstance()
                 .getPathEdges(currentRoute.getSource(), currentRoute.getDestination());
         for(int i= edges.size()-1; i >= 0; i --){
-            result.add(edges.get(i).toString() + " " + getEdgeWeight(edges.get(i)) + "\n");
+            result.add(StringEdgeParser
+                    .getInstance()
+                    .toPrettyEdgeStringReverse(edges.get(i), getEdgeWeight(edges.get(i)))
+            );
         }
 
         return result;
@@ -234,10 +231,6 @@ public class MapGraph {
         Log.d("MapGraph", "Current IDs: [Source] " + currentRouteItem.getSource() + "\t[Destination] "+ currentRouteItem.getDestination());
         Log.d("MapGraph","isGoingBackwards? [true]source : [false]destination -- Bool: " + isGoingBackwards.toString());
         return (isGoingBackwards)?currentRouteItem.getSource():currentRouteItem.getDestination();
-    }
-
-    public Boolean getGoingBackwards() {
-        return isGoingBackwards;
     }
 
     public void updatePathWithRemovedItem(String id){

@@ -3,6 +3,7 @@ package com.example.zooseekercse110team7.map_v2;
 import android.location.Location;
 import android.util.Log;
 
+import com.example.zooseekercse110team7.GlobalDebug;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
@@ -38,6 +39,23 @@ public class Path {
     public List<IdentifiedWeightedEdge> getPathEdges(String source, String destination){
         GraphPath<String, IdentifiedWeightedEdge> path;
         path = DijkstraShortestPath.findPathBetween(mapGraph.getGraph(), source, destination);
+        List<String> verticies = path.getVertexList();
+//        String currentSource = source;
+//        for(IdentifiedWeightedEdge edge: path){
+//
+//        }
+        List<IdentifiedWeightedEdge> givenEdges = path.getEdgeList();
+        int moveFactor = 1; // the factor in which to get items from iterating in vertices list
+        for(int i=0; i<givenEdges.size(); i++){
+            if(!verticies.get(i*moveFactor).equals(givenEdges.get(i).getEdgeSource())){
+                givenEdges.get(i).flipPoints();
+                if(GlobalDebug.DEBUG){
+                    String newSource = givenEdges.get(i).getEdgeSource();
+                    String newTarget = givenEdges.get(i).getEdgeTarget();
+                    continue;// <-- only useful for debugging as `newTarget` value updates
+                }
+            }
+        }
         return path.getEdgeList();
     }
 
