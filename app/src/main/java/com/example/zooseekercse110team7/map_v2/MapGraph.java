@@ -33,6 +33,7 @@ public class MapGraph {
     private List<RouteItem> pathOfRouteItems;   // list of items to
     private Integer currentPathIndex = 0;
     private Boolean isGoingBackwards = false;
+    private Boolean isBrief = false;
 
     /**
      * Sets the asset loader that is used to build the graph
@@ -292,6 +293,30 @@ public class MapGraph {
      * @return a list of `RouteItem`s in order of the path to take
      * */
     public List<RouteItem> getRecentPath(){ return pathOfRouteItems; }
+
+
+    /**
+     * Brief directions call out a landmark only when turning on to a new street/trail.
+     * This function sets the `isBrief` boolean to true
+     *
+     * @return this instance of the object -- using Chain of Command
+     * */
+    public MapGraph setToBriefDirections(){
+        this.isBrief = true;
+        return this;
+    }
+
+    /**
+     * Detailed directions are about calling out landmarks (exhibits and intersections) that the
+     * user should be passing, even if there are no turns (i.e., staying on the same street/trail).
+     * This function sets the `isBrief` boolean to false
+     *
+     * @return this instance of the object -- using Chain of Command
+     * */
+    public MapGraph setToDetailedDirections(){
+        this.isBrief = false;
+        return this;
+    }
 
 //    public boolean isFinishedRouteFlag() {
 //        return finishedRouteFlag;
