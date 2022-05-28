@@ -3,6 +3,7 @@ package com.example.zooseekercse110team7.map_v2;
 import android.util.Log;
 
 import com.example.zooseekercse110team7.GlobalDebug;
+import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import org.jgrapht.Graph;
@@ -301,6 +302,12 @@ public class MapGraph {
      * */
     public void updateDirectionsBrevity(){
         this.isBrief = !this.isBrief;
+    }
+
+    public List<RouteItem> getRemainingSubpathList(){//TODO:Test This
+        int startIndex = (isGoingBackwards) ? 1: -1;
+        int endIndex = (isGoingBackwards) ? 0: pathOfRouteItems.size()-1;
+        return pathOfRouteItems.subList(startIndex, endIndex);
     }
 
 //    public boolean isFinishedRouteFlag() {
