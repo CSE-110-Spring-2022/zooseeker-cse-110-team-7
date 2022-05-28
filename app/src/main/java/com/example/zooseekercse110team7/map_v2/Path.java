@@ -29,7 +29,8 @@ public class Path {
     private Double pathCost;
     private boolean shouldUpdateGraph = false;
     /**
-     * Returns a list of the edges (`IdentifiedWeightedEdge`) within *a* calculated path
+     * Returns a list of the edges (`IdentifiedWeightedEdge`) within *a* calculated path using
+     * Dijkstra. It returns edges with proper ordering of source and destination.
      *
      * @param source the source of the path which is a vertex
      * @param destination the destination of the path which is a vertex
@@ -37,25 +38,20 @@ public class Path {
      * @return list of `IdentifiedWeightedEdge`s between the two connecting vertices
      * */
     public List<IdentifiedWeightedEdge> getPathEdges(String source, String destination){
-        GraphPath<String, IdentifiedWeightedEdge> path;
+        GraphPath<String, IdentifiedWeightedEdge> path; //hold the resulting path
         path = DijkstraShortestPath.findPathBetween(mapGraph.getGraph(), source, destination);
-        List<String> verticies = path.getVertexList();
-//        String currentSource = source;
-//        for(IdentifiedWeightedEdge edge: path){
-//
-//        }
-        List<IdentifiedWeightedEdge> givenEdges = path.getEdgeList();
-        int moveFactor = 1; // the factor in which to get items from iterating in vertices list
-        for(int i=0; i<givenEdges.size(); i++){
-            if(!verticies.get(i*moveFactor).equals(givenEdges.get(i).getEdgeSource())){
-                givenEdges.get(i).flipPoints();
-                if(GlobalDebug.DEBUG){
-                    String newSource = givenEdges.get(i).getEdgeSource();
-                    String newTarget = givenEdges.get(i).getEdgeTarget();
-                    continue;// <-- only useful for debugging as `newTarget` value updates
-                }
+
+        List<String> verticies = path.getVertexList();//order of visited vertices
+        List<IdentifiedWeightedEdge> givenEdges =
+                path.getEdgeList(); // edges with unordered source & destination
+
+        /* ORDER SOURCE AND DESTINATION OF EDGES */
+        for(int index=0; index<givenEdges.size(); index++){
+            if(!verticies.get(index).equals(givenEdges.get(index).getEdgeSource())){
+                givenEdges.get(index).flipPoints();//order source & destination
             }
         }
+
         return path.getEdgeList();
     }
 

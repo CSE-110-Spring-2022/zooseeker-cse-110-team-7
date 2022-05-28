@@ -34,7 +34,8 @@ public class StringEdgeParser {
         return this;
     }
 
-    public String toPrettyEdgeString(IdentifiedWeightedEdge edge, Double distance, IdentifiedWeightedEdge previousEdge){
+    public String toPrettyEdgeString(IdentifiedWeightedEdge edge, Double distance,
+                                     IdentifiedWeightedEdge previousEdge){
         String errorString = "[Path Error] Cannot Find Path Details!";
         String result = "";
         String sourceId = edge.getEdgeSource();
@@ -44,8 +45,8 @@ public class StringEdgeParser {
         NodeItem destinationItem = nodeDao.get(destinationId);
 
         if(sourceItem == null || destinationItem == null){
-            Log.e("StringEdgeParser", "[ERROR] Source NodeItem or Destination NodeItem is " +
-                    "NULL!");
+            Log.e("StringEdgeParser", "[ERROR] Source NodeItem or Destination NodeItem is "
+                    + "NULL!");
             return errorString;
         }
 
@@ -55,33 +56,51 @@ public class StringEdgeParser {
         boolean sourceIsStreet = sourceItem.name.contains("/");
         boolean targetIsStreet = destinationItem.name.contains("/");
         if(sourceIsStreet && targetIsStreet){
-            List<String> streetSpliceSource = Arrays.asList(nodeDao.get(edge.getEdgeSource()).name.split(" / "));
-            List<String> streetSpliceTarget = Arrays.asList(nodeDao.get(edge.getEdgeTarget()).name.split(" / "));
+            List<String> streetSpliceSource = Arrays.asList(
+                    nodeDao.get(edge.getEdgeSource()).name.split(" / ")
+            );
+            List<String> streetSpliceTarget = Arrays.asList(
+                    nodeDao.get(edge.getEdgeTarget()).name.split(" / ")
+            );
             if(!edge.isFlipped()) {
                 if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
-                    result = "Continue on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    result = "Continue on " + getFirst(streetSpliceTarget) + " for "
+                            + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
+                            + "\n";
                 } else if (Objects.equals(getLast(streetSpliceSource), getFirst(streetSpliceTarget))) {
-                    result = "Proceed on " + getLast(streetSpliceSource) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    result = "Proceed on " + getLast(streetSpliceSource) + " for "
+                            + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
+                            + "\n";
                 }
             }else{
                 if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
                     if(previousStreet.equals(currentStreet)){
-                        result = "Continue on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                        result = "Continue on " + getFirst(streetSpliceTarget) + " for "
+                                + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
+                                + "\n";
                     }else{
-                        result = "Proceed on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                        result = "Proceed on " + getFirst(streetSpliceTarget) + " for "
+                                + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
+                                + "\n";
                     }
                 } else if (Objects.equals(getFirst(streetSpliceSource), getLast(streetSpliceTarget))) {
                     if(previousStreet.equals(currentStreet)){
-                        result = "Continue on " + getLast(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getFirst(streetSpliceTarget) + "\n";
+                        result = "Continue on " + getLast(streetSpliceTarget) + " for "
+                                + distance.toString() + "ft towards " + getFirst(streetSpliceTarget)
+                                + "\n";
                     }else{
-                        result = "Proceed on " + getLast(streetSpliceSource) + " for " + distance.toString() + "ft towards " + getFirst(streetSpliceTarget) + "\n";
+                        result = "Proceed on " + getLast(streetSpliceSource) + " for "
+                                + distance.toString() + "ft towards " + getFirst(streetSpliceTarget)
+                                + "\n";
                     }
                 }
             }
         }else if(sourceIsStreet || !targetIsStreet){
-            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
+            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards "
+                    + destinationItem.name+ "\n";//check if parent
         }else if(targetIsStreet){
-            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
+            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards "
+                    + destinationItem.name+ "\n";//check if parent
         }else{
             // it should never get to this point as the second nested conditional takes care of
             // it. If it ever gets to this point then some edge case was not accounted for!
@@ -91,7 +110,8 @@ public class StringEdgeParser {
         return result;
     }
 
-    public String toPrettyEdgeStringReverse(IdentifiedWeightedEdge edge, Double distance, IdentifiedWeightedEdge previousEdge){
+    public String toPrettyEdgeStringReverse(IdentifiedWeightedEdge edge, Double distance,
+                                            IdentifiedWeightedEdge previousEdge){
         String errorString = "[Path Error] Cannot Find Path Details!";
         String result="";
         String sourceId = edge.getEdgeSource();
@@ -104,8 +124,8 @@ public class StringEdgeParser {
         NodeItem destinationItem = nodeDao.get(sourceId);
 
         if(sourceItem == null || destinationItem == null){
-            Log.e("StringEdgeParser", "[ERROR] Source NodeItem or Destination NodeItem is " +
-                    "NULL!");
+            Log.e("StringEdgeParser", "[ERROR] Source NodeItem or Destination NodeItem is "
+                    +"NULL!");
             return errorString;
         }
 
@@ -114,33 +134,51 @@ public class StringEdgeParser {
         boolean sourceIsStreet = sourceItem.name.contains("/");
         boolean targetIsStreet = destinationItem.name.contains("/");
         if(sourceIsStreet && targetIsStreet){
-            List<String> streetSpliceSource = Arrays.asList(nodeDao.get(edge.getEdgeSource()).name.split(" / "));
-            List<String> streetSpliceTarget = Arrays.asList(nodeDao.get(edge.getEdgeTarget()).name.split(" / "));
+            List<String> streetSpliceSource = Arrays.asList(
+                    nodeDao.get(edge.getEdgeSource()).name.split(" / ")
+            );
+            List<String> streetSpliceTarget = Arrays.asList(
+                    nodeDao.get(edge.getEdgeTarget()).name.split(" / ")
+            );
             if(!edge.isFlipped()) {
                 if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
-                    result = "Continue on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    result = "Continue on " + getFirst(streetSpliceTarget) + " for "
+                            + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
+                            + "\n";
                 } else if (Objects.equals(getLast(streetSpliceSource), getFirst(streetSpliceTarget))) {
-                    result = "Proceed on " + getLast(streetSpliceSource) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                    result = "Proceed on " + getLast(streetSpliceSource) + " for "
+                            + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
+                            + "\n";
                 }
             }else{
                 if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
                     if(previousStreet.equals(currentStreet)){
-                        result = "Continue on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                        result = "Continue on " + getFirst(streetSpliceTarget) + " for "
+                                + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
+                                + "\n";
                     }else{
-                        result = "Proceed on " + getFirst(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getLast(streetSpliceTarget) + "\n";
+                        result = "Proceed on " + getFirst(streetSpliceTarget) + " for "
+                                + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
+                                + "\n";
                     }
                 } else if (Objects.equals(getFirst(streetSpliceSource), getLast(streetSpliceTarget))) {
                     if(previousStreet.equals(currentStreet)){
-                        result = "Continue on " + getLast(streetSpliceTarget) + " for " + distance.toString() + "ft towards " + getFirst(streetSpliceTarget) + "\n";
+                        result = "Continue on " + getLast(streetSpliceTarget) + " for "
+                                + distance.toString() + "ft towards " + getFirst(streetSpliceTarget)
+                                + "\n";
                     }else{
-                        result = "Proceed on " + getLast(streetSpliceSource) + " for " + distance.toString() + "ft towards " + getFirst(streetSpliceTarget) + "\n";
+                        result = "Proceed on " + getLast(streetSpliceSource) + " for "
+                                + distance.toString() + "ft towards " + getFirst(streetSpliceTarget)
+                                + "\n";
                     }
                 }
             }
         }else if(sourceIsStreet || !targetIsStreet){
-            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
+            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards "
+                    + destinationItem.name+ "\n";//check if parent
         }else if(targetIsStreet){
-            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
+            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards "
+                    + destinationItem.name+ "\n";//check if parent
         }else{
             // it should never get to this point as the second nested conditional takes care of
             // it. If it ever gets to this point then some edge case was not accounted for!

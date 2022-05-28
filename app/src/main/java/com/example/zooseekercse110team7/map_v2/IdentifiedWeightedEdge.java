@@ -34,7 +34,13 @@ public class IdentifiedWeightedEdge extends DefaultWeightedEdge {
         }
     }
 
-    public void flipPoints(){ this.hasFlippedPoints = true; }
+    public void flipPoints(){
+        this.hasFlippedPoints = true;
+
+        //update ordering
+        getEdgeSource();
+        getEdgeTarget();
+    }
 
     public String getEdgeTarget(){
         if(myTarget == null){
