@@ -152,7 +152,7 @@ public class MapGraph {
         List<String> result = new ArrayList<>(); // holds result of parsed string for directions
 
         /* CHECK FOR EDGE CASES */
-        if(pathOfRouteItems == null || currentPathIndex >= getPathSize()){
+        if(pathOfRouteItems == null || currentPathIndex >= getPathSize() || 1 == getPathSize()){
             Log.d("MapGraph", "[getNextDirections] End of Directions! OR List Is NULL!");
             result.add("End of Directions.");
             return result;
@@ -191,7 +191,7 @@ public class MapGraph {
         List<String> result = new ArrayList<>();// holds result of parsed string for directions
 
         /* CHECK FOR EDGE CASES */
-        if(pathOfRouteItems == null){
+        if(pathOfRouteItems == null  || 1 == getPathSize()){
             Log.d("MapGraph", "List Is NULL!");
             result.add("End of Directions.");
             return result;
@@ -218,7 +218,7 @@ public class MapGraph {
         return result;
     }
 
-    //@pre pathofRouteItems >= 2
+    //@pre pathOfRouteItems.Size() >= 1
     /**
      * Returns an id string of a node item in the path currently being looked at in the path
      *
@@ -263,22 +263,25 @@ public class MapGraph {
         //note: items slide down when removed
         pathOfRouteItems.remove(pathOfRouteItems.get(currentPathIndex));
         pathOfRouteItems.remove(((isGoingBackwards)?pathOfRouteItems.get(currentPathIndex):pathOfRouteItems.get(currentPathIndex-1)));
-        if(currentPathIndex >= pathOfRouteItems.size()){
-            if(!pathOfRouteItems.addAll(subpathRouteItems)){
-                Log.e("MapGraph", "ERROR 1: Subpath Cannot Be Inserted!");
-            }
-        }else{
-            if(!pathOfRouteItems.addAll(((isGoingBackwards)?currentPathIndex:currentPathIndex-1), subpathRouteItems)){
-                Log.e("MapGraph", "ERROR 2: Subpath Cannot Be Inserted!");
-            }
+//        if(false && currentPathIndex >= pathOfRouteItems.size()){
+//            if(!pathOfRouteItems.addAll(subpathRouteItems)){
+//                Log.e("MapGraph", "ERROR 1: Subpath Cannot Be Inserted!");
+//            }
+//        }else{
+//            if(!pathOfRouteItems.addAll(((isGoingBackwards)?currentPathIndex:currentPathIndex-1), subpathRouteItems)){
+//                Log.e("MapGraph", "ERROR 2: Subpath Cannot Be Inserted!");
+//            }
+//        }
+        if(!pathOfRouteItems.addAll(((isGoingBackwards)?currentPathIndex:currentPathIndex-1), subpathRouteItems)){
+            Log.e("MapGraph", "ERROR 2: Subpath Cannot Be Inserted!");
         }
-
     }
 
     public List<String> getCurrentDirections(){
         Integer originalIndex = currentPathIndex;
-        Log.d("MapGraph", "[GetCurrentDirections] Original Index: " + originalIndex);
         currentPathIndex += (isGoingBackwards) ? 1: -1;
+        Log.d("MapGraph", "[GetCurrentDirections] Original Index: " + originalIndex
+                + "\tCurrent Index: " + currentPathIndex);
         List<String> result = (isGoingBackwards)?getPreviousDirections():getNextDirections();
         currentPathIndex = originalIndex;
         return result;

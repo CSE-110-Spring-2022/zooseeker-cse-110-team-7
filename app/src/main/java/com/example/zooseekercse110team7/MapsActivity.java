@@ -186,6 +186,7 @@ public class MapsActivity extends AppCompatActivity implements
 //            directions += " Finished Planned Route!";
 //        }
 
+        Log.d("MapsActivity", "[Skip]\n" + directions);
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
         directionsTextview.setText(directions);
