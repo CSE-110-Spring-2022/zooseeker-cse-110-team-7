@@ -75,9 +75,9 @@ public class StringEdgeParser {
                 }
             }
         }else if(sourceIsStreet || !targetIsStreet){
-            result = "1Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
+            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
         }else if(targetIsStreet){
-            result = "2Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
+            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
         }else{
             // it should never get to this point as the second nested conditional takes care of
             // it. If it ever gets to this point then some edge case was not accounted for!
@@ -131,9 +131,9 @@ public class StringEdgeParser {
                 }
             }
         }else if(sourceIsStreet || !targetIsStreet){
-            result = "1Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
+            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
         }else if(targetIsStreet){
-            result = "2Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
+            result = "Proceed on " + getStreet(edge) + " for " + distance.toString() + "ft towards " + destinationItem.name+ "\n";//check if parent
         }else{
             // it should never get to this point as the second nested conditional takes care of
             // it. If it ever gets to this point then some edge case was not accounted for!
