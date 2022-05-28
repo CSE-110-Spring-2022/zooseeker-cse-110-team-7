@@ -305,8 +305,14 @@ public class MapGraph {
     }
 
     public List<RouteItem> getRemainingSubpathList(){//TODO:Test This
-        int startIndex = (isGoingBackwards) ? 1: -1;
-        int endIndex = (isGoingBackwards) ? 0: pathOfRouteItems.size()-1;
+        int startIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
+        int endIndex = pathOfRouteItems.size()-1;
+        return pathOfRouteItems.subList(startIndex, endIndex);
+    }
+
+    public List<RouteItem> getVisitedSubpathList(){//TODO:Test This
+        int startIndex = 0;
+        int endIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
         return pathOfRouteItems.subList(startIndex, endIndex);
     }
 
