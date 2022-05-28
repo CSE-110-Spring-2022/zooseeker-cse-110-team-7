@@ -316,6 +316,8 @@ public class MapGraph {
         return pathOfRouteItems.subList(startIndex, endIndex);
     }
 
+    public Boolean isGoingBackwards(){ return isGoingBackwards; }
+
 //    public boolean isFinishedRouteFlag() {
 //        return finishedRouteFlag;
 //    }
