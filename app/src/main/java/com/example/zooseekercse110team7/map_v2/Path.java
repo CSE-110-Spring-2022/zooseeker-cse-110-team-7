@@ -5,13 +5,17 @@ import android.util.Log;
 
 import com.example.zooseekercse110team7.GlobalDebug;
 import com.example.zooseekercse110team7.planner.NodeItem;
+import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
+import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This is a singleton class (so it can be called anywhere) that is related to finding the shortest
@@ -85,6 +89,16 @@ public class Path {
         return stringList;
     }
 
+    private List<NodeItem> routeItemListToNodeItems(List<RouteItem> routeItems){
+        Set<NodeItem> result = new HashSet<>();
+        for(RouteItem item: routeItems){
+            result.add(UpdateNodeDaoRequest.getInstance().RequestItem(item.getSource()));
+            result.add(UpdateNodeDaoRequest.getInstance().RequestItem(item.getDestination()));
+        }
+
+        return new ArrayList<>(result);
+    }
+
     /**
      * Calculates the shortest path in part by using Dijkstra's Algorithm. For each item the user
      * wants to visit to, it calculates the shortest path from a reference point (like the entrance)
@@ -153,6 +167,9 @@ public class Path {
     public List<RouteItem> getShortestPath(List<NodeItem> mustVisitItems){
         String defaultSource = "entrance_exit_gate", defaultDestination = "entrance_exit_gate";//TODO: Check If There Is A Way NOT to hardcode this
         return this.getShortestPath(defaultSource, mustVisitItems, defaultDestination);
+    }
+    public List<RouteItem> getShorestPath(String source, List<RouteItem> mustVisitItems, String destination){
+        return getShortestPath(source, routeItemListToNodeItems(mustVisitItems), destination);
     }
 
     /**

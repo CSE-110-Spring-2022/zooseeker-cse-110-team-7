@@ -196,6 +196,18 @@ public class MapsActivity extends AppCompatActivity implements
 
     public void onBriefDirectionsSwitch(View view){
         Log.d("MapsActivity", "Toggled Brief Directions!");
+        MapGraph.getInstance().updateDirectionsBrevity();
+
+        String directions = "[Updated to Brief Directions]\n";
+        List<String> route = MapGraph.getInstance().getCurrentDirections();
+        for(String detail: route){
+            directions += detail;
+        }
+
+        Log.d("MapsActivity", "[Brief]\n" + directions);
+        TextView directionsTextview =
+                (TextView) findViewById(R.id.directions_text); // text view to display directions
+        directionsTextview.setText(directions);
     }
 
 

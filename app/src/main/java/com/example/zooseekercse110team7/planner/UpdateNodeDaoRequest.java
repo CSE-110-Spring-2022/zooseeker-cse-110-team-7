@@ -34,4 +34,8 @@ public class UpdateNodeDaoRequest {
         return !nodeDao.get(id).onPlanner;
     }
 
+    public NodeItem RequestItem(String id){
+        return nodeDao.get(id);
+    }
+
 }

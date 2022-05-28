@@ -168,7 +168,7 @@ public class MapGraph {
         for(IdentifiedWeightedEdge edge: edges){
             result.add(StringEdgeParser
                     .getInstance()
-                    .toPrettyEdgeString(edge, getEdgeWeight(edge),previousEdge)
+                    .toPrettyEdgeString(edge, getEdgeWeight(edge),previousEdge, isBrief)
             );
             previousEdge = edge;
         }
@@ -210,7 +210,7 @@ public class MapGraph {
         for(IdentifiedWeightedEdge edge: edges){
             result.add(StringEdgeParser
                     .getInstance()
-                    .toPrettyEdgeString(edge, getEdgeWeight(edge),previousEdge)
+                    .toPrettyEdgeString(edge, getEdgeWeight(edge),previousEdge, isBrief)
             );
             previousEdge = edge;
         }
@@ -294,28 +294,13 @@ public class MapGraph {
      * */
     public List<RouteItem> getRecentPath(){ return pathOfRouteItems; }
 
-
     /**
-     * Brief directions call out a landmark only when turning on to a new street/trail.
-     * This function sets the `isBrief` boolean to true
-     *
-     * @return this instance of the object -- using Chain of Command
+     * This function updates the brevity to the opposite value. For example, if the current state is
+     * to have brief directions, then it will update to be the opposite value such that the current
+     * state becomes detailed directions.
      * */
-    public MapGraph setToBriefDirections(){
-        this.isBrief = true;
-        return this;
-    }
-
-    /**
-     * Detailed directions are about calling out landmarks (exhibits and intersections) that the
-     * user should be passing, even if there are no turns (i.e., staying on the same street/trail).
-     * This function sets the `isBrief` boolean to false
-     *
-     * @return this instance of the object -- using Chain of Command
-     * */
-    public MapGraph setToDetailedDirections(){
-        this.isBrief = false;
-        return this;
+    public void updateDirectionsBrevity(){
+        this.isBrief = !this.isBrief;
     }
 
 //    public boolean isFinishedRouteFlag() {
