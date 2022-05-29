@@ -17,6 +17,7 @@ import com.example.zooseekercse110team7.map_v2.AssetLoader;
 import com.example.zooseekercse110team7.depreciated_map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map_v2.MapGraph;
 import com.example.zooseekercse110team7.map_v2.Path;
+import com.example.zooseekercse110team7.map_v2.UserLocation;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
@@ -114,6 +115,7 @@ public class MapsActivity extends AppCompatActivity implements
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
 
         String directions = "";
+
         List<String> route = MapGraph.getInstance().getNextDirections();
         for(String detail: route){
             directions += detail;

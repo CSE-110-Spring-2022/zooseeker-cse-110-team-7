@@ -1,0 +1,262 @@
+package com.example.zooseekercse110team7.map_v2;
+
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
+import static java.lang.Math.sqrt;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import com.example.zooseekercse110team7.MainActivity;
+import com.example.zooseekercse110team7.MapsActivity;
+import com.example.zooseekercse110team7.planner.NodeDatabase;
+import com.example.zooseekercse110team7.planner.NodeItem;
+import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * A singleton class that provides information on the user's current location,
+ * checks if they are off route, and determines the closest exhibit to the user.
+ *
+ * May need to enable fine location access and internet access on activity using it.
+ * */
+public class UserLocation {
+    private static UserLocation location;
+
+    ReadOnlyNodeDao nodeDao;
+    FusedLocationProviderClient mFusedLocationClient;
+
+    int PERMISSION_ID = 44;
+    double latitude;
+    double longitude;
+
+    private UserLocation(){}
+
+    public static UserLocation getInstance(){
+        if (location == null){
+            location = new UserLocation();
+        }
+
+        return location;
+    }
+
+    //The distance formula. Used in getClosestExhibit().
+    public double distanceFormulaHelper(double firstLatitude, double firstLongitude, double secondLatitude, double secondLongitude){
+        double changeInLat = (secondLatitude - firstLatitude);
+        double changeInLong = (secondLongitude - firstLongitude);
+        double distance = sqrt((changeInLat * changeInLat) + (changeInLong * changeInLong));
+        return distance;
+    }
+
+    //Method that compares the user's current coordinates with every other exhibit's coordinates to return the closest exhibit (in the form of its ID) to the user.
+    public String getClosestExhibit(){
+        NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
+        nodeDao = db.nodeDao();
+        double closestDistance;
+        NodeItem closestExhibit;
+
+        //Get the list of all exhibits in the zoo
+        List<NodeItem> exhibits = nodeDao.getAll();
+        for(int i = exhibits.size() - 1; i >= 0; i--){
+            if(!exhibits.get(i).kind.equals("exhibit")){
+                exhibits.remove(i);
+            }
+        }
+
+        //Get the user's current location
+        Pair<Double,Double> userCoords = getLocationCoordinates();
+        double latitude = userCoords.latit;
+        double longitude = userCoords.longit;
+
+        //Set an initial 'closest' distance with the first item from exhibits list.
+        closestDistance = distanceFormulaHelper(latitude, longitude, exhibits.get(0).lat, exhibits.get(0).lng);
+        closestExhibit = exhibits.get(0);
+
+        //Find the closest exhibit by comparing the above with every other exhibit.
+        for(int i = 1; i < exhibits.size(); i++){
+            double comparingDistance = distanceFormulaHelper(latitude, longitude, exhibits.get(i).lat, exhibits.get(i).lng);
+            //If the exhibit being compared with the current closest exhibit is closer to the user, update the closest exhibit to that.
+            if(comparingDistance < closestDistance){
+                closestExhibit = exhibits.get(i);
+                closestDistance = comparingDistance;
+            }
+        }
+
+        //Return the closest exhibit's ID.
+        return closestExhibit.id;
+    }
+
+    public boolean checkForReroute(){
+        NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
+        nodeDao = db.nodeDao();
+
+        //Get the list of exhibits on the planner.
+        List<NodeItem> exhibits = nodeDao.getByOnPlanner(true);
+
+        //Get the IDs of the above exhibits into a list.
+        List<String> exhibitIDs = new ArrayList<String>();
+        for(NodeItem x : exhibits){
+            exhibitIDs.add(x.id);
+        }
+
+        //Get the exhibit closest to the user.
+        String closestExhibit = getClosestExhibit();
+
+        //Check if the closest exhibit to the user is on the prescribed path. If so, return false, indicating no need for a reroute.
+        if(exhibitIDs.contains(closestExhibit)){
+            return false;
+        }
+
+        //If the closest exhibit is not on the prescribed route, return true, indicating a need to reroute.
+        return true;
+    }
+
+
+    //Helper class that helps with returning latitude,longitude pairs.
+    public class Pair<T, U> {
+        public final T latit;
+        public final U longit;
+
+        public Pair(T t, U u) {
+            this.latit = t;
+            this.longit = u;
+        }
+    }
+
+    /**
+     * Returns a Pair object (see above) consisting of latitude and longitude coordinates.
+     * */
+    public Pair<Double, Double> getLocationCoordinates(Context context){
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        getLastLocation();
+        Pair<Double,Double> coordinates = new Pair(latitude, longitude);
+        return coordinates;
+    }
+
+    /**
+     * Everything below here is part of getting user's current location.
+     * */
+    @SuppressLint("MissingPermission")
+    private void getLastLocation() {
+        // check if permissions are given
+        if (checkPermissions()) {
+
+            // check if location is enabled
+            if (isLocationEnabled()) {
+
+                // getting last
+                // location from
+                // FusedLocationClient
+                // object
+                mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        Location location = task.getResult();
+                        if (location == null) {
+                            requestNewLocationData();
+                        } else {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                        }
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Please turn on" + " your location...", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        } else {
+            // if permissions aren't available,
+            // request for permissions
+            requestPermissions();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void requestNewLocationData() {
+
+        // Initializing LocationRequest
+        // object with appropriate methods
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(5);
+        mLocationRequest.setFastestInterval(0);
+        mLocationRequest.setNumUpdates(1);
+
+        // setting LocationRequest
+        // on FusedLocationClient
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+    }
+
+    private LocationCallback mLocationCallback = new LocationCallback() {
+
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Location mLastLocation = locationResult.getLastLocation();
+            latitude = mLastLocation.getLatitude();
+            longitude = mLastLocation.getLongitude();
+        }
+    };
+
+    // method to check for permissions
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+        // If we want background location
+        // on Android 10.0 and higher,
+        // use:
+        // ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
+
+    // method to request for permissions
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
+    }
+
+    // method to check
+    // if location is enabled
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    // If everything is alright then
+    @Override
+    public void
+    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation();
+            }
+        }
+    }
+
+
+}
