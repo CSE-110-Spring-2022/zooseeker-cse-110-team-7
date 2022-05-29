@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.zooseekercse110team7.MainActivity;
 import com.example.zooseekercse110team7.MapsActivity;
+import com.example.zooseekercse110team7.location.Coord;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
@@ -40,23 +41,32 @@ import java.util.List;
  * A singleton class that provides information on the user's current location,
  * checks if they are off route, and determines the closest exhibit to the user.
  *
- * May need to enable fine location access and internet access on activity using it.
+ * Requires that a reference to MapsActivity be passed in since the code acquiring the user's location is stored there, in addition to the
+ * ReadOnlyNodeDao and NodeDatabase from there.
+ * Example: Coord example = UserLocation.getInstance(this, nodeDao, db).getLocationCoordinates();
  * */
-public class UserLocation {
+public class UserLocation extends Activity{
     private static UserLocation location;
 
     ReadOnlyNodeDao nodeDao;
+    NodeDatabase db;
     FusedLocationProviderClient mFusedLocationClient;
 
     int PERMISSION_ID = 44;
     double latitude;
     double longitude;
+    MapsActivity myMapsActivity;
 
-    private UserLocation(){}
 
-    public static UserLocation getInstance(){
+    private UserLocation(MapsActivity act, ReadOnlyNodeDao nodeDao, NodeDatabase db){
+        this.db = db;
+        this.nodeDao = nodeDao;
+        this.myMapsActivity = act;
+    }
+
+    public static UserLocation getInstance(MapsActivity act, ReadOnlyNodeDao nodeDao, NodeDatabase db){
         if (location == null){
-            location = new UserLocation();
+            location = new UserLocation(act, nodeDao, db);
         }
 
         return location;
@@ -72,8 +82,6 @@ public class UserLocation {
 
     //Method that compares the user's current coordinates with every other exhibit's coordinates to return the closest exhibit (in the form of its ID) to the user.
     public String getClosestExhibit(){
-        NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
-        nodeDao = db.nodeDao();
         double closestDistance;
         NodeItem closestExhibit;
 
@@ -86,17 +94,18 @@ public class UserLocation {
         }
 
         //Get the user's current location
-        Pair<Double,Double> userCoords = getLocationCoordinates();
-        double latitude = userCoords.latit;
-        double longitude = userCoords.longit;
+
+        Coord userCoords = getLocationCoordinates();
+        double userLatitude = userCoords.lat;
+        double userLongitude = userCoords.lng;
 
         //Set an initial 'closest' distance with the first item from exhibits list.
-        closestDistance = distanceFormulaHelper(latitude, longitude, exhibits.get(0).lat, exhibits.get(0).lng);
+        closestDistance = distanceFormulaHelper(userLatitude, userLongitude, exhibits.get(0).lat, exhibits.get(0).lng);
         closestExhibit = exhibits.get(0);
 
         //Find the closest exhibit by comparing the above with every other exhibit.
         for(int i = 1; i < exhibits.size(); i++){
-            double comparingDistance = distanceFormulaHelper(latitude, longitude, exhibits.get(i).lat, exhibits.get(i).lng);
+            double comparingDistance = distanceFormulaHelper(userLatitude, userLongitude, exhibits.get(i).lat, exhibits.get(i).lng);
             //If the exhibit being compared with the current closest exhibit is closer to the user, update the closest exhibit to that.
             if(comparingDistance < closestDistance){
                 closestExhibit = exhibits.get(i);
@@ -104,13 +113,15 @@ public class UserLocation {
             }
         }
 
+
+        //return "Default";
         //Return the closest exhibit's ID.
         return closestExhibit.id;
     }
 
     public boolean checkForReroute(){
-        NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
-        nodeDao = db.nodeDao();
+        //NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
+        //nodeDao = db.nodeDao();
 
         //Get the list of exhibits on the planner.
         List<NodeItem> exhibits = nodeDao.getByOnPlanner(true);
@@ -134,30 +145,28 @@ public class UserLocation {
     }
 
 
-    //Helper class that helps with returning latitude,longitude pairs.
-    public class Pair<T, U> {
-        public final T latit;
-        public final U longit;
 
-        public Pair(T t, U u) {
-            this.latit = t;
-            this.longit = u;
-        }
-    }
 
     /**
-     * Returns a Pair object (see above) consisting of latitude and longitude coordinates.
+     * Returns a Coord consisting of latitude and longitude coordinates.
+     *
      * */
-    public Pair<Double, Double> getLocationCoordinates(Context context){
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
-        Pair<Double,Double> coordinates = new Pair(latitude, longitude);
-        return coordinates;
+    public Coord getLocationCoordinates(){
+        //mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //getLastLocation();
+        //MapsActivity.Pair<Double,Double> coordinates = new MapsActivity.Pair(latitude, longitude);
+        //return coordinates;
+        //MapsActivity r = new MapsActivity();
+        //r.onSearchClicked();
+
+        Coord userCoords = myMapsActivity.latLng();
+        return userCoords;
     }
 
     /**
      * Everything below here is part of getting user's current location.
      * */
+    /*
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
         // check if permissions are given
@@ -257,6 +266,8 @@ public class UserLocation {
             }
         }
     }
+
+     */
 
 
 }
