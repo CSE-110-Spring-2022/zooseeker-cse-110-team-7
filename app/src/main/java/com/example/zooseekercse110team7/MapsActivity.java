@@ -92,6 +92,7 @@ public class MapsActivity extends AppCompatActivity implements
     int startCounter = 0;
     int goalCounter = 1;
     private boolean hasDeniedReroute;
+    private boolean responseReceived = true; //initially set to true
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -289,6 +290,7 @@ public class MapsActivity extends AppCompatActivity implements
 
             public void onClick(DialogInterface dialog, int which) {
                 reroutePath();
+                responseReceived = true;
                 dialog.dismiss();
 
             }
@@ -299,6 +301,7 @@ public class MapsActivity extends AppCompatActivity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 hasDeniedReroute = true;
+                responseReceived = true;
                 dialog.dismiss();
             }
         });
@@ -315,10 +318,14 @@ public class MapsActivity extends AppCompatActivity implements
 
         //resets because they are back on track
         //TODO include code for isUserOffRoute: if (hasDeniedReroute && !location.isUserOffRoute()) {
-            hasDeniedReroute = false;
+        hasDeniedReroute = false;
         //}
         //TODO include code for isUserOffRoute: if (!hasDeniedReroute && location.isUserOffRoute() && !graph.isGoingBackwards()) {
+        if (responseReceived) {
+            responseReceived = false;
             askUserToReroute();
+        }
+
         //}
 
     }
