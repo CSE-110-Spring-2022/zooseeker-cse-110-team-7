@@ -254,7 +254,9 @@ public class MapGraph {
 //        finishedRouteFlag = ((currentRouteItem == pathOfRouteItems.get(0) && isGoingBackwards) ||
 //                (currentRouteItem == pathOfRouteItems.get(0)) && !isGoingBackwards);
 
-        List<RouteItem> subpathRouteItems = Path.getInstance().notUpdateGraph().getShortestPath(newSource, null, newDestination);
+        List<RouteItem> remainingList = getRemainingSubpathList();
+        remainingList.remove(0);
+        List<RouteItem> subpathRouteItems = Path.getInstance().notUpdateGraph().getShortestPath(newSource, remainingList);
         if(GlobalDebug.DEBUG){
             for(RouteItem item: subpathRouteItems){
                 Log.d("MapGraph", item.toString());
@@ -307,13 +309,13 @@ public class MapGraph {
     public List<RouteItem> getRemainingSubpathList(){//TODO:Test This
         int startIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
         int endIndex = pathOfRouteItems.size()-1;
-        return pathOfRouteItems.subList(startIndex, endIndex);
+        return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
     }
 
     public List<RouteItem> getVisitedSubpathList(){//TODO:Test This
         int startIndex = 0;
         int endIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
-        return pathOfRouteItems.subList(startIndex, endIndex);
+        return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
     }
 
     public Boolean isGoingBackwards(){ return isGoingBackwards; }

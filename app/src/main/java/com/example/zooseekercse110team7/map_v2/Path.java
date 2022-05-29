@@ -171,6 +171,10 @@ public class Path {
     public List<RouteItem> getShorestPath(String source, List<RouteItem> mustVisitItems, String destination){
         return getShortestPath(source, routeItemListToNodeItems(mustVisitItems), destination);
     }
+    public List<RouteItem> getShortestPath(String source, List<RouteItem> mustVisitItems){
+        String defaultDestination = "entrance_exit_gate";//TODO
+        return this.getShortestPath(source, routeItemListToNodeItems(mustVisitItems), defaultDestination);
+    }
 
     /**
      * Returns the total cost of a path last calculated
