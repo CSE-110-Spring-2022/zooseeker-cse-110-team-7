@@ -23,15 +23,19 @@ import java.util.Set;
  * of the most recent calculated path.
  * */
 public class Path {
+    //  Singleton Setup
+    // ---------------------------------------START---------------------------------------------- //
     private static Path instance = new Path();
     private Path(){}
     public static Path getInstance(){
         return instance;
     }
+    // ----------------------------------------END----------------------------------------------- //
 
-    private MapGraph mapGraph = MapGraph.getInstance();
-    private Double pathCost;
-    private boolean shouldUpdateGraph = false;
+    private final MapGraph mapGraph = MapGraph.getInstance(); // alias for `MapGraph` instance
+    private Double pathCost; // total path cost
+    private boolean shouldUpdateGraph = false; // boolean flag to prevent updating `MapGraph` path
+
     /**
      * Returns a list of the edges (`IdentifiedWeightedEdge`) within *a* calculated path using
      * Dijkstra. It returns edges with proper ordering of source and destination.
@@ -89,6 +93,15 @@ public class Path {
         return stringList;
     }
 
+    /**
+     * Parses a list of `RouteItem`s into a list of `NodeItem`s. This is done by finding and
+     * converting each Source and Target of a `RouteItem` and putting it into a Set which is then
+     * converted into a List.
+     *
+     * @param routeItems a list of `RouteItem`s to be parsed
+     *
+     * @return a list of `NodeItem`s
+     * */
     private List<NodeItem> routeItemListToNodeItems(List<RouteItem> routeItems){
         Set<NodeItem> result = new HashSet<>();
         for(RouteItem item: routeItems){
@@ -159,11 +172,8 @@ public class Path {
 
         return route;
     }
-    public Path notUpdateGraph() {
-        shouldUpdateGraph = true;
-        return this;
-    }
-    /* Different signature, default source and default destination included when ran */
+    /* DIFFERENT SIGNATURES */
+    //[Note] default source and default destination included when ran
     public List<RouteItem> getShortestPath(List<NodeItem> mustVisitItems){
         String defaultSource = "entrance_exit_gate", defaultDestination = "entrance_exit_gate";//TODO: Check If There Is A Way NOT to hardcode this
         return this.getShortestPath(defaultSource, mustVisitItems, defaultDestination);
@@ -177,14 +187,19 @@ public class Path {
     }
 
     /**
+     * Prevents updating the path within the `MapGraph` using the Chain of Command pattern
+     *
+     * @return this instance of the object
+     * */
+    public Path notUpdateGraph() {
+        shouldUpdateGraph = true;
+        return this;
+    }
+
+    /**
      * Returns the total cost of a path last calculated
      *
      * @return null if no path has previously been calculated, else a Double of the total cost
      * */
     public Double getTotalCost(){ return pathCost; }
-
-    //TODO
-    public List<RouteItem> getShortestLocationPath(Location source, List<NodeItem> mustVisitItems, String destination){
-        return null;
-    }
 }

@@ -17,7 +17,7 @@ import com.example.zooseekercse110team7.map_v2.AssetLoader;
 import com.example.zooseekercse110team7.depreciated_map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map_v2.MapGraph;
 import com.example.zooseekercse110team7.map_v2.Path;
-import com.example.zooseekercse110team7.map_v2.StringEdgeParser;
+import com.example.zooseekercse110team7.map_v2.PrettyDirections;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
@@ -113,7 +113,7 @@ public class MapsActivity extends AppCompatActivity implements
         NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
         nodeDao = db.nodeDao();
         Path.getInstance().getShortestPath(nodeDao.getByOnPlanner(true));//on startup get planner info
-        StringEdgeParser.getInstance().setContext(getApplicationContext());
+        PrettyDirections.getInstance().setContext(getApplicationContext());
     }
 
     // Called when Directions is clicked. Displays directions for pairs of destinations in order
@@ -168,12 +168,6 @@ public class MapsActivity extends AppCompatActivity implements
     // -- start and ends of a path aren't deleted! so this may be a double edged sword
     //
     public void onSkipClicked(View view){
-        //remove item from planner
-//        for (String direction: MapGraph.getInstance().getCurrentDirections()) {
-//            Log.d("MapsActivity: Directions", direction);
-//        }
-//
-//        if (MapGraph.getInstance().getCurrentDirections().size() == 1) { return; }
         String itemId = MapGraph.getInstance().getCurrentItemToVisitId();
         if(null == itemId){ return; }
         boolean updateSuccess = UpdateNodeDaoRequest.getInstance()
@@ -186,7 +180,7 @@ public class MapsActivity extends AppCompatActivity implements
         }
 
         //update path relative to current source
-        MapGraph.getInstance().updatePathWithRemovedItem(itemId);
+        MapGraph.getInstance().updatePathWithRemovedItem();
 
         //update view/text
         String directions = "[Updated After Skip]\n";
@@ -194,9 +188,6 @@ public class MapsActivity extends AppCompatActivity implements
         for(String detail: route){
             directions += detail;
         }
-//        if(MapGraph.getInstance().isFinishedRouteFlag()) {
-//            directions += " Finished Planned Route!";
-//        }
 
         Log.d("MapsActivity", "[Skip]\n" + directions);
         TextView directionsTextview =
