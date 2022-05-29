@@ -166,12 +166,16 @@ public class MapGraph {
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
                 .getPathEdges(currentRoute.getSource(), currentRoute.getDestination());
-        for(IdentifiedWeightedEdge edge: edges){
-            result.add(StringEdgeParser
-                    .getInstance()
-                    .toPrettyEdgeString(edge, getEdgeWeight(edge),previousEdge, isBrief)
-            );
-            previousEdge = edge;
+        if(!isBrief) {
+            for (IdentifiedWeightedEdge edge : edges) {
+                result.add(StringEdgeParser
+                        .getInstance()
+                        .toPrettyEdgeString(edge, getEdgeWeight(edge), previousEdge)
+                );
+                previousEdge = edge;
+            }
+        }else{
+            result = StringEdgeParser.getInstance().toPrettyBriefEdgeString(edges);
         }
 
         /* INCREASE CURRENT INDEX WITHIN PATH LIST */
@@ -208,12 +212,16 @@ public class MapGraph {
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
                 .getPathEdges(currentRoute.getDestination(), currentRoute.getSource());
-        for(IdentifiedWeightedEdge edge: edges){
-            result.add(StringEdgeParser
-                    .getInstance()
-                    .toPrettyEdgeString(edge, getEdgeWeight(edge),previousEdge, isBrief)
-            );
-            previousEdge = edge;
+        if(!isBrief) {
+            for (IdentifiedWeightedEdge edge : edges) {
+                result.add(StringEdgeParser
+                        .getInstance()
+                        .toPrettyEdgeString(edge, getEdgeWeight(edge), previousEdge)
+                );
+                previousEdge = edge;
+            }
+        }else{
+            result = StringEdgeParser.getInstance().toPrettyBriefEdgeString(edges);
         }
 
         return result;

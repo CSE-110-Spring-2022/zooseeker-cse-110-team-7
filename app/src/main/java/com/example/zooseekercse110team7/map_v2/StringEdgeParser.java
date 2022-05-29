@@ -7,7 +7,9 @@ import android.util.Log;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
+import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,8 +36,49 @@ public class StringEdgeParser {
         return this;
     }
 
+    public List<String> toPrettyBriefEdgeString(List<IdentifiedWeightedEdge> edges){
+        String errorString = "[Path Error] Cannot Find Path Details!";
+        List<String> result = new ArrayList<>();
+
+        String lastStreet = "";
+        String subDirection="";
+        Double distance = 0.0;
+        boolean gettingDestination = false;
+        for(int i=0; i < edges.size(); i++){
+            if(!lastStreet.equals(getStreet(edges.get(i))) || edges.size()-1 == i){
+                if(!gettingDestination) {
+                    subDirection += "Proceed on " + getStreet(edges.get(i)) + " for ";
+                    gettingDestination = true;
+                }else{
+                    String anId = edges.get(i).getEdgeTarget();
+                    VertexInfo n = AssetLoader.getInstance().getVertexMap().get(anId);
+                    subDirection += distance.toString() + "ft towards "
+                            + n.name
+                            + "\n";
+                    gettingDestination = false;
+                    distance = 0.0;
+                    result.add(subDirection);
+                    subDirection = "";
+                }
+            }
+            distance += MapGraph.getInstance().getEdgeWeight(edges.get(i));
+            lastStreet = getStreet(edges.get(i));
+        }
+
+        if(gettingDestination) {
+            String anId = getLast(edges).getEdgeTarget();
+            VertexInfo n = AssetLoader.getInstance().getVertexMap().get(anId);
+            subDirection += distance.toString() + "ft towards "
+                    + n.name
+                    + "\n";
+            result.add(subDirection);
+        }
+
+        return result;
+    }
+
     public String toPrettyEdgeString(IdentifiedWeightedEdge edge, Double distance,
-                                     IdentifiedWeightedEdge previousEdge, boolean isBrief){
+                                     IdentifiedWeightedEdge previousEdge){
         String errorString = "[Path Error] Cannot Find Path Details!";
         String result = "";
         String sourceId = edge.getEdgeSource();
@@ -63,7 +106,7 @@ public class StringEdgeParser {
                     nodeDao.get(edge.getEdgeTarget()).name.split(" / ")
             );
             if(!edge.isFlipped()) {
-                if (!isBrief && Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
+                if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
                     result = "Continue on " + getFirst(streetSpliceTarget) + " for "
                             + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
                             + "\n";
@@ -74,7 +117,7 @@ public class StringEdgeParser {
                 }
             }else{
                 if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
-                    if(!isBrief && previousStreet.equals(currentStreet)){
+                    if(previousStreet.equals(currentStreet)){
                         result = "Continue on " + getFirst(streetSpliceTarget) + " for "
                                 + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
                                 + "\n";
@@ -84,7 +127,7 @@ public class StringEdgeParser {
                                 + "\n";
                     }
                 } else if (Objects.equals(getFirst(streetSpliceSource), getLast(streetSpliceTarget))) {
-                    if(!isBrief && previousStreet.equals(currentStreet)){
+                    if(previousStreet.equals(currentStreet)){
                         result = "Continue on " + getLast(streetSpliceTarget) + " for "
                                 + distance.toString() + "ft towards " + getFirst(streetSpliceTarget)
                                 + "\n";
@@ -111,7 +154,7 @@ public class StringEdgeParser {
     }
 
     public String toPrettyEdgeStringReverse(IdentifiedWeightedEdge edge, Double distance,
-                                            IdentifiedWeightedEdge previousEdge, boolean isBrief){
+                                            IdentifiedWeightedEdge previousEdge){
         String errorString = "[Path Error] Cannot Find Path Details!";
         String result="";
         String sourceId = edge.getEdgeSource();
@@ -141,7 +184,7 @@ public class StringEdgeParser {
                     nodeDao.get(edge.getEdgeTarget()).name.split(" / ")
             );
             if(!edge.isFlipped()) {
-                if (!isBrief && Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
+                if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
                     result = "Continue on " + getFirst(streetSpliceTarget) + " for "
                             + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
                             + "\n";
@@ -152,7 +195,7 @@ public class StringEdgeParser {
                 }
             }else{
                 if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
-                    if(!isBrief && previousStreet.equals(currentStreet)){
+                    if(previousStreet.equals(currentStreet)){
                         result = "Continue on " + getFirst(streetSpliceTarget) + " for "
                                 + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
                                 + "\n";
@@ -162,7 +205,7 @@ public class StringEdgeParser {
                                 + "\n";
                     }
                 } else if (Objects.equals(getFirst(streetSpliceSource), getLast(streetSpliceTarget))) {
-                    if(!isBrief && previousStreet.equals(currentStreet)){
+                    if(previousStreet.equals(currentStreet)){
                         result = "Continue on " + getLast(streetSpliceTarget) + " for "
                                 + distance.toString() + "ft towards " + getFirst(streetSpliceTarget)
                                 + "\n";

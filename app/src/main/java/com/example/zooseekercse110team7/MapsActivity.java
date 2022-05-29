@@ -135,6 +135,18 @@ public class MapsActivity extends AppCompatActivity implements
         Log.d("MapsActivity", "Next Updated!");
     }
 
+    /**
+     * https://piazza.com/class/l186r5pbwg2q4?cid=648
+     * 1. Does hitting the previous button backtrace and reverse the steps? For example, the user
+     * story mentions 2 scenarios - pressing previous to find out how to backtrack to the hippos
+     * exhibit, but also pressing next to "preview" the next exhibit and then pressing previous to
+     * return to the current one.
+     *
+     * This was -- partially -- previously asked and answered in previous clarifications. I recommend
+     * you read those responses carefully. In general, the answer is, yes, Previous reverses the
+     * steps. It's even in the Scenario.However, directions are now from your actual location
+     * as opposed to a supposed location.
+     * */
     public void onBackClicked(View view){
         Log.d("MapsActivity", "Back Button Clicked!");
         TextView directionsTextview =
