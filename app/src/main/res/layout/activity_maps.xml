@@ -62,7 +62,7 @@
             android:text="Search" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/mock_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
@@ -106,6 +106,13 @@
                 android:onClick="onBackClicked"
                 android:text="Back" />
 
+            <ImageButton
+                android:id="@+id/reroute_bt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                app:srcCompat="@drawable/maps_icon_direction" />
+
             <Switch
                 android:id="@+id/brief_directions_switch"
                 android:layout_width="0dp"
@@ -114,6 +121,7 @@
                 android:minHeight="48dp"
                 android:onClick="onBriefDirectionsSwitch"
                 android:text="Brief Direction" />
+
         </LinearLayout>
 
         <TextView
