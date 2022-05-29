@@ -52,13 +52,18 @@ public class StringEdgeParser {
                 }else{
                     String anId = edges.get(i).getEdgeTarget();
                     VertexInfo n = AssetLoader.getInstance().getVertexMap().get(anId);
-                    subDirection += distance.toString() + "ft towards "
-                            + n.name
+                    subDirection += distance.toString() + "ft to "
+                            + getStreet(edges.get(i))
                             + "\n";
                     gettingDestination = false;
                     distance = 0.0;
                     result.add(subDirection);
                     subDirection = "";
+                }
+            }else{
+                if(!gettingDestination) {
+                    subDirection += "Proceed on " + getStreet(edges.get(i)) + " for ";
+                    gettingDestination = true;
                 }
             }
             distance += MapGraph.getInstance().getEdgeWeight(edges.get(i));
@@ -68,9 +73,15 @@ public class StringEdgeParser {
         if(gettingDestination) {
             String anId = getLast(edges).getEdgeTarget();
             VertexInfo n = AssetLoader.getInstance().getVertexMap().get(anId);
-            subDirection += distance.toString() + "ft towards "
+            subDirection += distance.toString() + "ft to "
                     + n.name
                     + "\n";
+            result.add(subDirection);
+        }else{
+            String anId = getLast(edges).getEdgeTarget();
+            VertexInfo n = AssetLoader.getInstance().getVertexMap().get(anId);
+            subDirection += "Proceed on " + getStreet(getLast(edges)) + " for "
+                    + distance.toString() + "ft to " + n.name + "\n";
             result.add(subDirection);
         }
 
