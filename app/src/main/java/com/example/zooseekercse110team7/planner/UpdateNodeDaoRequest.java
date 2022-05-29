@@ -34,6 +34,8 @@ public class UpdateNodeDaoRequest {
         return !nodeDao.get(id).onPlanner;
     }
 
+
+    //TODO: Depreciate this method -- in violation of SRP
     public NodeItem RequestItem(String id){
         return nodeDao.get(id);
     }
