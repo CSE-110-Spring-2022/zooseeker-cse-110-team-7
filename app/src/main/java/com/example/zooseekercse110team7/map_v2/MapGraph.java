@@ -347,13 +347,12 @@ public class MapGraph {
     }
 
     /**
-     * Returns a list of the subpath that needs to be visited.
-     *
+     * Returns a list of the subpath that needs to be visited
      * @return a list of `RouteItem`s which is the subpath of unvisited items
      * */
     public List<RouteItem> getRemainingSubpathList(){//TODO:Test This
-        if(pathOfRouteItems.size() > 1){ return Collections.emptyList();}
-        int startIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
+        if(pathOfRouteItems.size() <= 1){ return Collections.emptyList();}
+        int startIndex = currentPathIndex;
         int endIndex = pathOfRouteItems.size()-1;
         return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
     }
@@ -364,9 +363,9 @@ public class MapGraph {
      * @return a list of `RouteItem`s which is the subpath of visited items
      * */
     public List<RouteItem> getVisitedSubpathList(){//TODO:Test This
-        if(pathOfRouteItems.size() > 1){ return Collections.emptyList();}
+        if(pathOfRouteItems.size() <= 1){ return Collections.emptyList();}
         int startIndex = 0;
-        int endIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
+        int endIndex = currentPathIndex;
         return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
     }
 

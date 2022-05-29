@@ -338,11 +338,12 @@ public class MapsActivity extends AppCompatActivity implements
         MapGraph graph = MapGraph.getInstance();
         List<RouteItem> routeItemsToVisit = graph.getRemainingSubpathList();
         List<RouteItem> routeItemsVisited = graph.getVisitedSubpathList();
-
-        String closestExhibit = ""; //TODO include code: location.getClosestExhibit();
-        List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShorestPath(closestExhibit, routeItemsToVisit, Path.DEFAULT_DESTINATION);
-        routeItemsVisited.addAll(newRoute);
-        graph.setPath(routeItemsVisited);
+        if (routeItemsVisited.size() >= 1) {
+            String closestExhibit = Path.DEFAULT_SOURCE; //TODO include code: location.getClosestExhibit();
+            List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShorestPath(closestExhibit, routeItemsToVisit, Path.DEFAULT_DESTINATION);
+            routeItemsVisited.addAll(newRoute);
+            graph.setPath(routeItemsVisited);
+        }
     }
     /**
      * onResume, rerouter checks if delay (15 seconds) past before running handleRerouting

@@ -130,6 +130,7 @@ public class Path {
      * @return list of `RouteItem`s in order in which they should be visited for optimal path
      * */
     public List<RouteItem> getShortestPath(String source, List<NodeItem> mustVisitItems, String destination){
+
         List<String> remainingNames = nodeListToStringList(mustVisitItems);
 
         double totalCost = 0.0;
