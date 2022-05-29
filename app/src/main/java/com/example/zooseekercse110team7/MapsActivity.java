@@ -1,9 +1,16 @@
 package com.example.zooseekercse110team7;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.InputType;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import android.graphics.Color;
@@ -22,6 +29,7 @@ import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
 import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
+import com.example.zooseekercse110team7.routesummary.RouteItem;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -80,10 +88,10 @@ public class MapsActivity extends AppCompatActivity implements
     private List<NodeItem> plannedItems;
     ReadOnlyNodeDao nodeDao;
     AssetLoader g;
+    //TODO include code: Location location = LocationSingleton.getInstance();
     int startCounter = 0;
     int goalCounter = 1;
-
-
+    private boolean hasDeniedReroute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +100,23 @@ public class MapsActivity extends AppCompatActivity implements
         // [START_EXCLUDE silent]
 
         // [END_EXCLUDE]
+        ImageButton reroute_btn = (ImageButton) findViewById(R.id.reroute_bt);
+
+        reroute_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reroutePath();
+            }
+        });
+        Button mock_btn = (Button) findViewById(R.id.mock_btn);
+
+
+        mock_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readInPathText();
+            }
+        });
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -114,6 +139,41 @@ public class MapsActivity extends AppCompatActivity implements
         nodeDao = db.nodeDao();
         Path.getInstance().getShortestPath(nodeDao.getByOnPlanner(true));//on startup get planner info
         PrettyDirections.getInstance().setContext(getApplicationContext());
+    }
+
+    /**
+     * creates an alert dialog when the `Mock` button is pressed
+     * if OK is pressed, the alert dialog reads inputed text and then stores it in the path_url string
+     * else if Cancel is pressed, the alert dialog closes and the path_url remains unchanged.
+     * https://stackoverflow.com/questions/10903754/input-text-dialog-android
+     */
+    private void readInPathText() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Location Mock JSON URL");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String path_url = input.getText().toString();
+                //TODO include code: ReadJSONStuff(path_url);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     // Called when Directions is clicked. Displays directions for pairs of destinations in order
@@ -196,7 +256,6 @@ public class MapsActivity extends AppCompatActivity implements
 
     }
 
-
     public void onBriefDirectionsSwitch(View view){
         Log.d("MapsActivity", "Toggled Brief Directions!");
         MapGraph.getInstance().updateDirectionsBrevity();
@@ -213,12 +272,111 @@ public class MapsActivity extends AppCompatActivity implements
         directionsTextview.setText(directions);
     }
 
+    // [<REROUTE HANDLER>]
 
-    // [START_EXCLUDE silent]
+
+    /*
+     * https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android
+     * Creates a dialog box that asks user if they want to reroute or not
+     */
+    private void askUserToReroute () {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Rerouting");
+        builder.setMessage("You are off the path, would you like to reroute?");
+
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                reroutePath();
+                dialog.dismiss();
+
+            }
+        });
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                hasDeniedReroute = true;
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    /*
+     * Checks if user is going `forward` and user is off-route
+     * Queries user if they want to reroute for a more optimal path
+     */
+    public void checkOffPath() {
+        MapGraph graph = MapGraph.getInstance();
+
+        //resets because they are back on track
+        //TODO include code for isUserOffRoute: if (hasDeniedReroute && !location.isUserOffRoute()) {
+            hasDeniedReroute = false;
+        //}
+        //TODO include code for isUserOffRoute: if (!hasDeniedReroute && location.isUserOffRoute() && !graph.isGoingBackwards()) {
+            askUserToReroute();
+        //}
+
+    }
+
+    /*
+     * Uses the graph methods to recreate a new route based off the closest exhibit
+     * @ensure the path is going forward
+     */
+    private void reroutePath() {
+        MapGraph graph = MapGraph.getInstance();
+        List<RouteItem> routeItemsToVisit = graph.getRemainingSubpathList();
+        List<RouteItem> routeItemsVisited = graph.getVisitedSubpathList();
+
+        String closestExhibit = ""; //TODO include code: location.getClosestExhibit();
+        List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShorestPath(closestExhibit, routeItemsToVisit, Path.DEFAULT_DESTINATION);
+        routeItemsVisited.addAll(newRoute);
+        graph.setPath(routeItemsVisited);
+    }
+    /**
+     * onResume, rerouter checks if delay (15 seconds) past before running handleRerouting
+     * onPause, rerouter pauses until activity is resumed (doesn't check for off route)
+     * https://stackoverflow.com/questions/11434056/how-to-run-a-method-every-x-seconds
+     */
+    Handler rerouter = new Handler();
+    Runnable runnable;
+    int delay = 15*1000; //Delay for 15 seconds.  One second = 1000 milliseconds.
     @Override
     protected void onResume() {
+        //start handler as activity become visible
+
+        rerouter.postDelayed( runnable = new Runnable() {
+            public void run() {
+                //call location functions
+
+                checkOffPath();
+
+                rerouter.postDelayed(runnable, delay);
+            }
+        }, delay);
+
         super.onResume();
     }
+
+    // If onPause() is not included the threads will double up when you
+    // reload the activity
+
+    @Override
+    protected void onPause() {
+        rerouter.removeCallbacks(runnable); //stop handler when activity not visible
+        super.onPause();
+    }
+    // [</REROUTE HANDLER>]
+
+
+
+
+    // [START_EXCLUDE silent]
+
     // [END_EXCLUDE]
 
     @Override
@@ -275,11 +433,6 @@ public class MapsActivity extends AppCompatActivity implements
     }
      */
 
-
-
-    private void changeCamera(CameraUpdate update) {
-        changeCamera(update, null);
-    }
 
     /**
      * Change the camera position by moving or animating the camera depending on the state of the

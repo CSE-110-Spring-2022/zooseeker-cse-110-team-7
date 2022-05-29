@@ -23,6 +23,8 @@ import java.util.Set;
  * of the most recent calculated path.
  * */
 public class Path {
+    public static final String DEFAULT_SOURCE = "entrance_exit_gate";
+    public static final String DEFAULT_DESTINATION = "entrance_exit_gate";
     //  Singleton Setup
     // ---------------------------------------START---------------------------------------------- //
     private static Path instance = new Path();
@@ -175,8 +177,7 @@ public class Path {
     /* DIFFERENT SIGNATURES */
     //[Note] default source and default destination included when ran
     public List<RouteItem> getShortestPath(List<NodeItem> mustVisitItems){
-        String defaultSource = "entrance_exit_gate", defaultDestination = "entrance_exit_gate";//TODO: Check If There Is A Way NOT to hardcode this
-        return this.getShortestPath(defaultSource, mustVisitItems, defaultDestination);
+        return this.getShortestPath(DEFAULT_SOURCE, mustVisitItems, DEFAULT_DESTINATION);
     }
     public List<RouteItem> getShorestPath(String source, List<RouteItem> mustVisitItems, String destination){
         return getShortestPath(source, routeItemListToNodeItems(mustVisitItems), destination);
@@ -202,4 +203,9 @@ public class Path {
      * @return null if no path has previously been calculated, else a Double of the total cost
      * */
     public Double getTotalCost(){ return pathCost; }
+
+    //TODO
+    public List<RouteItem> getShortestLocationPath(Location source, List<NodeItem> mustVisitItems, String destination){
+        return null;
+    }
 }
