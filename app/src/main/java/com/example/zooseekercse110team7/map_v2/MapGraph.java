@@ -8,6 +8,7 @@ import com.example.zooseekercse110team7.routesummary.RouteItem;
 import org.jgrapht.Graph;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -351,6 +352,7 @@ public class MapGraph {
      * @return a list of `RouteItem`s which is the subpath of unvisited items
      * */
     public List<RouteItem> getRemainingSubpathList(){//TODO:Test This
+        if(pathOfRouteItems.size() > 1){ return Collections.emptyList();}
         int startIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
         int endIndex = pathOfRouteItems.size()-1;
         return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
@@ -362,6 +364,7 @@ public class MapGraph {
      * @return a list of `RouteItem`s which is the subpath of visited items
      * */
     public List<RouteItem> getVisitedSubpathList(){//TODO:Test This
+        if(pathOfRouteItems.size() > 1){ return Collections.emptyList();}
         int startIndex = 0;
         int endIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
         return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
