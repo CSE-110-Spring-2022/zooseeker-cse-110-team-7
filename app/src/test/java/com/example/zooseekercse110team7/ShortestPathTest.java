@@ -63,6 +63,7 @@ public class ShortestPathTest {
                         null
                 );
 
+
         //MapGraph.getInstance().setAssetLoader(assetLoader);
         Path path = Path.getInstance();
 
