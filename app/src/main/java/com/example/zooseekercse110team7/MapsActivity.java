@@ -163,7 +163,7 @@ public class MapsActivity extends AppCompatActivity implements
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
 
-        String directions = "";
+        String directions = "[Next]\n";
 
         //Coord example = UserLocation.getInstance(this, nodeDao, db).getLocationCoordinates();
         //String ex2 = UserLocation.getInstance(this, nodeDao, db).getClosestExhibit();
