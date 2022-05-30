@@ -738,9 +738,13 @@ public class MapsActivity extends AppCompatActivity implements
     @SuppressLint("MissingPermission")
     private void requestNewLocationData() {
 
-        // Initializing LocationRequest
-        // object with appropriate methods
-        LocationRequest mLocationRequest = new LocationRequest();
+        // Initializing LocationRequest object with appropriate methods
+        LocationRequest mLocationRequest =  LocationRequest.create()
+                .setInterval(100)
+                .setFastestInterval(3000)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setMaxWaitTime(100);
+
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(5);
         mLocationRequest.setFastestInterval(0);
