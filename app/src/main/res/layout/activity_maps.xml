@@ -113,6 +113,7 @@
                 android:layout_weight="0.5"
                 app:srcCompat="@drawable/maps_icon_direction" />
 
+
             <Switch
                 android:id="@+id/brief_directions_switch"
                 android:layout_width="0dp"

@@ -24,6 +24,7 @@ import com.example.zooseekercse110team7.routesummary.RouteSummaryViewModel;
 
 import java.util.List;
 
+
 public class PlannerActivity extends AppCompatActivity {
     // Exposed for testing purposes later
     public RecyclerView recyclerView, routeSummaryView;

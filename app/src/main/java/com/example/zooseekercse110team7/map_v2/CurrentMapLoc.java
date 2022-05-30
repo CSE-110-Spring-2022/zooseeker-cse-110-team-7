@@ -45,6 +45,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import java.util.Arrays;
 import java.util.List;
 
+
 /**
  * An activity that displays a map showing the place at the device's current location.
  */
