@@ -257,8 +257,6 @@ public class MapsActivity extends AppCompatActivity implements
 
         String directions = "[Next]\n";
 
-        String directions = "";
-
         //Coord example = UserLocation.getInstance(this, nodeDao, db).getLocationCoordinates();
         //String ex2 = UserLocation.getInstance(this, nodeDao, db).getClosestExhibit();
         //boolean ex3  = UserLocation.getInstance(this, nodeDao, db).checkForReroute();
