@@ -37,7 +37,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        tools:visibility="gone">
 
     </LinearLayout>
 
@@ -71,30 +72,45 @@
             android:text="Mock"
             android:textSize="12sp" />
 
-        <Button
-            android:id="@+id/next_mock_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="MOCK NEXT"
-            android:textSize="10sp" />
-
-        <Button
-            android:id="@+id/turn_off_mocking_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="MOCK OFF"
-            android:textSize="10sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/validity"
         android:layout_width="match_parent"
-        android:layout_height="148dp"
-        android:layout_gravity="bottom"
+        android:layout_height="238dp"
+        android:layout_gravity="center"
         android:background="@android:color/white"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/next_mock_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="MOCK NEXT"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/mock_back_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="Mock Back"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/turn_off_mocking_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="MOCK OFF"
+                android:textSize="10sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -158,6 +174,6 @@
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="537dp" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
