@@ -1,5 +1,6 @@
 package com.example.zooseekercse110team7;
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -15,11 +16,14 @@ public class AssetLoaderTest {
 
     @Test
     public void testLoad(){
-        AssetLoader assets = new AssetLoader(
-                "sample_zoo_graph.json",
-                "sample_node_info.json",
-                "sample_edge_info.json",
-                null);
+        AssetLoader assets = AssetLoader
+                .getInstance()
+                .loadAssets(
+                        "sample_zoo_graph.json",
+                        "sample_node_info.json",
+                        "sample_edge_info.json",
+                        null
+                );
 
         //System.out.println(assets.getZooFile());
         //System.out.println(assets.getNodeFile());

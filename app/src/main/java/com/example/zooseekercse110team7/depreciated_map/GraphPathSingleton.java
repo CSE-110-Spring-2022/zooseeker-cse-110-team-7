@@ -13,6 +13,7 @@ import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class GraphPathSingleton {
 
     private static GraphPathSingleton instance = new GraphPathSingleton();
@@ -35,7 +36,7 @@ public class GraphPathSingleton {
         Log.d("GraphPathSingleton", "Items Set");
     }
     public void loadAssets(Context context) {
-        g = new AssetLoader(
+        g = AssetLoader.getInstance().loadAssets(
                 "sample_zoo_graph.json",
                 "sample_node_info.json",
                 "sample_edge_info.json",

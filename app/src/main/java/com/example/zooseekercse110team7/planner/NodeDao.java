@@ -10,6 +10,7 @@ import androidx.room.Update;
 import org.w3c.dom.Node;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -60,6 +61,8 @@ public interface NodeDao extends ReadOnlyNodeDao{
     List<NodeItem> getByKind(List<Boolean> onPlannerBools, List<String> kinds);
     @Query("SELECT * FROM `node_items` WHERE onPlanner IN (:onPlannerBools)")
     List<NodeItem> getByOnPlanner(Boolean onPlannerBools);
+    @Query("SELECT * FROM `node_items` WHERE kind LIKE (:gateString) LIMIT 1")
+    NodeItem getGate(String gateString);
 
     /**
      * Retrieves all the values from the `kind` field in the database as a list of Strings.
@@ -77,6 +80,14 @@ public interface NodeDao extends ReadOnlyNodeDao{
      * */
     @Query("UPDATE `node_items` SET onPlanner=0 WHERE onPlanner=1")
     int clearPlanner();
+
+    /**
+     * Updates the database of a particular item based on the `id` to remove it off the planner
+     *
+     * @return number of updated items
+     * */
+    @Query("UPDATE `node_items` SET onPlanner=0 WHERE id=(:id)")
+    int removeItemOnPlanner(String id);
 
     /**
      * The implementation of the method will update its parameters in the database if they already

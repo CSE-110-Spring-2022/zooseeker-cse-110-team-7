@@ -15,3 +15,4 @@ package com.example.zooseekercse110team7;
 public class GlobalDebug {
     public static boolean DEBUG = true; // set this to false on release
 }
+

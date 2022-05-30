@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+
 /**
  * The name of the class may be a tiny bit confusing, but the purpose of this class is to be the
  * MODEL of the MVC pattern
