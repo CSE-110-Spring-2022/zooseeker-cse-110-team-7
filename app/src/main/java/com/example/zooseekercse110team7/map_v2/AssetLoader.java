@@ -15,10 +15,6 @@ import org.jgrapht.Graph;
  * This class loads all the information from the JSON files to be able to create a graph.
  * */
 public class AssetLoader {
-    private static AssetLoader instance = new AssetLoader();
-    private AssetLoader(){}
-    public static AssetLoader getInstance(){ return instance;}
-
 
     private String zooGraphJSON;
     private String nodeInfoJSON;
@@ -27,7 +23,7 @@ public class AssetLoader {
     private Map<String, VertexInfo> vInfo;
     private Map<String, EdgeInfo> eInfo;
 
-    public AssetLoader loadAssets(String zooGraph, String nodeInfo, String edgeInfo, Context aContext){
+    public AssetLoader(String zooGraph, String nodeInfo, String edgeInfo, Context aContext){
         this.zooGraphJSON = zooGraph;
         this.nodeInfoJSON = nodeInfo;
         this.edgeInfoJSON = edgeInfo;
@@ -45,8 +41,6 @@ public class AssetLoader {
         graph = ZooData.loadZooGraphJSON(aContext, zooGraphJSON);
         vInfo = ZooData.loadVertexInfoJSON(aContext, nodeInfoJSON);
         eInfo = ZooData.loadEdgeInfoJSON(aContext, edgeInfoJSON);
-
-        return this;
     }
 
     public String getZooFile(){
