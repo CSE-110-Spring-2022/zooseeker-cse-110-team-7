@@ -79,6 +79,14 @@ public interface NodeDao extends ReadOnlyNodeDao{
     int clearPlanner();
 
     /**
+     * Updates the database of a particular item based on the `id` to remove it off the planner
+     *
+     * @return number of updated items
+     * */
+    @Query("UPDATE `node_items` SET onPlanner=0 WHERE id=(:id)")
+    int removeItemOnPlanner(String id);
+
+    /**
      * The implementation of the method will update its parameters in the database if they already
      * exists (checked by primary keys). If they don't already exists, this option will not change
      * the database

@@ -46,29 +46,6 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/next_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:onClick="onNextClicked"
-            android:text="Next" />
-
-        <Button
-            android:id="@+id/skip_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Skip" />
-
-        <Button
-            android:id="@+id/back_step_plan"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:onClick="onBackClicked"
-            android:text="Back" />
-
-        <Button
             android:id="@+id/planner_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -83,6 +60,13 @@
             android:layout_weight="0.5"
             android:onClick="onSearchClicked"
             android:text="Search" />
+
+        <Button
+            android:id="@+id/mock_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Mock" />
     </LinearLayout>
 
     <LinearLayout
@@ -93,12 +77,59 @@
         android:background="@android:color/white"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/next_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:onClick="onNextClicked"
+                android:text="Next" />
+
+            <Button
+                android:id="@+id/skip_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:onClick="onSkipClicked"
+                android:text="Skip" />
+
+            <Button
+                android:id="@+id/back_step_plan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:onClick="onBackClicked"
+                android:text="Back" />
+
+            <ImageButton
+                android:id="@+id/reroute_bt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                app:srcCompat="@drawable/maps_icon_direction" />
+
+            <Switch
+                android:id="@+id/brief_directions_switch"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:minHeight="48dp"
+                android:onClick="onBriefDirectionsSwitch"
+                android:text="Brief Direction" />
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/directions_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="Press 'Next' to begin route guidance."
-            android:scrollbars = "vertical"
+            android:scrollbars="vertical"
             android:textColorHint="#757575"
             android:verticalScrollbarPosition="right" />
     </LinearLayout>
