@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zooseekercse110team7.R;
 
+
 public class RouteSummaryViewAdapter extends RecyclerView.Adapter <RouteSummaryViewAdapter.ViewHolder>{
 
     /**

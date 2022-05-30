@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+
 /**
  * The name of the class may be a tiny bit confusing, but the purpose of this class is to be the
  * MODEL of the MVC pattern
@@ -87,12 +88,6 @@ public class NodeSearchViewModel extends AndroidViewModel{
         return filterItems;
     }
 
-
-
-    public List<NodeItem> getAllSelectedNodeItems() {
-        return nodeDao.getByOnPlanner(true);
-    }
-
     public List<NodeItem> getAllFilteredNodeItems(String filter){
         String queryString;
         if (filter.isEmpty()) {
@@ -132,10 +127,6 @@ public class NodeSearchViewModel extends AndroidViewModel{
     public void removeItemFromPlanner(NodeItem nodeItem){
         nodeItem.onPlanner = false;
         nodeDao.update(nodeItem);
-    }
-
-    public void removeAllItemsFromPlanner() {
-        nodeDao.clearPlanner();
     }
 
     /**

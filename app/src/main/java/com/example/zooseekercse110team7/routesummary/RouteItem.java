@@ -1,5 +1,6 @@
 package com.example.zooseekercse110team7.routesummary;
 
+
 /**
  * An itermediary class used by the Planner
  * */

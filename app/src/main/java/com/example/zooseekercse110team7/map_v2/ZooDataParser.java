@@ -19,10 +19,18 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultUndirectedWeightedGraph;
 import org.jgrapht.nio.json.JSONImporter;
 
-public class ZooData {
+/**
+ * The purpose of this class is to parse the JSON files related to the graph. This class uses the
+ * GSON JSON parser to parse JSON files.
+ * */
+public class ZooDataParser {
 
-
-
+    /**
+     * Parses the JSON file related to the vertices in the graph. It puts the resulting information
+     * into a HashMap where the key is the ID and value is the `VertexInfo`.
+     *
+     * @return a HashMap where the key is the ID and value is the `VertexInfo` of the parsed info
+     * */
     public static Map<String, VertexInfo> loadVertexInfoJSON(Context aContext,String path) {
         Map<String, VertexInfo> indexedZooData = new HashMap<>();
         try{
@@ -41,7 +49,7 @@ public class ZooData {
             //
             indexedZooData = zooData
                     .stream()
-                    .collect(Collectors.toMap(v -> v.id, datum -> datum));
+                    .collect(Collectors.toMap(vertex -> vertex.id, datum -> datum));
 
 
         } catch (NullPointerException | IOException e){
@@ -50,12 +58,18 @@ public class ZooData {
         return indexedZooData;
     }
 
+    /**
+     * Parses the JSON file related to the edges in the graph. It puts the resulting information
+     * into a HashMap where the key is the ID and value is the `EdgeInfo`.
+     *
+     * @return a HashMap where the key is the ID and value is the `EdgeInfo` of the parsed info
+     * */
     public static Map<String, EdgeInfo> loadEdgeInfoJSON(Context aContext, String path) {
         Map<String, EdgeInfo> indexedZooData = new HashMap<>();
+
         try{
             InputStream inputStream = aContext.getAssets().open(path);
             Reader reader = new InputStreamReader(inputStream);
-
             Gson gson = new Gson();
             Type type = new TypeToken<List<EdgeInfo>>(){}.getType();
             List<EdgeInfo> zooData = gson.fromJson(reader, type);
@@ -71,15 +85,24 @@ public class ZooData {
         return indexedZooData;
     }
 
-    public static Graph<String, IdentifiedWeightedEdge> loadZooGraphJSON(Context context, String path) {
+    /**
+     * Parses the JSON file related to the graph. It puts the resulting information into a Java
+     * Graph object where the key is the ID and value is the `IdentifiedWeightedEdge`.
+     *
+     * @return a Java Graph object where the key is the ID and value is the `IdentifiedWeightedEdge`
+     * of the parsed info
+     * */
+    public static Graph<String, IdentifiedWeightedEdge> loadZooGraphJSON(Context context,
+                                                                         String path) {
         // Create an empty graph to populate.
-        Graph<String, IdentifiedWeightedEdge> g = new DefaultUndirectedWeightedGraph<>(IdentifiedWeightedEdge.class);
+        Graph<String, IdentifiedWeightedEdge> g
+                = new DefaultUndirectedWeightedGraph<>(IdentifiedWeightedEdge.class);
 
         // Create an importer that can be used to populate our empty graph.
         JSONImporter<String, IdentifiedWeightedEdge> importer = new JSONImporter<>();
 
         // We don't need to convert the vertices in the graph, so we return them as is.
-        importer.setVertexFactory(v -> v);
+        importer.setVertexFactory(vertex -> vertex);
 
         // We need to make sure we set the IDs on our edges from the 'id' attribute.
         // While this is automatic for vertices, it isn't for edges. We keep the
@@ -93,8 +116,6 @@ public class ZooData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
         //InputStream inputStream = App.class.getClassLoader().getResourceAsStream(path);
         Reader reader = new InputStreamReader(inputStream);

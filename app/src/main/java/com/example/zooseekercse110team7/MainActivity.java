@@ -1,5 +1,6 @@
 package com.example.zooseekercse110team7;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -21,11 +22,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MapGraph.getInstance().setAssetLoader(new AssetLoader(
-                "sample_zoo_graph.json",
-                "sample_node_info.json",
-                "sample_edge_info.json",
-                getApplicationContext()));
+//        MapGraph.getInstance().setAssetLoader(new AssetLoader(
+//                "sample_zoo_graph.json",
+//                "sample_node_info.json",
+//                "sample_edge_info.json",
+//                getApplicationContext()));
 
         //Intent intent = new Intent(this, TodoListActivity.class);
 

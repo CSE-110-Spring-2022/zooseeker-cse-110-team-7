@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 
+
 /**
  * This class updates the Recycler Viewer (UI list). It extends to the RecyclerView
  * Adapter to be able to update it. It holds all the important methods dealing with the
@@ -35,17 +36,10 @@ import java.util.function.Consumer;
 public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewAdapter.ViewHolder>{
     private List<NodeItem> nodeItems = Collections.emptyList();
     private NodeSearchViewModel viewModel;
-    private Consumer<Boolean> onSelectionChange;
 
     //constructor -- sets view model
     public NodeSearchViewAdapter(NodeSearchViewModel viewModel) {
         this.viewModel = viewModel;
-    }
-
-    //second constructor -- sets view model
-    public NodeSearchViewAdapter(NodeSearchViewModel viewModel, Consumer <Boolean> onSelectionChange) {
-        this.viewModel = viewModel;
-        this.onSelectionChange = onSelectionChange;
     }
 
     /**
@@ -93,10 +87,8 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
             public void onClick(View view) {
                 if (holder.checkBox.isChecked()) {
                     viewModel.addItemToPlanner(nodeItem);
-                    onSelectionChange.accept(true);
                 } else {
                     viewModel.removeItemFromPlanner(nodeItem);
-                    onSelectionChange.accept(false);
                 }
             }
         });

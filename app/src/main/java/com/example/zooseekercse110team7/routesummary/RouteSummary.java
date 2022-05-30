@@ -6,6 +6,7 @@ import com.example.zooseekercse110team7.planner.NodeItem;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Singleton class that contains list of route items
  * */

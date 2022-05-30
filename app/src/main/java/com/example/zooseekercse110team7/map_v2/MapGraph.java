@@ -2,15 +2,18 @@ package com.example.zooseekercse110team7.map_v2;
 
 import android.util.Log;
 
+import com.example.zooseekercse110team7.GlobalDebug;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import org.jgrapht.Graph;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 
 
 /**
@@ -22,22 +25,19 @@ import java.util.Set;
  * keeps the most recently calculated path.
  * */
 public class MapGraph {
+    //  Singleton Setup
+    // ---------------------------------------START---------------------------------------------- //
     public static MapGraph instance = new MapGraph();
     private MapGraph(){}
     public static MapGraph getInstance(){ return instance; }
+    // ----------------------------------------END----------------------------------------------- //
 
-    AssetLoader assetLoader;
-    private List<RouteItem> pathOfRouteItems;   // list of items to
-    private Integer currentPathIndex = 0;
-
-    /**
-     * Sets the asset loader that is used to build the graph
-     *
-     * @param assetLoader an `AssetLoader` object that has parsed JSON files
-     * */
-    public void setAssetLoader(AssetLoader assetLoader){
-        this.assetLoader = assetLoader;
-    }
+    private AssetLoader assetLoader
+            = AssetLoader.getInstance();        // an alias for `AssetLoader` instance
+    private List<RouteItem> pathOfRouteItems;   // current path as a list of `RouteItem`s
+    private Integer currentPathIndex = 0;       // current index of path item to look at
+    private Boolean isGoingBackwards = false;   // boolean flag, determines if going backwards
+    private Boolean isBrief = false;            // boolean flag, determines brief directions
 
     /**
      * Returns Java's built in Graph object using our JSON files as the data. Each item in the graph
@@ -152,22 +152,33 @@ public class MapGraph {
      * @return Directions in the form of a String list
      * */
     public List<String> getNextDirections(){//TODO: Make Strings Look Nicer
+        isGoingBackwards = false;
         List<String> result = new ArrayList<>(); // holds result of parsed string for directions
 
         /* CHECK FOR EDGE CASES */
-        if(pathOfRouteItems == null || currentPathIndex >= getPathSize()){
+        if(pathOfRouteItems == null || currentPathIndex >= getPathSize() || 1 == getPathSize()){
             Log.d("MapGraph", "[getNextDirections] End of Directions! OR List Is NULL!");
             result.add("End of Directions.");
             return result;
         }
 
         /* PARSE EDGES TO STRING OF DIRECTIONS */
+        IdentifiedWeightedEdge previousEdge = null;
         RouteItem currentRoute = pathOfRouteItems.get(currentPathIndex);
+        result.add((currentRoute.getSource() + " -> " + currentRoute.getDestination() + "\n"));
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
                 .getPathEdges(currentRoute.getSource(), currentRoute.getDestination());
-        for(IdentifiedWeightedEdge edge: edges){
-            result.add((edge.toString() + " " + getEdgeWeight(edge) + "\n"));
+        if(!isBrief) {
+            for (IdentifiedWeightedEdge edge : edges) {
+                result.add(PrettyDirections
+                        .getInstance()
+                        .toPrettyDirectionsString(edge, getEdgeWeight(edge), previousEdge)
+                );
+                previousEdge = edge;
+            }
+        }else{
+            result = PrettyDirections.getInstance().toPrettyBriefDirectionsString(edges);
         }
 
         /* INCREASE CURRENT INDEX WITHIN PATH LIST */
@@ -179,15 +190,16 @@ public class MapGraph {
     /**
      * This function acts as a singular step within an iteration of a list. Upon call, the current
      * index decreases (if possible) and parses a list of `IdentifiedWeightedEdge` (edges) between
-     * two exhibits/locations into strings.
+     * two exhibits/locations into strings. The directions are in reverse order!
      *
      * @return Directions in the form of a String list
      * */
     public List<String> getPreviousDirections(){ //TODO: Make Strings Look Nicer
+        isGoingBackwards = true;
         List<String> result = new ArrayList<>();// holds result of parsed string for directions
 
         /* CHECK FOR EDGE CASES */
-        if(pathOfRouteItems == null){
+        if(pathOfRouteItems == null  || 1 == getPathSize()){
             Log.d("MapGraph", "List Is NULL!");
             result.add("End of Directions.");
             return result;
@@ -196,15 +208,173 @@ public class MapGraph {
         /* DECREASE CURRENT INDEX WITHIN PATH LIST */
         currentPathIndex = (currentPathIndex > 0)? currentPathIndex-1: currentPathIndex;
 
-        /* PARSE EDGES TO STRING OF DIRECTIONS */
+        /* PARSE EDGES TO STRING OF DIRECTIONS IN REVERSE*/
+        IdentifiedWeightedEdge previousEdge = null;
         RouteItem currentRoute = pathOfRouteItems.get(currentPathIndex);
+        result.add((currentRoute.getDestination() + " -> " + currentRoute.getSource() + "\n"));
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
-                .getPathEdges(currentRoute.getSource(), currentRoute.getDestination());
-        for(IdentifiedWeightedEdge edge: edges){
-            result.add((edge.toString() + " " + getEdgeWeight(edge) + "\n"));
+                .getPathEdges(currentRoute.getDestination(), currentRoute.getSource());
+        if(!isBrief) {
+            for (IdentifiedWeightedEdge edge : edges) {
+                result.add(PrettyDirections
+                        .getInstance()
+                        .toPrettyDirectionsString(edge, getEdgeWeight(edge), previousEdge)
+                );
+                previousEdge = edge;
+            }
+        }else{
+            result = PrettyDirections.getInstance().toPrettyBriefDirectionsString(edges);
         }
 
         return result;
     }
+
+    //@pre pathOfRouteItems.Size() >= 1
+    /**
+     * Returns an id string of a node item in the path currently being looked at in the path
+     *
+     * @return the `id` of the `NodeItem` as a String
+     * */
+    public String getCurrentItemToVisitId(){
+        //if(currentPathIndex - 1 < 0){}
+        if(pathOfRouteItems.isEmpty() || 1 == pathOfRouteItems.size()
+                || (isGoingBackwards && currentPathIndex+1 >= pathOfRouteItems.size())
+                || (!isGoingBackwards && currentPathIndex-1 < 0)){
+            return null;
+        }
+        RouteItem currentRouteItem = pathOfRouteItems.get(((isGoingBackwards)?currentPathIndex+1:currentPathIndex-1));
+        Log.d("MapGraph", "Current IDs: [Source] " + currentRouteItem.getSource() + "\t[Destination] "+ currentRouteItem.getDestination());
+        Log.d("MapGraph","isGoingBackwards? [true]source : [false]destination -- Bool: " + isGoingBackwards.toString());
+        return (isGoingBackwards)?currentRouteItem.getSource():currentRouteItem.getDestination();
+    }
+
+    /**
+     * Updates the current path route `pathOfRouteItems` by removing the current items that the
+     * user is being taken to. This is done by first removing the item with the list, then it finds
+     * a new path by getting a new subpath of the remaining items to visit. The new path is based on
+     * getting the shortest path from the current source and
+     *  **NOT** connecting the current source to the next item in the list.
+     *  The purpose of this class is to skip the current destination/exhibit.
+     * */
+    public void updatePathWithRemovedItem(){
+        //save time by not calculating path
+        //there is no need to update current path index as it will point to the next thing in the list
+        //      and there are checks/safeguards in place
+        if(1 == pathOfRouteItems.size() || pathOfRouteItems.isEmpty()){
+            pathOfRouteItems = new ArrayList<>();
+            return;
+        }
+
+        /* GET SOURCE AND DESTINATION INFORMATION */
+        RouteItem previousRouteItem = pathOfRouteItems.get((
+                (isGoingBackwards)?currentPathIndex+1:currentPathIndex-1
+        ));
+        RouteItem currentRouteItem = pathOfRouteItems.get(currentPathIndex);
+        String newSource =
+                (!isGoingBackwards)
+                ? previousRouteItem.getSource()
+                : currentRouteItem.getSource();
+        String newDestination =
+                (!isGoingBackwards)
+                ? currentRouteItem.getDestination()
+                : previousRouteItem.getDestination();
+
+        /* CALCULATE NEW SUBPATH */
+        List<RouteItem> remainingList = getRemainingSubpathList();
+        remainingList.remove(0);
+        List<RouteItem> subpathRouteItems = Path
+                .getInstance()
+                .notUpdateGraph()
+                .getShortestPath(newSource, remainingList);
+        if(GlobalDebug.DEBUG){
+            for(RouteItem item: subpathRouteItems){
+                Log.d("MapGraph", item.toString());
+            }
+        }
+
+        /* REMOVE SKIPPED ITEMS FROM LIST */
+        pathOfRouteItems.remove(pathOfRouteItems.get(currentPathIndex));
+        pathOfRouteItems.remove((
+                (isGoingBackwards)
+                ?pathOfRouteItems.get(currentPathIndex)
+                :pathOfRouteItems.get(currentPathIndex-1)));
+
+        /* APPEND SUBPATH TO END OF THE LIST */
+        if(!pathOfRouteItems.addAll((
+                (isGoingBackwards)
+                        ? currentPathIndex
+                        : currentPathIndex-1),
+                subpathRouteItems)){
+            Log.e("MapGraph", "ERROR 2: Subpath Cannot Be Inserted!");
+        }
+    }
+
+    /**
+     * Returns a list of Strings which are directions to the current exhibit/item to visit.
+     *
+     * @return a list of directions in the form of a string list
+     * */
+    public List<String> getCurrentDirections(){
+        /* GET INDEX */
+        Integer originalIndex = currentPathIndex;
+        currentPathIndex += (isGoingBackwards) ? 1: -1;
+        Log.d("MapGraph", "[GetCurrentDirections] Original Index: " + originalIndex
+                + "\tCurrent Index: " + currentPathIndex);
+
+        /* GET DIRECTIONS */
+        List<String> result = (isGoingBackwards)?getPreviousDirections():getNextDirections();
+
+        /* RESET INDEX TO ORIGINAL STATE */
+        currentPathIndex = originalIndex;
+
+        return result;
+    }
+
+    /**
+     * This function returns the most recent path that was calculated
+     *
+     * @return a list of `RouteItem`s in order of the path to take
+     * */
+    public List<RouteItem> getRecentPath(){ return pathOfRouteItems; }
+
+    /**
+     * This function updates the brevity to the opposite value. For example, if the current state is
+     * to have brief directions, then it will update to be the opposite value such that the current
+     * state becomes detailed directions.
+     * */
+    public void updateDirectionsBrevity(){
+        this.isBrief = !this.isBrief;
+    }
+
+    /**
+     * Returns a list of the subpath that needs to be visited.
+     *
+     * @return a list of `RouteItem`s which is the subpath of unvisited items
+     * */
+    public List<RouteItem> getRemainingSubpathList(){//TODO:Test This
+        if(pathOfRouteItems.size() <= 1){ return Collections.emptyList();}
+        int startIndex = currentPathIndex;
+        int endIndex = pathOfRouteItems.size()-1;
+        return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
+    }
+
+    /**
+     * Returns a list of the subpath that has been visited.
+     *
+     * @return a list of `RouteItem`s which is the subpath of visited items
+     * */
+    public List<RouteItem> getVisitedSubpathList(){//TODO:Test This
+        if(pathOfRouteItems.size() > 1){ return Collections.emptyList();}
+        int startIndex = 0;
+        int endIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
+        return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
+    }
+
+    /**
+     * Checks if the user is currently going backwards/previous
+     *
+     * @return the current state of the user's progression (i.e forward or reverse)
+     * */
+    public Boolean isGoingBackwards(){ return isGoingBackwards; }
 }
