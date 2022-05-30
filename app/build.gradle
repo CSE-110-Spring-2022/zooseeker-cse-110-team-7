@@ -43,6 +43,7 @@ dependencies {
     implementation 'junit:junit:4.13.2'
     implementation 'androidx.test:core:1.4.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.libraries.places:places:2.4.0'
     implementation 'com.google.android.libraries.maps:maps:3.1.0-beta'
     def gson_version = "2.9.0"
