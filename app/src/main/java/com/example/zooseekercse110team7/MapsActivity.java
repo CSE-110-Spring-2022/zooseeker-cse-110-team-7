@@ -1,16 +1,17 @@
 package com.example.zooseekercse110team7;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.InputType;
+import android.os.Looper;
+import android.provider.Settings;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import android.graphics.Color;
@@ -18,18 +19,24 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import com.example.zooseekercse110team7.location.Coord;
 import com.example.zooseekercse110team7.map_v2.AssetLoader;
 import com.example.zooseekercse110team7.depreciated_map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map_v2.MapGraph;
 import com.example.zooseekercse110team7.map_v2.Path;
-import com.example.zooseekercse110team7.map_v2.PrettyDirections;
+import com.example.zooseekercse110team7.map_v2.UserLocation;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
-import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
-import com.example.zooseekercse110team7.routesummary.RouteItem;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,6 +50,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
@@ -88,11 +97,15 @@ public class MapsActivity extends AppCompatActivity implements
     private List<NodeItem> plannedItems;
     ReadOnlyNodeDao nodeDao;
     AssetLoader g;
-    //TODO include code: Location location = LocationSingleton.getInstance();
     int startCounter = 0;
     int goalCounter = 1;
-    private boolean hasDeniedReroute;
-    private boolean responseReceived = true; //initially set to true
+
+    //Location variables
+    FusedLocationProviderClient mFusedLocationClient;
+    int PERMISSION_ID = 44;
+    double latitude;
+    double longitude;
+    NodeDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,80 +114,46 @@ public class MapsActivity extends AppCompatActivity implements
         // [START_EXCLUDE silent]
 
         // [END_EXCLUDE]
-        ImageButton reroute_btn = (ImageButton) findViewById(R.id.reroute_bt);
-
-        reroute_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reroutePath();
-            }
-        });
-        Button mock_btn = (Button) findViewById(R.id.mock_btn);
-
-
-        mock_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                readInPathText();
-            }
-        });
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
-        /**
-         * [Note]: Loading the Assets Takes Precedence!
-         * Dependency: AssetLoader <-- MapGraph <-- Path
-         * */
-        g = AssetLoader
-                .getInstance()
-                .loadAssets(
+        g = new AssetLoader(
                 "sample_zoo_graph.json",
                 "sample_node_info.json",
                 "sample_edge_info.json",
                 getApplicationContext());                       // parses JSON files
 
-        NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
+        //Part of user location
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        db = NodeDatabase.getSingleton(getApplicationContext());
         nodeDao = db.nodeDao();
         Path.getInstance().getShortestPath(nodeDao.getByOnPlanner(true));//on startup get planner info
-        PrettyDirections.getInstance().setContext(getApplicationContext());
+
+        //UserLocation.getInstance();
     }
 
-    /**
-     * creates an alert dialog when the `Mock` button is pressed
-     * if OK is pressed, the alert dialog reads inputed text and then stores it in the path_url string
-     * else if Cancel is pressed, the alert dialog closes and the path_url remains unchanged.
-     * https://stackoverflow.com/questions/10903754/input-text-dialog-android
+    //Helper class that helps with returning latitude,longitude pairs.
+    /*
+    public class Pair<T, U> {
+        public final T latit;
+        public final U longit;
+
+        public Pair(T t, U u) {
+            this.latit = t;
+            this.longit = u;
+        }
+    }
+
      */
-    private void readInPathText() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Location Mock JSON URL");
 
-        // Set up the input
-        final EditText input = new EditText(this);
-
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String path_url = input.getText().toString();
-                //TODO include code: ReadJSONStuff(path_url);
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
+    public Coord latLng(){
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        getLastLocation();
+        Coord currentCoords = new Coord(latitude, longitude);
+        return currentCoords;
     }
 
     // Called when Directions is clicked. Displays directions for pairs of destinations in order
@@ -185,10 +164,17 @@ public class MapsActivity extends AppCompatActivity implements
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
 
         String directions = "[Next]\n";
-        List<String> route = MapGraph.getInstance().getNextDirections();
 
+        //Coord example = UserLocation.getInstance(this, nodeDao, db).getLocationCoordinates();
+        //String ex2 = UserLocation.getInstance(this, nodeDao, db).getClosestExhibit();
+        //boolean ex3  = UserLocation.getInstance(this, nodeDao, db).checkForReroute();
+
+        List<String> route = MapGraph.getInstance().getNextDirections();
         for(String detail: route){
             directions += detail;
+            //directions += "Test of coords: " + example + "\n";
+            //directions += "Test of closest exhibit: " + ex2 + "\n";
+            //directions += "Test of reroute check: " + ex3 + "\n";
         }
 
         directionsTextview.setText(directions);
@@ -196,24 +182,12 @@ public class MapsActivity extends AppCompatActivity implements
         Log.d("MapsActivity", "Next Updated!");
     }
 
-    /**
-     * https://piazza.com/class/l186r5pbwg2q4?cid=648
-     * 1. Does hitting the previous button backtrace and reverse the steps? For example, the user
-     * story mentions 2 scenarios - pressing previous to find out how to backtrack to the hippos
-     * exhibit, but also pressing next to "preview" the next exhibit and then pressing previous to
-     * return to the current one.
-     *
-     * This was -- partially -- previously asked and answered in previous clarifications. I recommend
-     * you read those responses carefully. In general, the answer is, yes, Previous reverses the
-     * steps. It's even in the Scenario.However, directions are now from your actual location
-     * as opposed to a supposed location.
-     * */
     public void onBackClicked(View view){
         Log.d("MapsActivity", "Back Button Clicked!");
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
 
-        String directions = "[Back]\n";
+        String directions = "";
         List<String> route = MapGraph.getInstance().getPreviousDirections();
         for(String detail: route){
             directions += detail;
@@ -225,166 +199,16 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
 
-    //What happens if you use default end and start, do you remove them?
-    // -- start and ends of a path aren't deleted! so this may be a double edged sword
-    //
-    public void onSkipClicked(View view){
-        String itemId = MapGraph.getInstance().getCurrentItemToVisitId();
-        if(null == itemId){ return; }
-        boolean updateSuccess = UpdateNodeDaoRequest.getInstance()
-                .setContext(getApplicationContext())
-                .RequestPlannerSkip(itemId);
-
-        if(!updateSuccess){
-            Log.d("MapsActivity", "Skip Item Failed! -- Returning");
-            return;
-        }
-
-        //update path relative to current source
-        MapGraph.getInstance().updatePathWithRemovedItem();
-
-        //update view/text
-        String directions = "[Updated After Skip]\n";
-        List<String> route = MapGraph.getInstance().getCurrentDirections();
-        for(String detail: route){
-            directions += detail;
-        }
-
-        Log.d("MapsActivity", "[Skip]\n" + directions);
-        TextView directionsTextview =
-                (TextView) findViewById(R.id.directions_text); // text view to display directions
-        directionsTextview.setText(directions);
-
-    }
-
-    public void onBriefDirectionsSwitch(View view){
-        Log.d("MapsActivity", "Toggled Brief Directions!");
-        MapGraph.getInstance().updateDirectionsBrevity();
-
-        String directions = "[Updated to Brief Directions]\n";
-        List<String> route = MapGraph.getInstance().getCurrentDirections();
-        for(String detail: route){
-            directions += detail;
-        }
-
-        Log.d("MapsActivity", "[Brief]\n" + directions);
-        TextView directionsTextview =
-                (TextView) findViewById(R.id.directions_text); // text view to display directions
-        directionsTextview.setText(directions);
-    }
-
-    // [<REROUTE HANDLER>]
-
-
-    /*
-     * https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android
-     * Creates a dialog box that asks user if they want to reroute or not
-     */
-    private void askUserToReroute () {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("Rerouting");
-        builder.setMessage("You are off the path, would you like to reroute?");
-
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int which) {
-                reroutePath();
-                responseReceived = true;
-                dialog.dismiss();
-
-            }
-        });
-
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                hasDeniedReroute = true;
-                responseReceived = true;
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-    /*
-     * Checks if user is going `forward` and user is off-route
-     * Queries user if they want to reroute for a more optimal path
-     */
-    public void checkOffPath() {
-        MapGraph graph = MapGraph.getInstance();
-
-        //resets because they are back on track
-        //TODO include code for isUserOffRoute: if (hasDeniedReroute && !location.isUserOffRoute()) {
-        hasDeniedReroute = false;
-        //}
-        //TODO include code for isUserOffRoute: if (!hasDeniedReroute && location.isUserOffRoute() && !graph.isGoingBackwards()) {
-        if (responseReceived) {
-            responseReceived = false;
-            askUserToReroute();
-        }
-
-        //}
-
-    }
-
-    /*
-     * Uses the graph methods to recreate a new route based off the closest exhibit
-     * @ensure the path is going forward
-     */
-    private void reroutePath() {
-        MapGraph graph = MapGraph.getInstance();
-        List<RouteItem> routeItemsToVisit = graph.getRemainingSubpathList();
-        List<RouteItem> routeItemsVisited = graph.getVisitedSubpathList();
-        if (routeItemsVisited.size() >= 1) {
-            String closestExhibit = Path.DEFAULT_SOURCE; //TODO include code: location.getClosestExhibit();
-            List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShorestPath(closestExhibit, routeItemsToVisit, Path.DEFAULT_DESTINATION);
-            routeItemsVisited.addAll(newRoute);
-            graph.setPath(routeItemsVisited);
-        }
-    }
-    /**
-     * onResume, rerouter checks if delay (15 seconds) past before running handleRerouting
-     * onPause, rerouter pauses until activity is resumed (doesn't check for off route)
-     * https://stackoverflow.com/questions/11434056/how-to-run-a-method-every-x-seconds
-     */
-    Handler rerouter = new Handler();
-    Runnable runnable;
-    int delay = 15*1000; //Delay for 15 seconds.  One second = 1000 milliseconds.
-    @Override
-    protected void onResume() {
-        //start handler as activity become visible
-
-        rerouter.postDelayed( runnable = new Runnable() {
-            public void run() {
-                //call location functions
-
-                checkOffPath();
-
-                rerouter.postDelayed(runnable, delay);
-            }
-        }, delay);
-
-        super.onResume();
-    }
-
-    // If onPause() is not included the threads will double up when you
-    // reload the activity
-
-    @Override
-    protected void onPause() {
-        rerouter.removeCallbacks(runnable); //stop handler when activity not visible
-        super.onPause();
-    }
-    // [</REROUTE HANDLER>]
-
-
 
 
     // [START_EXCLUDE silent]
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (checkPermissions()) {
+            getLastLocation();
+        }
+    }
     // [END_EXCLUDE]
 
     @Override
@@ -441,6 +265,11 @@ public class MapsActivity extends AppCompatActivity implements
     }
      */
 
+
+
+    private void changeCamera(CameraUpdate update) {
+        changeCamera(update, null);
+    }
 
     /**
      * Change the camera position by moving or animating the camera depending on the state of the
@@ -533,6 +362,108 @@ public class MapsActivity extends AppCompatActivity implements
         LatLng target = map.getCameraPosition().target;
         currPolylineOptions.add(target);
     }
-    // [END_EXCLUDE]
+
+
+    //START
+
+
+    @SuppressLint("MissingPermission")
+    private void getLastLocation() {
+        // check if permissions are given
+        if (checkPermissions()) {
+
+            // check if location is enabled
+            if (isLocationEnabled()) {
+
+                // getting last
+                // location from
+                // FusedLocationClient
+                // object
+                mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        Location location = task.getResult();
+                        if (location == null) {
+                            requestNewLocationData();
+                        } else {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                        }
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Please turn on" + " your location...", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        } else {
+            // if permissions aren't available,
+            // request for permissions
+            requestPermissions();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void requestNewLocationData() {
+
+        // Initializing LocationRequest
+        // object with appropriate methods
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(5);
+        mLocationRequest.setFastestInterval(0);
+        mLocationRequest.setNumUpdates(1);
+
+        // setting LocationRequest
+        // on FusedLocationClient
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+    }
+
+    private LocationCallback mLocationCallback = new LocationCallback() {
+
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Location mLastLocation = locationResult.getLastLocation();
+            latitude = mLastLocation.getLatitude();
+            longitude = mLastLocation.getLongitude();
+        }
+    };
+
+    // method to check for permissions
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+        // If we want background location
+        // on Android 10.0 and higher,
+        // use:
+        // ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
+
+    // method to request for permissions
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
+    }
+
+    // method to check
+    // if location is enabled
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    // If everything is alright then
+    @Override
+    public void
+    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation();
+            }
+        }
+    }
 }
-// [END maps_camera_events]

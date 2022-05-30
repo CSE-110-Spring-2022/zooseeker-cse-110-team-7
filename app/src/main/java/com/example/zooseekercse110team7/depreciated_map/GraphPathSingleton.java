@@ -35,7 +35,7 @@ public class GraphPathSingleton {
         Log.d("GraphPathSingleton", "Items Set");
     }
     public void loadAssets(Context context) {
-        g = AssetLoader.getInstance().loadAssets(
+        g = new AssetLoader(
                 "sample_zoo_graph.json",
                 "sample_node_info.json",
                 "sample_edge_info.json",
