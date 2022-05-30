@@ -51,7 +51,8 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:onClick="onPlannerClicked"
-            android:text="Planner" />
+            android:text="Planner"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/search_button"
@@ -59,14 +60,32 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:onClick="onSearchClicked"
-            android:text="Search" />
+            android:text="Search"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/mock_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="Mock" />
+            android:text="Mock"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/next_mock_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="MOCK NEXT"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/turn_off_mocking_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="MOCK OFF"
+            android:textSize="10sp" />
     </LinearLayout>
 
     <LinearLayout

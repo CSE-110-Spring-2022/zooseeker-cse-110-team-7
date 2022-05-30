@@ -38,6 +38,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.zooseekercse110team7.location.Coord;
+import com.example.zooseekercse110team7.location.MockLocationParser;
 import com.example.zooseekercse110team7.map_v2.AssetLoader;
 import com.example.zooseekercse110team7.depreciated_map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map_v2.MapGraph;
@@ -120,7 +121,6 @@ public class MapsActivity extends AppCompatActivity implements
     private List<NodeItem> plannedItems;
     ReadOnlyNodeDao nodeDao;
     AssetLoader g;
-    //TODO include code: Location location = LocationSingleton.getInstance();
     int startCounter = 0;
     int goalCounter = 1;
 
@@ -134,7 +134,9 @@ public class MapsActivity extends AppCompatActivity implements
 
     private boolean hasDeniedReroute;
     private boolean responseReceived = true; //initially set to true
-
+    private List<Coord> mockUserLocations; //list inputted from MOCK button read in locations from GSON
+    public boolean MOCKING_ON = false;
+    private int location_index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +159,58 @@ public class MapsActivity extends AppCompatActivity implements
         mock_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MOCKING_ON= true;
+                location_index = 0;
                 readInPathText();
+            }
+        });
+        Button mock_back = (Button) findViewById(R.id.mock_back_btn);
+
+
+        mock_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MOCKING_ON && location_index > 0) {
+                    location_index--;
+                }
+                Log.d("MOCK NEXT", "MOCK_ON " + MOCKING_ON);
+                Log.d("MOCK NEXT", "Location_index: " + location_index + "Location: " +
+                        mockUserLocations.get(location_index));
+                Log.d("MOCK NEXT", "Current user location: " + latLng().toString());
+            }
+        });
+
+
+
+        Button next_mock = (Button) findViewById(R.id.next_mock_btn);
+        next_mock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //checks if at last index already
+
+                if (MOCKING_ON && location_index < mockUserLocations.size() - 1) {
+                    location_index++;
+                }
+                Log.d("MOCK NEXT", "MOCK_ON " + MOCKING_ON);
+                Log.d("MOCK NEXT", "Location_index: " + location_index + "Location: " +
+                        mockUserLocations.get(location_index));
+                Log.d("MOCK NEXT", "Current user location: " + latLng().toString());
+
+            }
+        });
+
+
+        Button turn_off_mocking = (Button) findViewById(R.id.turn_off_mocking_btn);
+        turn_off_mocking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MOCKING_ON = false;
+                location_index = 0;
+                Log.d("MOCK OFF", "MOCK_ON " + MOCKING_ON);
+                Log.d("MOCK OFF", "Location_index: " + location_index + "Location: " +
+                        mockUserLocations.get(location_index));
+                Log.d("MOCK OFF", "Current user location: " + latLng().toString());
+
             }
         });
 
@@ -209,10 +262,16 @@ public class MapsActivity extends AppCompatActivity implements
      */
 
     public Coord latLng(){
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
-        Coord currentCoords = new Coord(latitude, longitude);
-        return currentCoords;
+        if (MOCKING_ON) {
+            return mockUserLocations.get(location_index);
+        }
+        else {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            getLastLocation();
+            Coord currentCoords = new Coord(latitude, longitude);
+            return currentCoords;
+        }
+
 
         //not sure why that's there
         //PrettyDirections.getInstance().setContext(getApplicationContext());
@@ -233,7 +292,7 @@ public class MapsActivity extends AppCompatActivity implements
         final EditText input = new EditText(this);
 
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
         // Set up the buttons
@@ -241,7 +300,13 @@ public class MapsActivity extends AppCompatActivity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String path_url = input.getText().toString();
-                //TODO include code: ReadJSONStuff(path_url);
+                mockUserLocations = MockLocationParser.parseMockLocations(getApplicationContext(), path_url);
+                if (GlobalDebug.DEBUG) {
+                    for (Coord coor : mockUserLocations) {
+                        Log.d("List<Coors>", coor.toString());
+                    }
+                }
+
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -394,6 +459,13 @@ public class MapsActivity extends AppCompatActivity implements
         AlertDialog alert = builder.create();
         alert.show();
     }
+    boolean isUserOffRoute() {
+        return UserLocation.getInstance(this, nodeDao, db).checkForReroute();
+    }
+    String getClosestExhibit() {
+        return UserLocation.getInstance(this, nodeDao, db).getClosestExhibit();
+    }
+
     /*
      * Checks if user is going `forward` and user is off-route
      * Queries user if they want to reroute for a more optimal path
@@ -402,16 +474,13 @@ public class MapsActivity extends AppCompatActivity implements
         MapGraph graph = MapGraph.getInstance();
 
         //resets because they are back on track
-        //TODO include code for isUserOffRoute: if (hasDeniedReroute && !location.isUserOffRoute()) {
-        hasDeniedReroute = false;
-        //}
-        //TODO include code for isUserOffRoute: if (!hasDeniedReroute && location.isUserOffRoute() && !graph.isGoingBackwards()) {
-        if (responseReceived) {
+        if (hasDeniedReroute && !isUserOffRoute()) {
+            hasDeniedReroute = false;
+        }
+        if (!hasDeniedReroute && !isUserOffRoute() && !graph.isGoingBackwards() && responseReceived) {
             responseReceived = false;
             askUserToReroute();
         }
-
-        //}
 
     }
 
@@ -424,8 +493,8 @@ public class MapsActivity extends AppCompatActivity implements
         List<RouteItem> routeItemsToVisit = graph.getRemainingSubpathList();
         List<RouteItem> routeItemsVisited = graph.getVisitedSubpathList();
         if (routeItemsVisited.size() >= 1) {
-            String closestExhibit = Path.getInstance().DEFAULT_SOURCE; //TODO include code: location.getClosestExhibit();
-            List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShorestPath(closestExhibit, routeItemsToVisit, Path.getInstance().DEFAULT_DESTINATION);
+            String closestExhibit = getClosestExhibit();
+            List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShorestPath(closestExhibit, routeItemsToVisit, Path.getInstance().getDEFAULT_DESTINATION());
             routeItemsVisited.addAll(newRoute);
             graph.setPath(routeItemsVisited);
         }
@@ -437,7 +506,7 @@ public class MapsActivity extends AppCompatActivity implements
      */
     Handler rerouter = new Handler();
     Runnable runnable;
-    int delay = 15*1000; //Delay for 15 seconds.  One second = 1000 milliseconds.
+    int delay = 60*1000; //Delay for 15 seconds.  One second = 1000 milliseconds.
     @Override
     protected void onResume() {
         //location stuff
