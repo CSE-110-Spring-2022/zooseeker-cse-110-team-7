@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 
+
 /**
  * This class updates the Recycler Viewer (UI list). It extends to the RecyclerView
  * Adapter to be able to update it. It holds all the important methods dealing with the
