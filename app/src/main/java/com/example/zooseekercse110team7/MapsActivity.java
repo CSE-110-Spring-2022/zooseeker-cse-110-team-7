@@ -343,8 +343,8 @@ public class MapsActivity extends AppCompatActivity implements
         List<RouteItem> routeItemsToVisit = graph.getRemainingSubpathList();
         List<RouteItem> routeItemsVisited = graph.getVisitedSubpathList();
         if (routeItemsVisited.size() >= 1) {
-            String closestExhibit = Path.getInstance().DEFAULT_SOURCE; //TODO include code: location.getClosestExhibit();
-            List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShorestPath(closestExhibit, routeItemsToVisit, Path.getInstance().DEFAULT_DESTINATION);
+            String closestExhibit = Path.getInstance().getDEFAULT_SOURCE(); //TODO include code: location.getClosestExhibit();
+            List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShortestPath(closestExhibit, routeItemsToVisit, Path.getInstance().getDEFAULT_DESTINATION());
             routeItemsVisited.addAll(newRoute);
             graph.setPath(routeItemsVisited);
         }
