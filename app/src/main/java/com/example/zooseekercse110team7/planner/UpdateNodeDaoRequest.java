@@ -35,9 +35,14 @@ public class UpdateNodeDaoRequest {
     }
 
 
-    //TODO: Depreciate this method -- in violation of SRP
+    //TODO: Depreciate these methods -- in violation of SRP
     public NodeItem RequestItem(String id){
         return nodeDao.get(id);
     }
-
+    public String RequestGateId(){
+        String gateString = "%gate%";
+        NodeItem result = nodeDao.getGate(gateString);
+        Log.d("GateId", ((result==null)?"":result.id));
+        return (result==null)?"":result.id;
+    }
 }

@@ -23,8 +23,18 @@ import java.util.Set;
  * of the most recent calculated path.
  * */
 public class Path {
-    public static final String DEFAULT_SOURCE = "entrance_exit_gate";
-    public static final String DEFAULT_DESTINATION = "entrance_exit_gate";
+    public final String DEFAULT_SOURCE = (
+            UpdateNodeDaoRequest.getInstance().RequestGateId().isEmpty()
+    )
+            ? "entrance_exit_gate"
+            : UpdateNodeDaoRequest.getInstance().RequestGateId();
+    public final String DEFAULT_DESTINATION = (
+            UpdateNodeDaoRequest.getInstance().RequestGateId().isEmpty()
+    )
+            ? "entrance_exit_gate"
+            : UpdateNodeDaoRequest.getInstance().RequestGateId();
+    public String getDEFAULT_SOURCE(){ return DEFAULT_SOURCE; }
+    public String getDEFAULT_DESTINATION(){ return DEFAULT_DESTINATION; }
     //  Singleton Setup
     // ---------------------------------------START---------------------------------------------- //
     private static Path instance = new Path();
