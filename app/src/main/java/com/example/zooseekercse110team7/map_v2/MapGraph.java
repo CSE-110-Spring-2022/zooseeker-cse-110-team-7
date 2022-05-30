@@ -169,7 +169,7 @@ public class MapGraph {
         /* PARSE EDGES TO STRING OF DIRECTIONS */
         IdentifiedWeightedEdge previousEdge = null;
         RouteItem currentRoute = pathOfRouteItems.get(currentPathIndex);
-        result.add((currentRoute.getSource() + " -> " + currentRoute.getDestination() + "\n"));
+        result.add((getCurrentSource() + " -> " + currentRoute.getDestination() + "\n"));
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
                 .getPathEdges(getCurrentSource(), currentRoute.getDestination());
@@ -215,10 +215,11 @@ public class MapGraph {
         /* PARSE EDGES TO STRING OF DIRECTIONS IN REVERSE*/
         IdentifiedWeightedEdge previousEdge = null;
         RouteItem currentRoute = pathOfRouteItems.get(currentPathIndex);
-        result.add((currentRoute.getDestination() + " -> " + currentRoute.getSource() + "\n"));
+        String newDestination = currentRoute.getSource();
+        result.add((getCurrentSource() + " -> " + newDestination + "\n"));
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
-                .getPathEdges(currentRoute.getDestination(), getCurrentSource());
+                .getPathEdges(getCurrentSource(), newDestination);
         if(!isBrief) {
             for (IdentifiedWeightedEdge edge : edges) {
                 result.add(PrettyDirections

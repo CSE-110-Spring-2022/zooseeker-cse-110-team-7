@@ -37,8 +37,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:visibility="gone">
+        android:layout_height="wrap_content">
 
     </LinearLayout>
 
@@ -77,7 +76,7 @@
     <LinearLayout
         android:id="@+id/validity"
         android:layout_width="match_parent"
-        android:layout_height="238dp"
+        android:layout_height="304dp"
         android:layout_gravity="center"
         android:background="@android:color/white"
         android:orientation="vertical">
@@ -114,6 +113,35 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/refresh_directions_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="Refresh Directions" />
+
+            <Switch
+                android:id="@+id/brief_directions_switch"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:minHeight="48dp"
+                android:onClick="onBriefDirectionsSwitch"
+                android:text="Brief Directions" />
+
+            <ImageButton
+                android:id="@+id/reroute_bt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                app:srcCompat="@drawable/maps_icon_direction" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -141,22 +169,6 @@
                 android:onClick="onBackClicked"
                 android:text="Back" />
 
-            <ImageButton
-                android:id="@+id/reroute_bt"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                app:srcCompat="@drawable/maps_icon_direction" />
-
-
-            <Switch
-                android:id="@+id/brief_directions_switch"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:minHeight="48dp"
-                android:onClick="onBriefDirectionsSwitch"
-                android:text="Brief Direction" />
 
         </LinearLayout>
 

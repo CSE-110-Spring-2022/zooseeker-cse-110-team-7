@@ -67,11 +67,12 @@ public class UserLocation extends Activity{
         double closestDistance;
         NodeItem closestExhibit;
 
-        //Get the list of all exhibits in the zoo
-        List<NodeItem> exhibits = nodeDao.getAll();
-        for(int i = exhibits.size() - 1; i >= 0; i--){
-            if(!exhibits.get(i).kind.equals("exhibit")){
-                exhibits.remove(i);
+        //Get the list of all items that is not a child in the zoo
+        List<NodeItem> nodes = nodeDao.getAll();
+        //remove nodes that are children (i.e those with a parent ID as they have no lat & lng)
+        for(int i = nodes.size() - 1; i >= 0; i--){
+            if(nodes.get(i).parent_id != null){
+                nodes.remove(i);
             }
         }
 
@@ -82,15 +83,15 @@ public class UserLocation extends Activity{
         double userLongitude = userCoords.lng;
 
         //Set an initial 'closest' distance with the first item from exhibits list.
-        closestDistance = distanceFormulaHelper(userLatitude, userLongitude, exhibits.get(0).lat, exhibits.get(0).lng);
-        closestExhibit = exhibits.get(0);
+        closestDistance = distanceFormulaHelper(userLatitude, userLongitude, nodes.get(0).lat, nodes.get(0).lng);
+        closestExhibit = nodes.get(0);
 
         //Find the closest exhibit by comparing the above with every other exhibit.
-        for(int i = 1; i < exhibits.size(); i++){
-            double comparingDistance = distanceFormulaHelper(userLatitude, userLongitude, exhibits.get(i).lat, exhibits.get(i).lng);
+        for(int i = 1; i < nodes.size(); i++){
+            double comparingDistance = distanceFormulaHelper(userLatitude, userLongitude, nodes.get(i).lat, nodes.get(i).lng);
             //If the exhibit being compared with the current closest exhibit is closer to the user, update the closest exhibit to that.
             if(comparingDistance < closestDistance){
-                closestExhibit = exhibits.get(i);
+                closestExhibit = nodes.get(i);
                 closestDistance = comparingDistance;
             }
         }
@@ -144,6 +145,7 @@ public class UserLocation extends Activity{
         Coord userCoords = myMapsActivity.latLng();
         return userCoords;
     }
+
 
     /**
      * Everything below here is part of getting user's current location.

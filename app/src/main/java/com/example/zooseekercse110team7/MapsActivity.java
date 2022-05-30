@@ -408,6 +408,10 @@ public class MapsActivity extends AppCompatActivity implements
 
     }
 
+    public void onRefreshClicked(View view){
+        //TODO: Refresh Directions
+    }
+
     public void onBriefDirectionsSwitch(View view){
         Log.d("MapsActivity", "Toggled Brief Directions!");
         MapGraph.getInstance().updateDirectionsBrevity();
