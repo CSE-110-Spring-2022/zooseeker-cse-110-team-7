@@ -144,6 +144,10 @@ public class MapGraph {
      * */
     public int getPathSize(){ return pathOfRouteItems.size(); }
 
+    private String getCurrentSource(){
+        return UserLocation.getInstance().getClosestExhibit();
+    }
+
     /**
      * This function acts as a singular step within an iteration of a list. Upon call, the current
      * index increases (if possible) and parses a list of `IdentifiedWeightedEdge` (edges) between
@@ -168,7 +172,7 @@ public class MapGraph {
         result.add((currentRoute.getSource() + " -> " + currentRoute.getDestination() + "\n"));
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
-                .getPathEdges(currentRoute.getSource(), currentRoute.getDestination());
+                .getPathEdges(getCurrentSource(), currentRoute.getDestination());
         if(!isBrief) {
             for (IdentifiedWeightedEdge edge : edges) {
                 result.add(PrettyDirections
@@ -214,7 +218,7 @@ public class MapGraph {
         result.add((currentRoute.getDestination() + " -> " + currentRoute.getSource() + "\n"));
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
-                .getPathEdges(currentRoute.getDestination(), currentRoute.getSource());
+                .getPathEdges(currentRoute.getDestination(), getCurrentSource());
         if(!isBrief) {
             for (IdentifiedWeightedEdge edge : edges) {
                 result.add(PrettyDirections

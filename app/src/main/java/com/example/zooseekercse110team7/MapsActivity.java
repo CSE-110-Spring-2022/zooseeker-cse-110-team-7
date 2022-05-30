@@ -243,6 +243,7 @@ public class MapsActivity extends AppCompatActivity implements
         UpdateNodeDaoRequest.getInstance().setNodeDao(getApplicationContext());
         Path.getInstance().getShortestPath(nodeDao.getByOnPlanner(true));//on startup get planner info
 
+        UserLocation.getInstance(this, nodeDao, db); // <--- instantiate
 
         //UserLocation.getInstance();
     }

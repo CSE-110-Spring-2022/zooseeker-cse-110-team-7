@@ -1,38 +1,15 @@
 package com.example.zooseekercse110team7.map_v2;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-
 import static java.lang.Math.sqrt;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.os.Looper;
-import android.provider.Settings;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
-import com.example.zooseekercse110team7.MainActivity;
 import com.example.zooseekercse110team7.MapsActivity;
 import com.example.zooseekercse110team7.location.Coord;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +23,7 @@ import java.util.List;
  * Example: Coord example = UserLocation.getInstance(this, nodeDao, db).getLocationCoordinates();
  * */
 public class UserLocation extends Activity{
-    private static UserLocation location;
+    private static UserLocation instance;
 
     ReadOnlyNodeDao nodeDao;
     NodeDatabase db;
@@ -65,12 +42,17 @@ public class UserLocation extends Activity{
     }
 
     public static UserLocation getInstance(MapsActivity act, ReadOnlyNodeDao nodeDao, NodeDatabase db){
-        if (location == null){
-            location = new UserLocation(act, nodeDao, db);
+        if (instance == null){
+            instance = new UserLocation(act, nodeDao, db);
         }
 
-        return location;
+        return instance;
     }
+
+    /**
+     * @pre non null requirements
+     * */
+    public static UserLocation getInstance(){ return instance; }
 
     //The distance formula. Used in getClosestExhibit().
     public double distanceFormulaHelper(double firstLatitude, double firstLongitude, double secondLatitude, double secondLongitude){
