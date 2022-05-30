@@ -8,6 +8,8 @@ import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -137,11 +139,13 @@ public class PrettyDirections {
 
         String sourceId = edge.getEdgeSource();
         String destinationId = edge.getEdgeTarget();
-        NodeItem sourceItem = nodeDao.get(sourceId);
-        NodeItem destinationItem = nodeDao.get(destinationId);
-
-        /* CHECK IF IT'S ITEMS EXIST */
-        if(sourceItem == null || destinationItem == null){
+        NodeItem sourceItem;
+        NodeItem destinationItem;
+        try{
+            sourceItem = nodeDao.get(sourceId);
+            destinationItem = nodeDao.get(destinationId);
+        }catch (NullPointerException e){
+            /* CHECK IF IT'S ITEMS EXIST */
             Log.e("StringEdgeParser", "[ERROR] Source NodeItem or Destination NodeItem is "
                     + "NULL!");
             return errorString;
