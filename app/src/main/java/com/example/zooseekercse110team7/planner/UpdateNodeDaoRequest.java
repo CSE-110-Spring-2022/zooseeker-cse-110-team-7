@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.Optional;
+
 public class UpdateNodeDaoRequest {
     public static UpdateNodeDaoRequest instance = new UpdateNodeDaoRequest();
     private UpdateNodeDaoRequest(){}
@@ -36,9 +38,16 @@ public class UpdateNodeDaoRequest {
     }
 
 
-    //TODO: Depreciate this method -- in violation of SRP
+    //TODO: Depreciate these methods -- in violation of SRP
     public NodeItem RequestItem(String id){
         return nodeDao.get(id);
     }
-
+    public String RequestGateId(){
+        String gateString = "%gate%";
+        try{
+            return nodeDao.getGate(gateString).id;
+        }catch (NullPointerException e){
+            return "";
+        }
+    }
 }

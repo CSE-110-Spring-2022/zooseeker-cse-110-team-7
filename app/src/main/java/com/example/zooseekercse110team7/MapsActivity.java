@@ -140,8 +140,10 @@ public class MapsActivity extends AppCompatActivity implements
 
         NodeDatabase db = NodeDatabase.getSingleton(getApplicationContext());
         nodeDao = db.nodeDao();
+        UpdateNodeDaoRequest.getInstance().setNodeDao(getApplicationContext());
         Path.getInstance().getShortestPath(nodeDao.getByOnPlanner(true));//on startup get planner info
         PrettyDirections.getInstance().setContext(getApplicationContext());
+
     }
 
     /**
@@ -341,8 +343,8 @@ public class MapsActivity extends AppCompatActivity implements
         List<RouteItem> routeItemsToVisit = graph.getRemainingSubpathList();
         List<RouteItem> routeItemsVisited = graph.getVisitedSubpathList();
         if (routeItemsVisited.size() >= 1) {
-            String closestExhibit = Path.DEFAULT_SOURCE; //TODO include code: location.getClosestExhibit();
-            List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShorestPath(closestExhibit, routeItemsToVisit, Path.DEFAULT_DESTINATION);
+            String closestExhibit = Path.getInstance().DEFAULT_SOURCE; //TODO include code: location.getClosestExhibit();
+            List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShorestPath(closestExhibit, routeItemsToVisit, Path.getInstance().DEFAULT_DESTINATION);
             routeItemsVisited.addAll(newRoute);
             graph.setPath(routeItemsVisited);
         }
