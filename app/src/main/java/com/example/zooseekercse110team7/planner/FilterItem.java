@@ -1,6 +1,7 @@
 package com.example.zooseekercse110team7.planner;
 
 
+
 /**
  * An object that contains information on the filter can be added.
  * */

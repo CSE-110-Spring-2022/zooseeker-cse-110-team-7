@@ -35,6 +35,7 @@ public class SearchActivity extends AppCompatActivity {
     // Exposed for testing purposes later
     public RecyclerView recyclerView;
 
+
     private static final String TAG = "SearchActivity";
     private NodeSearchViewModel viewModel;
     private List<NodeItem> nodeItems = new ArrayList<>();
