@@ -10,9 +10,6 @@ import org.jgrapht.nio.Attribute;
  */
 public class IdentifiedWeightedEdge extends DefaultWeightedEdge {
 
-    private boolean hasFlippedPoints = false;
-    private String mySource, myTarget;
-
     private String id = null;
 
     public String getId() { return id; }
@@ -20,8 +17,7 @@ public class IdentifiedWeightedEdge extends DefaultWeightedEdge {
 
     @Override
     public String toString() {
-        return "(" + ((!hasFlippedPoints)?getSource():getTarget()) + " :" + id + ": " +
-                ((!hasFlippedPoints)?getTarget():getSource()) + ")";
+        return "(" + getSource() + " :" + id + ": " + getTarget() + ")";
     }
 
     public static void attributeConsumer(Pair<IdentifiedWeightedEdge, String> pair, Attribute attr) {
@@ -34,41 +30,17 @@ public class IdentifiedWeightedEdge extends DefaultWeightedEdge {
         }
     }
 
-    public void flipPoints(){
-        this.hasFlippedPoints = true;
-
-        //update ordering
-        getEdgeSource();
-        getEdgeTarget();
-    }
-
     public String getEdgeTarget(){
-        if(myTarget == null){
-            String str = this.toString();
-            int start = str.lastIndexOf(':');
-            int end = str.lastIndexOf(')');
-            myTarget = str.substring(start+2, end);
-        }
-
-        if(hasFlippedPoints){ return mySource; }
-
-        return myTarget;
+        String str = this.toString();
+        int start = str.lastIndexOf(':');
+        int end = str.lastIndexOf(')');
+        return str.substring(start+2, end);
     }
     public String getEdgeSource(){
-        if(mySource == null){
-            String str = this.toString();
-            int start = str.indexOf('(');
-            int end = str.indexOf(' ');
-            mySource = str.substring(start+1, end);
-        }
-
-        if(hasFlippedPoints){ return myTarget; }
-
-        return mySource;
+        String str = this.toString();
+        int start = str.indexOf('(');
+        int end = str.indexOf(' ');
+        return str.substring(start+1, end);
     }
-
-    public String getEdgeId(){ return id; }
-
-    public Boolean isFlipped(){ return hasFlippedPoints; }
 }
 
