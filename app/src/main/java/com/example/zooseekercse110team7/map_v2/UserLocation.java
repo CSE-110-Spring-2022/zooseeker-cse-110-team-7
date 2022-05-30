@@ -75,6 +75,7 @@ public class UserLocation extends Activity{
                 nodes.remove(i);
             }
         }
+        //TODO: Check This Does Not Skew With "offRoute" method
 
         //Get the user's current location
 
