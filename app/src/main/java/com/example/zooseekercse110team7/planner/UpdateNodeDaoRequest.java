@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.Optional;
+
 public class UpdateNodeDaoRequest {
     public static UpdateNodeDaoRequest instance = new UpdateNodeDaoRequest();
     private UpdateNodeDaoRequest(){}
@@ -42,8 +44,10 @@ public class UpdateNodeDaoRequest {
     }
     public String RequestGateId(){
         String gateString = "%gate%";
-        NodeItem result = nodeDao.getGate(gateString);
-        Log.d("GateId", ((result==null)?"":result.id));
-        return (result==null)?"":result.id;
+        try{
+            return nodeDao.getGate(gateString).id;
+        }catch (NullPointerException e){
+            return "";
+        }
     }
 }
