@@ -122,6 +122,7 @@
                 android:onClick="onBriefDirectionsSwitch"
                 android:text="Brief Direction" />
 
+
         </LinearLayout>
 
         <TextView
