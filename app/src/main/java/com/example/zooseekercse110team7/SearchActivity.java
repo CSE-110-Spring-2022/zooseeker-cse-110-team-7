@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,15 +32,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+//here
 public class SearchActivity extends AppCompatActivity {
     // Exposed for testing purposes later
     public RecyclerView recyclerView;
-
+    public RecyclerView selectedRecyclerView;
 
     private static final String TAG = "SearchActivity";
     private NodeSearchViewModel viewModel;
+    private NodeSearchViewModel selectedViewModel;
     private List<NodeItem> nodeItems = new ArrayList<>();
+    private List<NodeItem> selectedNodeItems = new ArrayList<>();
     private NodeSearchViewAdapter nodeViewAdapter;
+    private NodeSearchViewAdapter selectedNodeViewAdapter;
 
     private List<NodeItem> filter(String filterString) {
         return viewModel.getAllFilteredNodeItems(filterString);
@@ -66,15 +71,25 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    public void onSelectionChange(Boolean added) {
+        selectedNodeViewAdapter.setItems(selectedViewModel.getAllSelectedNodeItems());
+        selectedRecyclerView.invalidate();
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        viewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);//
-        nodeViewAdapter = new NodeSearchViewAdapter(viewModel);
+        viewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);
+        selectedViewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);
+        nodeViewAdapter = new NodeSearchViewAdapter(viewModel, this::onSelectionChange);
+        selectedNodeViewAdapter = new NodeSearchViewAdapter(selectedViewModel);
 
         nodeItems = viewModel.getAllFilteredNodeItems("");
+        selectedNodeItems = selectedViewModel.getAllSelectedNodeItems();
         if(GlobalDebug.DEBUG){
             for(NodeItem item: nodeItems){
                 Log.d("Search", item.toString());
@@ -82,15 +97,27 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         nodeViewAdapter.setItems(new ArrayList<>(nodeItems));
-        // recycler
+
+        // selectedNodeViewAdapter.setItems(new ArrayList<>(nodeItems));
         recyclerView = findViewById(R.id.search_node_viewer);//gets the recycler view from `activity_search.xml`
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(nodeViewAdapter);
+
+        selectedRecyclerView = findViewById(R.id.selected_search_node_viewer);
+        selectedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        selectedRecyclerView.setAdapter(selectedNodeViewAdapter);
 
         setSearchViewListener();
 
     }
 
+    public void onResetClick(View view) {
+        viewModel.removeAllItemsFromPlanner();
+        nodeViewAdapter.setItems(filter(""));
+        recyclerView.invalidate();
+        selectedNodeViewAdapter.setItems(selectedViewModel.getAllSelectedNodeItems());
+        selectedRecyclerView.invalidate();
+    }
 
     /**
      * When the filter image is clicked, a dialog appears which has options which the user can

@@ -4,6 +4,7 @@ package com.example.zooseekercse110team7;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.zooseekercse110team7.map_v2.AssetLoader;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         Planner,
         Search
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

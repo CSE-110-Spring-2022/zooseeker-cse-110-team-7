@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -67,6 +68,8 @@ public class PlannerActivity extends AppCompatActivity {
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         viewModel.getLiveNodeItems().observe(this, nodeObserver);
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
