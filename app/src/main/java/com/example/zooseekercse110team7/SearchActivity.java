@@ -82,7 +82,7 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         nodeViewAdapter.setItems(new ArrayList<>(nodeItems));
-
+        // recycler
         recyclerView = findViewById(R.id.search_node_viewer);//gets the recycler view from `activity_search.xml`
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(nodeViewAdapter);
