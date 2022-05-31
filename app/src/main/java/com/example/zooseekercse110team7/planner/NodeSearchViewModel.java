@@ -87,12 +87,19 @@ public class NodeSearchViewModel extends AndroidViewModel{
         Log.d("NodeSearchViewModel[Filters]", "| Success Returning Name Of Filters");
         return filterItems;
     }
-    //here
 
+    /**
+     * Returns the nodes that are selected
+     *
+     * */
     public List<NodeItem> getAllSelectedNodeItems() {
         return nodeDao.getByOnPlanner(true);
     }
 
+    /**
+     * Returns the nodes that are selected based on the filterr
+     *
+     * */
     public List<NodeItem> getAllFilteredNodeItems(String filter){
         String queryString;
         if (filter.isEmpty()) {
@@ -109,10 +116,7 @@ public class NodeSearchViewModel extends AndroidViewModel{
          * themselves.
          * These lines have now been replace with the `getListOfStringFilters` method.
          * */
-//        List<String> kinds = new ArrayList<>();
-//        kinds.add("exhibit");
-//        kinds.add("intersection");
-//        kinds.add("undefined");
+
 
         if(GlobalDebug.DEBUG){
             Log.d("SearchViewModel", "GETTING DATABASE ITEMS");
@@ -124,16 +128,28 @@ public class NodeSearchViewModel extends AndroidViewModel{
         return nodeDao.getByFilter(onPlannerBools, getListOfStringFilters()/*kinds*/, queryString);
     }
 
+    /**
+     * Adds animal/node to the planner
+     *
+     * */
     public void addItemToPlanner(NodeItem nodeItem){
         nodeItem.onPlanner = true;
         nodeDao.update(nodeItem);
     }
 
+    /**
+     * Remove animal/node from the planner
+     *
+     * */
     public void removeItemFromPlanner(NodeItem nodeItem){
         nodeItem.onPlanner = false;
         nodeDao.update(nodeItem);
     }
 
+    /**
+     * Removes all the animals/nodes from the planner
+     *
+     * */
     public void removeAllItemsFromPlanner() {
         nodeDao.clearPlanner();
     }
