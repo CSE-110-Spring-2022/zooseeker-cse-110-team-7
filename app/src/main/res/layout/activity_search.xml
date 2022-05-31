@@ -48,10 +48,12 @@
         android:id="@+id/clearAllBtn"
         android:layout_width="100dp"
         android:layout_height="42dp"
-        app:layout_constraintStart_toEndOf="@+id/search"
-        app:layout_constraintEnd_toStartOf="@+id/filterImage"
         android:onClick="onResetClick"
-        android:text="Clear All" />
+        android:text="Clear All"
+        app:layout_constraintBottom_toBottomOf="@+id/search"
+        app:layout_constraintEnd_toStartOf="@+id/filterImage"
+        app:layout_constraintStart_toEndOf="@+id/search"
+        app:layout_constraintTop_toTopOf="@+id/search" />
 
     <ImageView
         android:id="@+id/filterImage"
