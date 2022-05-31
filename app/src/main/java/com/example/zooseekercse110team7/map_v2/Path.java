@@ -24,18 +24,6 @@ import java.util.Set;
  * of the most recent calculated path.
  * */
 public class Path {
-    public final String DEFAULT_SOURCE = (
-            UpdateNodeDaoRequest.getInstance().RequestGateId().isEmpty()
-    )
-            ? "entrance_exit_gate"
-            : UpdateNodeDaoRequest.getInstance().RequestGateId();
-    public final String DEFAULT_DESTINATION = (
-            UpdateNodeDaoRequest.getInstance().RequestGateId().isEmpty()
-    )
-            ? "entrance_exit_gate"
-            : UpdateNodeDaoRequest.getInstance().RequestGateId();
-    public String getDEFAULT_SOURCE(){ return DEFAULT_SOURCE; }
-    public String getDEFAULT_DESTINATION(){ return DEFAULT_DESTINATION; }
     //  Singleton Setup
     // ---------------------------------------START---------------------------------------------- //
     private static Path instance = new Path();
@@ -44,6 +32,19 @@ public class Path {
         return instance;
     }
     // ----------------------------------------END----------------------------------------------- //
+
+    private final String DEFAULT_SOURCE = (
+            UpdateNodeDaoRequest.getInstance().RequestGateId().isEmpty()
+    )
+            ? "entrance_exit_gate"
+            : UpdateNodeDaoRequest.getInstance().RequestGateId();
+    private final String DEFAULT_DESTINATION = (
+            UpdateNodeDaoRequest.getInstance().RequestGateId().isEmpty()
+    )
+            ? "entrance_exit_gate"
+            : UpdateNodeDaoRequest.getInstance().RequestGateId();
+    public String getDEFAULT_SOURCE(){ return DEFAULT_SOURCE; }
+    public String getDEFAULT_DESTINATION(){ return DEFAULT_DESTINATION; }
 
     private final MapGraph mapGraph = MapGraph.getInstance(); // alias for `MapGraph` instance
     private Double pathCost; // total path cost
@@ -134,13 +135,36 @@ public class Path {
      * more items that need to be visited. Lastly, it finds the shortest path from the last
      * exhibit/item to be visited to the exit/destination.
      *
+     * Example:
+     * [Source, C,A,B, Destination] | ReferencePoint = Source
+     * [iteration 1]
+     * ReferencePoint -> C = 10, ReferencePoint -> A = 5, ReferencePoint -> B = 15
+     * ReferencePoint = A
+     *
+     * [Iteration 2]
+     * ReferencePoint -> C = 20, ReferencePoint -> B = 10
+     * ReferencePoint = B
+     *
+     * [Iteration 3]
+     * ReferencePoint -> C = 5
+     * ReferencePoint = C
+     *
+     * [Iteration 4]
+     * ReferencePoint -> Destination = 15
+     *
+     * Result = [Source, A, B, C, Destination]
+     *
+     * Note: the cost in each iteration is determined by Dijkstra -- that's why it changes value
+     *
+     *
      * @param source vertex name to start path
      * @param mustVisitItems list of items that must be visited
      * @param destination vertex name of the last item to visit
      *
      * @return list of `RouteItem`s in order in which they should be visited for optimal path
      * */
-    public List<RouteItem> getShortestPath(String source, List<NodeItem> mustVisitItems, String destination){
+    private List<RouteItem> calculatePath(String source, List<NodeItem> mustVisitItems,
+                                           String destination){
 
         List<String> remainingNames = nodeListToStringList(mustVisitItems);
 
@@ -186,17 +210,46 @@ public class Path {
 
         return route;
     }
-    /* DIFFERENT SIGNATURES */
-    //[Note] default source and default destination included when ran
-    public List<RouteItem> getShortestPath(List<NodeItem> mustVisitItems){
-        return this.getShortestPath(DEFAULT_SOURCE, mustVisitItems, DEFAULT_DESTINATION);
+
+    /**
+     * Calculates the shortest path based on a source, destination, and a list of items that must
+     * be visited.
+     *
+     * @param source vertex name to start path
+     * @param mustVisitItems list of items that must be visited which are either `RouteItem`
+     *                       or `NodeItem` -- if nether, result=empty_list
+     * @param destination vertex name of the last item to visit
+     *
+     * @return a list of ordered `RouteItem`s in which to visit the items
+     * */
+    public <T> List<RouteItem> getShortestPath(String source, List<T> mustVisitItems,
+                                               String destination){
+        // assume list is not null
+        // we don't have to check if list empty
+        List<NodeItem> items = new ArrayList<>();
+        if(!mustVisitItems.isEmpty()) {
+            if (mustVisitItems.get(0) instanceof RouteItem) {
+                items = routeItemListToNodeItems((List<RouteItem>) mustVisitItems);
+            }else{
+                items = (List<NodeItem>) mustVisitItems;
+            }
+        }
+        return this.calculatePath(
+                source,
+                items,
+                destination
+        );
     }
-    public List<RouteItem> getShorestPath(String source, List<RouteItem> mustVisitItems, String destination){
-        return getShortestPath(source, routeItemListToNodeItems(mustVisitItems), destination);
+    /* DIFFERENT SIGNATURES */ //[Note] default source and default destination included when ran
+    public List<RouteItem> getShortestPath(List<NodeItem> mustVisitItems){
+        return this.calculatePath(DEFAULT_SOURCE, mustVisitItems, DEFAULT_DESTINATION);
     }
     public List<RouteItem> getShortestPath(String source, List<RouteItem> mustVisitItems){
-        String defaultDestination = "entrance_exit_gate";//TODO
-        return this.getShortestPath(source, routeItemListToNodeItems(mustVisitItems), defaultDestination);
+        return this.calculatePath(
+                source,
+                routeItemListToNodeItems(mustVisitItems),
+                DEFAULT_DESTINATION
+        );
     }
 
     /**
@@ -217,7 +270,8 @@ public class Path {
     public Double getTotalCost(){ return pathCost; }
 
     //TODO
-    public List<RouteItem> getShortestLocationPath(Location source, List<NodeItem> mustVisitItems, String destination){
+    public List<RouteItem> getShortestLocationPath(Location source, List<NodeItem> mustVisitItems,
+                                                   String destination){
         return null;
     }
 }

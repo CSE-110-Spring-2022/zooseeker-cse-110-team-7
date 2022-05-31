@@ -1,6 +1,5 @@
 package com.example.zooseekercse110team7.map_v2;
 
-//import org.jgrapht.Graph;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 import android.content.Context;
@@ -10,67 +9,89 @@ import java.util.Map;
 
 import org.jgrapht.Graph;
 
-
-
 /**
- * This class loads all the information from the JSON files to be able to create a graph.
+ * This class loads (NOT parse) the JSON files related to the zoo. The data is stored and
+ * centralized here. Because this class is a singleton class it allows allows any class to get
+ * information about the graph. The parsing of the JSON files is delegated to the `ZooData`
  * */
 public class AssetLoader {
+    //  Singleton Setup
+    // ---------------------------------------START---------------------------------------------- //
     private static AssetLoader instance = new AssetLoader();
     private AssetLoader(){}
     public static AssetLoader getInstance(){ return instance;}
+    // ----------------------------------------END----------------------------------------------- //
+
+    /* Path Or File Name Of Respective JSON File */
+    private String zooGraphJSONFile;
+    private String nodeInfoJSONFile;
+    private String edgeInfoJSONFile;
+    // -------------------------------------------------
+    private Graph<String, IdentifiedWeightedEdge> graph;// a graph from the resulting JSON files
+    private Map<String, VertexInfo> vertexInfoMap;      // HashMap about the vertices in the graph
+    private Map<String, EdgeInfo> edgeInfoMap;          // HashMap about the edges in the graph
 
 
-    private String zooGraphJSON;
-    private String nodeInfoJSON;
-    private String edgeInfoJSON;
-    private Graph<String, IdentifiedWeightedEdge> graph;
-    private Map<String, VertexInfo> vInfo;
-    private Map<String, EdgeInfo> eInfo;
+    /**
+     * Loads in the assets from given paths as parameters. We assume that it's a file name because
+     * a `Context` is required in which we'll assume all the JSON files are loaded within the
+     * `assets` folder. The return value of the function allows for the Chain of Command pattern if
+     * needed.
+     *
+     * @param zooGraphFileName the name of the JSON file regarding the zoo graph
+     * @param nodeInfoFileName the name of the JSON file regarding the nodes/vertices of the graph
+     * @param edgeInfoFileName the name of the JSON file regarding the edges of the graph
+     * @param aContext the application context -- should be `null` when testing
+     *
+     * @return this instance of the object
+     * */
+    public AssetLoader loadAssets(String zooGraphFileName,
+                                  String nodeInfoFileName,
+                                  String edgeInfoFileName,
+                                  Context aContext){
+        /* ASSIGN/SAVE FILE NAMES */
+        this.zooGraphJSONFile = zooGraphFileName;
+        this.nodeInfoJSONFile = nodeInfoFileName;
+        this.edgeInfoJSONFile = edgeInfoFileName;
 
-    public AssetLoader loadAssets(String zooGraph, String nodeInfo, String edgeInfo, Context aContext){
-        this.zooGraphJSON = zooGraph;
-        this.nodeInfoJSON = nodeInfo;
-        this.edgeInfoJSON = edgeInfo;
-
-        /**
+        /* *
          * When testing, pass Context as `null` to as the application context changes between
          * emulation and tests. Otherwise, from whichever activity you are on, you need to pass a
          * Context that is `getApplicationContext()`. It Logs a Warning whenever it uses the
          * context for testing.
          * */
         if(aContext == null){
-            Log.w("AssetLoaderConstructor", "WARNING: Using Context For Testing Not Emulation!");
-            aContext = getApplicationContext(); }
+            Log.w("AssetLoader", "WARNING: Using Context For Testing Not Emulation!");
+            aContext = getApplicationContext();
+        }
 
-        graph = ZooData.loadZooGraphJSON(aContext, zooGraphJSON);
-        vInfo = ZooData.loadVertexInfoJSON(aContext, nodeInfoJSON);
-        eInfo = ZooData.loadEdgeInfoJSON(aContext, edgeInfoJSON);
+        /* GET PARSED DATA */
+        graph = ZooDataParser.loadZooGraphJSON(aContext, zooGraphJSONFile);
+        vertexInfoMap = ZooDataParser.loadVertexInfoJSON(aContext, nodeInfoJSONFile);
+        edgeInfoMap = ZooDataParser.loadEdgeInfoJSON(aContext, edgeInfoJSONFile);
 
         return this;
     }
 
+    /* THE FOLLOWING FUNCTIONS GET THE FILE NAMES OF THE RESPECTIVE JSON FILES */
     public String getZooFile(){
-        return this.zooGraphJSON;
+        return this.zooGraphJSONFile;
     }
-
     public String getNodeFile(){
-        return this.nodeInfoJSON;
+        return this.nodeInfoJSONFile;
     }
-
     public String getEdgeFile(){
-        return this.edgeInfoJSON;
+        return this.edgeInfoJSONFile;
     }
 
+    /* THE FOLLOWING FUNCTIONS RETURN A DATA STRUCTURE RESPECTIVE TO THE INFORMATION YOU WANT */
     public Graph<String, IdentifiedWeightedEdge> getGraph(){
         return this.graph;
     }
-
     public Map<String, VertexInfo> getVertexMap(){
-        return this.vInfo;
+        return this.vertexInfoMap;
     }
-
     public Map<String, EdgeInfo> getEdgeMap(){
-        return this.eInfo;
+        return this.edgeInfoMap;
     }
 }
