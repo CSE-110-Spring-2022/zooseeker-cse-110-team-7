@@ -381,7 +381,10 @@ public class MapsActivity extends AppCompatActivity implements
     //
     public void onSkipClicked(View view){
         String itemId = MapGraph.getInstance().getCurrentItemToVisitId();
-        if(null == itemId){ return; }
+        if(null == itemId){
+            Log.d("MapsActivity", "Cannot Find Skipable Item! -- Returning");
+            return;
+        }
         boolean updateSuccess = UpdateNodeDaoRequest.getInstance()
                 .setContext(getApplicationContext())
                 .RequestPlannerSkip(itemId);
@@ -410,19 +413,30 @@ public class MapsActivity extends AppCompatActivity implements
 
     public void onRefreshClicked(View view){
         //TODO: Refresh Directions
+        //update view/text
+        String directions = "[Updated]\n";
+        List<String> route = MapGraph.getInstance().getCurrentDirections();
+        for(String detail: route){
+            directions += detail;
+        }
+
+        Log.d("MapsActivity", "[Updated]\n" + directions);
+        TextView directionsTextview =
+                (TextView) findViewById(R.id.directions_text); // text view to display directions
+        directionsTextview.setText(directions);
     }
 
     public void onBriefDirectionsSwitch(View view){
         Log.d("MapsActivity", "Toggled Brief Directions!");
         MapGraph.getInstance().updateDirectionsBrevity();
 
-        String directions = "[Updated to Brief Directions]\n";
+        String directions = "[Updated Brevity of Directions]\n";
         List<String> route = MapGraph.getInstance().getCurrentDirections();
         for(String detail: route){
             directions += detail;
         }
 
-        Log.d("MapsActivity", "[Brief]\n" + directions);
+        Log.d("MapsActivity", "[On Brief]\n" + directions);
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
         directionsTextview.setText(directions);

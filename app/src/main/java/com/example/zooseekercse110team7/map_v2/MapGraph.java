@@ -244,11 +244,13 @@ public class MapGraph {
     public String getCurrentItemToVisitId(){
         //if(currentPathIndex - 1 < 0){}
         if(pathOfRouteItems.isEmpty() || 1 == pathOfRouteItems.size()
-                || (isGoingBackwards && currentPathIndex+1 >= pathOfRouteItems.size())
-                || (!isGoingBackwards && currentPathIndex-1 < 0)){
+                || (isGoingBackwards && (currentPathIndex!=0) && currentPathIndex < 0)
+                || (!isGoingBackwards && (currentPathIndex!=0) && currentPathIndex-1 < 0)){
             return null;
         }
-        RouteItem currentRouteItem = pathOfRouteItems.get(((isGoingBackwards)?currentPathIndex+1:currentPathIndex-1));
+        RouteItem currentRouteItem = pathOfRouteItems.get(
+                (0 == currentPathIndex)?currentPathIndex:((isGoingBackwards)?currentPathIndex:currentPathIndex-1)
+        );
         Log.d("MapGraph", "Current IDs: [Source] " + currentRouteItem.getSource() + "\t[Destination] "+ currentRouteItem.getDestination());
         Log.d("MapGraph","isGoingBackwards? [true]source : [false]destination -- Bool: " + isGoingBackwards.toString());
         return (isGoingBackwards)?currentRouteItem.getSource():currentRouteItem.getDestination();
@@ -269,17 +271,27 @@ public class MapGraph {
         if(1 == pathOfRouteItems.size() || pathOfRouteItems.isEmpty()){
             pathOfRouteItems = new ArrayList<>();
             return;
-        }
+        }else if(isGoingBackwards){ //can assume at least 2 items
+            //get previous source if it exists
+            RouteItem previous = pathOfRouteItems.get(currentPathIndex-1);
+            RouteItem current = pathOfRouteItems.get(currentPathIndex);
+            //update current route item to match source and destination
+            pathOfRouteItems.add(currentPathIndex, new RouteItem(
+                    previous.getSource(),
+                    current.getDestination(),
+                    Double.toString(Path.getInstance().getPathCost(previous.getSource(), current.getDestination())) ));
+            pathOfRouteItems.remove(previous);
+            pathOfRouteItems.remove(current);
+            return; } // https://piazza.com/class/l186r5pbwg2q4?cid=648
+                                              // only delete item
 
+        //can assume going forward
         /* GET SOURCE AND DESTINATION INFORMATION */
-        RouteItem previousRouteItem = pathOfRouteItems.get((
-                (isGoingBackwards)?currentPathIndex+1:currentPathIndex-1
-        ));
+        RouteItem previousRouteItem = pathOfRouteItems.get(
+                ((0 == currentPathIndex)?currentPathIndex:currentPathIndex-1)
+        );
         RouteItem currentRouteItem = pathOfRouteItems.get(currentPathIndex);
-        String newSource =
-                (!isGoingBackwards)
-                ? previousRouteItem.getSource()
-                : currentRouteItem.getSource();
+        String newSource = UserLocation.getInstance().getClosestExhibit();
         String newDestination =
                 (!isGoingBackwards)
                 ? currentRouteItem.getDestination()
@@ -287,7 +299,7 @@ public class MapGraph {
 
         /* CALCULATE NEW SUBPATH */
         List<RouteItem> remainingList = getRemainingSubpathList();
-        remainingList.remove(0);
+        if(!remainingList.isEmpty()) { remainingList.remove(0); }
         List<RouteItem> subpathRouteItems = Path
                 .getInstance()
                 .notUpdateGraph()
@@ -299,18 +311,15 @@ public class MapGraph {
         }
 
         /* REMOVE SKIPPED ITEMS FROM LIST */
-        pathOfRouteItems.remove(pathOfRouteItems.get(currentPathIndex));
-        pathOfRouteItems.remove((
-                (isGoingBackwards)
-                ?pathOfRouteItems.get(currentPathIndex)
-                :pathOfRouteItems.get(currentPathIndex-1)));
+        pathOfRouteItems.subList(currentPathIndex,  pathOfRouteItems.size()).clear();
+//        pathOfRouteItems.remove(pathOfRouteItems.get(currentPathIndex));
+//        pathOfRouteItems.remove((
+//                (isGoingBackwards)
+//                ?pathOfRouteItems.get(currentPathIndex)
+//                :pathOfRouteItems.get(currentPathIndex-1)));
 
         /* APPEND SUBPATH TO END OF THE LIST */
-        if(!pathOfRouteItems.addAll((
-                (isGoingBackwards)
-                        ? currentPathIndex
-                        : currentPathIndex-1),
-                subpathRouteItems)){
+        if(!pathOfRouteItems.addAll(currentPathIndex, subpathRouteItems)){
             Log.e("MapGraph", "ERROR 2: Subpath Cannot Be Inserted!");
         }
     }
@@ -323,7 +332,7 @@ public class MapGraph {
     public List<String> getCurrentDirections(){
         /* GET INDEX */
         Integer originalIndex = currentPathIndex;
-        currentPathIndex += (isGoingBackwards) ? 1: -1;
+        currentPathIndex += (0 == currentPathIndex)?currentPathIndex: ((isGoingBackwards) ? 1: -1);
         Log.d("MapGraph", "[GetCurrentDirections] Original Index: " + originalIndex
                 + "\tCurrent Index: " + currentPathIndex);
 

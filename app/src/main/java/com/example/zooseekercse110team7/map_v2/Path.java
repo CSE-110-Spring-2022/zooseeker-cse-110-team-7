@@ -84,7 +84,7 @@ public class Path {
      *
      * @return the cost of the path as a double
      * */
-    private double getPathCost(String referencePoint, String currentDestination){
+    public double getPathCost(String referencePoint, String currentDestination){
         GraphPath<String, IdentifiedWeightedEdge> path;
         path = DijkstraShortestPath.findPathBetween(mapGraph.getGraph(), referencePoint, currentDestination);
         return path.getWeight(); //sum of all weights leading to path
