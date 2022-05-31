@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -74,6 +75,7 @@ public class SearchActivity extends AppCompatActivity {
         selectedRecyclerView.invalidate();
 
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

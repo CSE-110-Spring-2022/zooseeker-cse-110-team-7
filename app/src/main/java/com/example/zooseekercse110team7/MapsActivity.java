@@ -5,6 +5,7 @@ package com.example.zooseekercse110team7;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -94,6 +95,7 @@ public class MapsActivity extends AppCompatActivity implements
     int goalCounter = 1;
     private boolean hasDeniedReroute;
     private boolean responseReceived = true; //initially set to true
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -381,6 +383,7 @@ public class MapsActivity extends AppCompatActivity implements
     protected void onPause() {
         rerouter.removeCallbacks(runnable); //stop handler when activity not visible
         super.onPause();
+
     }
     // [</REROUTE HANDLER>]
 

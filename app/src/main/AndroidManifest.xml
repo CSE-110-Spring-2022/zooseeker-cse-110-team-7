@@ -14,7 +14,8 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".PlannerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleInstance"/>
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
