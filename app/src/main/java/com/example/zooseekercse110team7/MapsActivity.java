@@ -79,6 +79,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -137,7 +138,7 @@ public class MapsActivity extends AppCompatActivity implements
     private Marker mapCenter;
     private boolean hasDeniedReroute;
     private boolean responseReceived = true; //initially set to true
-    private List<Coord> mockUserLocations; //list inputted from MOCK button read in locations from GSON
+    private List<Coord> mockUserLocations = Collections.emptyList(); //list inputted from MOCK button read in locations from GSON
     public boolean MOCKING_ON = false;
     private int location_index = 0;
 
@@ -175,11 +176,11 @@ public class MapsActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 if (MOCKING_ON && location_index > 0) {
                     location_index--;
+                    Log.d("MOCK NEXT", "MOCK_ON " + MOCKING_ON);
+                    Log.d("MOCK NEXT", "Location_index: " + location_index + "Location: " +
+                            mockUserLocations.get(location_index));
+                    Log.d("MOCK NEXT", "Current user location: " + latLng().toString());
                 }
-                Log.d("MOCK NEXT", "MOCK_ON " + MOCKING_ON);
-                Log.d("MOCK NEXT", "Location_index: " + location_index + "Location: " +
-                        mockUserLocations.get(location_index));
-                Log.d("MOCK NEXT", "Current user location: " + latLng().toString());
             }
         });
 
@@ -193,11 +194,11 @@ public class MapsActivity extends AppCompatActivity implements
 
                 if (MOCKING_ON && location_index < mockUserLocations.size() - 1) {
                     location_index++;
+                    Log.d("MOCK NEXT", "MOCK_ON " + MOCKING_ON);
+                    Log.d("MOCK NEXT", "Location_index: " + location_index + "Location: " +
+                            mockUserLocations.get(location_index));
+                    Log.d("MOCK NEXT", "Current user location: " + latLng().toString());
                 }
-                Log.d("MOCK NEXT", "MOCK_ON " + MOCKING_ON);
-                Log.d("MOCK NEXT", "Location_index: " + location_index + "Location: " +
-                        mockUserLocations.get(location_index));
-                Log.d("MOCK NEXT", "Current user location: " + latLng().toString());
 
             }
         });
@@ -208,6 +209,7 @@ public class MapsActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 MOCKING_ON = false;
+                if(mockUserLocations == null || mockUserLocations.isEmpty()){ return; }
                 location_index = 0;
                 Log.d("MOCK OFF", "MOCK_ON " + MOCKING_ON);
                 Log.d("MOCK OFF", "Location_index: " + location_index + "Location: " +
@@ -266,7 +268,7 @@ public class MapsActivity extends AppCompatActivity implements
      */
 
     public Coord latLng(){
-        if (MOCKING_ON) {
+        if (MOCKING_ON && mockUserLocations != null && !mockUserLocations.isEmpty()) {
             return mockUserLocations.get(location_index);
         }
         else {

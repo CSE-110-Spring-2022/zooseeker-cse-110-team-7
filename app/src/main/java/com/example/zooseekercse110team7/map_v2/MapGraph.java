@@ -3,6 +3,8 @@ package com.example.zooseekercse110team7.map_v2;
 import android.util.Log;
 
 import com.example.zooseekercse110team7.GlobalDebug;
+import com.example.zooseekercse110team7.planner.NodeItem;
+import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import org.jgrapht.Graph;
@@ -145,7 +147,7 @@ public class MapGraph {
     public int getPathSize(){ return pathOfRouteItems.size(); }
 
     private String getCurrentSource(){
-        return UserLocation.getInstance().getClosestExhibit();
+        return UserLocation.getInstance().getClosestVertex();
     }
 
     /**
@@ -155,7 +157,7 @@ public class MapGraph {
      *
      * @return Directions in the form of a String list
      * */
-    public List<String> getNextDirections(){//TODO: Make Strings Look Nicer
+    public List<String> getNextDirections(){
         isGoingBackwards = false;
         List<String> result = new ArrayList<>(); // holds result of parsed string for directions
 
@@ -242,7 +244,6 @@ public class MapGraph {
      * @return the `id` of the `NodeItem` as a String
      * */
     public String getCurrentItemToVisitId(){
-        //if(currentPathIndex - 1 < 0){}
         if(pathOfRouteItems.isEmpty() || 1 == pathOfRouteItems.size()
                 || (isGoingBackwards && (currentPathIndex!=0) && currentPathIndex < 0)
                 || (!isGoingBackwards && (currentPathIndex!=0) && currentPathIndex-1 < 0)){
@@ -253,7 +254,20 @@ public class MapGraph {
         );
         Log.d("MapGraph", "Current IDs: [Source] " + currentRouteItem.getSource() + "\t[Destination] "+ currentRouteItem.getDestination());
         Log.d("MapGraph","isGoingBackwards? [true]source : [false]destination -- Bool: " + isGoingBackwards.toString());
-        return (isGoingBackwards)?currentRouteItem.getSource():currentRouteItem.getDestination();
+
+        String resultId = (isGoingBackwards)?currentRouteItem.getSource():currentRouteItem.getDestination();
+
+        /* UPDATE APPROPRIATELY IF ID IS PARENT */
+        if(UpdateNodeDaoRequest.getInstance().isParent(resultId)){
+            List<NodeItem> children = UpdateNodeDaoRequest.getInstance().RequestChildrenOf(resultId);
+            for(NodeItem child: children){
+                if(child.onPlanner){
+                    UpdateNodeDaoRequest.getInstance().RequestPlannerSkip(child.id);
+                }
+            }
+        }
+
+        return resultId;
     }
 
     /**
@@ -272,7 +286,17 @@ public class MapGraph {
             pathOfRouteItems = new ArrayList<>();
             return;
         }else if(isGoingBackwards){ //can assume at least 2 items
+            if(0 == currentPathIndex){ return; } // can't skip at index -1
+
             //get previous source if it exists
+            Log.d("RemovedItemPath", "Current: " + currentPathIndex + "\tArray Size: "
+                    + pathOfRouteItems.size());
+            if(currentPathIndex >= pathOfRouteItems.size()){
+                currentPathIndex = pathOfRouteItems.size()-1;
+            }
+            Log.d("RemovedItemPath", "[After] Current: " + currentPathIndex
+                    + "\tArray Size: "
+                    + pathOfRouteItems.size());
             RouteItem previous = pathOfRouteItems.get(currentPathIndex-1);
             RouteItem current = pathOfRouteItems.get(currentPathIndex);
             //update current route item to match source and destination
@@ -291,7 +315,7 @@ public class MapGraph {
                 ((0 == currentPathIndex)?currentPathIndex:currentPathIndex-1)
         );
         RouteItem currentRouteItem = pathOfRouteItems.get(currentPathIndex);
-        String newSource = UserLocation.getInstance().getClosestExhibit();
+        String newSource = getCurrentSource();
         String newDestination =
                 (!isGoingBackwards)
                 ? currentRouteItem.getDestination()
@@ -367,7 +391,9 @@ public class MapGraph {
      * @return a list of `RouteItem`s which is the subpath of unvisited items
      * */
     public List<RouteItem> getRemainingSubpathList(){//TODO:Test This
-        if(pathOfRouteItems.size() <= 1){ return Collections.emptyList();}
+        if(pathOfRouteItems.size() <= 1 || currentPathIndex >= pathOfRouteItems.size()){
+            return Collections.emptyList();
+        }
         int startIndex = currentPathIndex;
         int endIndex = pathOfRouteItems.size()-1;
         return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));

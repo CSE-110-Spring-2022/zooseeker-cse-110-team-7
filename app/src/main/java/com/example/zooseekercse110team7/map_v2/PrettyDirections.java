@@ -242,6 +242,7 @@ public class PrettyDirections {
      * @return a generic object of type `T`, an object contained within the list
      * */
     private <T> T getLast(List<T> aList){
+        if(aList.isEmpty()){ return null; }
         return aList.get(aList.size()-1);
     }
 

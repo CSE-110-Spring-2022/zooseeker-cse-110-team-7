@@ -62,8 +62,8 @@ public class UserLocation extends Activity{
         return distance;
     }
 
-    //Method that compares the user's current coordinates with every other exhibit's coordinates to return the closest exhibit (in the form of its ID) to the user.
-    public String getClosestExhibit(){
+    //similar to `getClosestExhibit` but accounts for items that aren't exhibits (i.e intersections)
+    public String getClosestVertex(){
         double closestDistance;
         NodeItem closestExhibit;
 
@@ -75,7 +75,46 @@ public class UserLocation extends Activity{
                 nodes.remove(i);
             }
         }
-        //TODO: Check This Does Not Skew With "offRoute" method
+
+        //Get the user's current location
+
+        Coord userCoords = getLocationCoordinates();
+        double userLatitude = userCoords.lat;
+        double userLongitude = userCoords.lng;
+
+        //Set an initial 'closest' distance with the first item from exhibits list.
+        closestDistance = distanceFormulaHelper(userLatitude, userLongitude, nodes.get(0).lat, nodes.get(0).lng);
+        closestExhibit = nodes.get(0);
+
+        //Find the closest exhibit by comparing the above with every other exhibit.
+        for(int i = 1; i < nodes.size(); i++){
+            double comparingDistance = distanceFormulaHelper(userLatitude, userLongitude, nodes.get(i).lat, nodes.get(i).lng);
+            //If the exhibit being compared with the current closest exhibit is closer to the user, update the closest exhibit to that.
+            if(comparingDistance < closestDistance){
+                closestExhibit = nodes.get(i);
+                closestDistance = comparingDistance;
+            }
+        }
+
+
+        //return "Default";
+        //Return the closest exhibit's ID.
+        return closestExhibit.id;
+    }
+
+    //Method that compares the user's current coordinates with every other exhibit's coordinates to return the closest exhibit (in the form of its ID) to the user.
+    public String getClosestExhibit(){
+        double closestDistance;
+        NodeItem closestExhibit;
+
+        //Get the list of all items that is not a child in the zoo
+        List<NodeItem> nodes = nodeDao.getAll();
+        //remove nodes that are children (i.e those with a parent ID as they have no lat & lng)
+        for(int i = nodes.size() - 1; i >= 0; i--){
+            if(!nodes.get(i).kind.equals("exhibit")){
+                nodes.remove(i);
+            }
+        }
 
         //Get the user's current location
 
