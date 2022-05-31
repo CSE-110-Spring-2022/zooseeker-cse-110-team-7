@@ -73,6 +73,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -132,6 +134,7 @@ public class MapsActivity extends AppCompatActivity implements
     double longitude;
     NodeDatabase db;
 
+    private Marker mapCenter;
     private boolean hasDeniedReroute;
     private boolean responseReceived = true; //initially set to true
     private List<Coord> mockUserLocations; //list inputted from MOCK button read in locations from GSON
@@ -710,7 +713,12 @@ public class MapsActivity extends AppCompatActivity implements
     // [START_EXCLUDE silent]
     private void addCameraTargetToPath() {
         LatLng target = map.getCameraPosition().target;
-        currPolylineOptions.add(target);
+        if (mapCenter != null)
+            mapCenter.remove();
+        mapCenter = map.addMarker(new MarkerOptions()
+                .position(target)
+                .title("You"));
+//        currPolylineOptions.add(target);
     }
 
 
