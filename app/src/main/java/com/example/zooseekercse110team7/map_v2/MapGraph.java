@@ -3,6 +3,8 @@ package com.example.zooseekercse110team7.map_v2;
 import android.util.Log;
 
 import com.example.zooseekercse110team7.GlobalDebug;
+import com.example.zooseekercse110team7.planner.NodeItem;
+import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import org.jgrapht.Graph;
@@ -144,6 +146,10 @@ public class MapGraph {
      * */
     public int getPathSize(){ return pathOfRouteItems.size(); }
 
+    private String getCurrentSource(){
+        return UserLocation.getInstance().getClosestVertex();
+    }
+
     /**
      * This function acts as a singular step within an iteration of a list. Upon call, the current
      * index increases (if possible) and parses a list of `IdentifiedWeightedEdge` (edges) between
@@ -151,7 +157,7 @@ public class MapGraph {
      *
      * @return Directions in the form of a String list
      * */
-    public List<String> getNextDirections(){//TODO: Make Strings Look Nicer
+    public List<String> getNextDirections(){
         isGoingBackwards = false;
         List<String> result = new ArrayList<>(); // holds result of parsed string for directions
 
@@ -165,10 +171,10 @@ public class MapGraph {
         /* PARSE EDGES TO STRING OF DIRECTIONS */
         IdentifiedWeightedEdge previousEdge = null;
         RouteItem currentRoute = pathOfRouteItems.get(currentPathIndex);
-        result.add((currentRoute.getSource() + " -> " + currentRoute.getDestination() + "\n"));
+        result.add((getCurrentSource() + " -> " + currentRoute.getDestination() + "\n"));
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
-                .getPathEdges(currentRoute.getSource(), currentRoute.getDestination());
+                .getPathEdges(getCurrentSource(), currentRoute.getDestination());
         if(!isBrief) {
             for (IdentifiedWeightedEdge edge : edges) {
                 result.add(PrettyDirections
@@ -211,10 +217,11 @@ public class MapGraph {
         /* PARSE EDGES TO STRING OF DIRECTIONS IN REVERSE*/
         IdentifiedWeightedEdge previousEdge = null;
         RouteItem currentRoute = pathOfRouteItems.get(currentPathIndex);
-        result.add((currentRoute.getDestination() + " -> " + currentRoute.getSource() + "\n"));
+        String newDestination = currentRoute.getSource();
+        result.add((getCurrentSource() + " -> " + newDestination + "\n"));
         List<IdentifiedWeightedEdge> edges = Path
                 .getInstance()
-                .getPathEdges(currentRoute.getDestination(), currentRoute.getSource());
+                .getPathEdges(getCurrentSource(), newDestination);
         if(!isBrief) {
             for (IdentifiedWeightedEdge edge : edges) {
                 result.add(PrettyDirections
@@ -237,16 +244,30 @@ public class MapGraph {
      * @return the `id` of the `NodeItem` as a String
      * */
     public String getCurrentItemToVisitId(){
-        //if(currentPathIndex - 1 < 0){}
         if(pathOfRouteItems.isEmpty() || 1 == pathOfRouteItems.size()
-                || (isGoingBackwards && currentPathIndex+1 >= pathOfRouteItems.size())
-                || (!isGoingBackwards && currentPathIndex-1 < 0)){
+                || (isGoingBackwards && (currentPathIndex!=0) && currentPathIndex < 0)
+                || (!isGoingBackwards && (currentPathIndex!=0) && currentPathIndex-1 < 0)){
             return null;
         }
-        RouteItem currentRouteItem = pathOfRouteItems.get(((isGoingBackwards)?currentPathIndex+1:currentPathIndex-1));
+        RouteItem currentRouteItem = pathOfRouteItems.get(
+                (0 == currentPathIndex)?currentPathIndex:((isGoingBackwards)?currentPathIndex:currentPathIndex-1)
+        );
         Log.d("MapGraph", "Current IDs: [Source] " + currentRouteItem.getSource() + "\t[Destination] "+ currentRouteItem.getDestination());
         Log.d("MapGraph","isGoingBackwards? [true]source : [false]destination -- Bool: " + isGoingBackwards.toString());
-        return (isGoingBackwards)?currentRouteItem.getSource():currentRouteItem.getDestination();
+
+        String resultId = (isGoingBackwards)?currentRouteItem.getSource():currentRouteItem.getDestination();
+
+        /* UPDATE APPROPRIATELY IF ID IS PARENT */
+        if(UpdateNodeDaoRequest.getInstance().isParent(resultId)){
+            List<NodeItem> children = UpdateNodeDaoRequest.getInstance().RequestChildrenOf(resultId);
+            for(NodeItem child: children){
+                if(child.onPlanner){
+                    UpdateNodeDaoRequest.getInstance().RequestPlannerSkip(child.id);
+                }
+            }
+        }
+
+        return resultId;
     }
 
     /**
@@ -264,17 +285,37 @@ public class MapGraph {
         if(1 == pathOfRouteItems.size() || pathOfRouteItems.isEmpty()){
             pathOfRouteItems = new ArrayList<>();
             return;
-        }
+        }else if(isGoingBackwards){ //can assume at least 2 items
+            if(0 == currentPathIndex){ return; } // can't skip at index -1
 
+            //get previous source if it exists
+            Log.d("RemovedItemPath", "Current: " + currentPathIndex + "\tArray Size: "
+                    + pathOfRouteItems.size());
+            if(currentPathIndex >= pathOfRouteItems.size()){
+                currentPathIndex = pathOfRouteItems.size()-1;
+            }
+            Log.d("RemovedItemPath", "[After] Current: " + currentPathIndex
+                    + "\tArray Size: "
+                    + pathOfRouteItems.size());
+            RouteItem previous = pathOfRouteItems.get(currentPathIndex-1);
+            RouteItem current = pathOfRouteItems.get(currentPathIndex);
+            //update current route item to match source and destination
+            pathOfRouteItems.add(currentPathIndex, new RouteItem(
+                    previous.getSource(),
+                    current.getDestination(),
+                    Double.toString(Path.getInstance().getPathCost(previous.getSource(), current.getDestination())) ));
+            pathOfRouteItems.remove(previous);
+            pathOfRouteItems.remove(current);
+            return; } // https://piazza.com/class/l186r5pbwg2q4?cid=648
+                                              // only delete item
+
+        //can assume going forward
         /* GET SOURCE AND DESTINATION INFORMATION */
-        RouteItem previousRouteItem = pathOfRouteItems.get((
-                (isGoingBackwards)?currentPathIndex+1:currentPathIndex-1
-        ));
+        RouteItem previousRouteItem = pathOfRouteItems.get(
+                ((0 == currentPathIndex)?currentPathIndex:currentPathIndex-1)
+        );
         RouteItem currentRouteItem = pathOfRouteItems.get(currentPathIndex);
-        String newSource =
-                (!isGoingBackwards)
-                ? previousRouteItem.getSource()
-                : currentRouteItem.getSource();
+        String newSource = getCurrentSource();
         String newDestination =
                 (!isGoingBackwards)
                 ? currentRouteItem.getDestination()
@@ -282,7 +323,7 @@ public class MapGraph {
 
         /* CALCULATE NEW SUBPATH */
         List<RouteItem> remainingList = getRemainingSubpathList();
-        remainingList.remove(0);
+        if(!remainingList.isEmpty()) { remainingList.remove(0); }
         List<RouteItem> subpathRouteItems = Path
                 .getInstance()
                 .notUpdateGraph()
@@ -294,18 +335,15 @@ public class MapGraph {
         }
 
         /* REMOVE SKIPPED ITEMS FROM LIST */
-        pathOfRouteItems.remove(pathOfRouteItems.get(currentPathIndex));
-        pathOfRouteItems.remove((
-                (isGoingBackwards)
-                ?pathOfRouteItems.get(currentPathIndex)
-                :pathOfRouteItems.get(currentPathIndex-1)));
+        pathOfRouteItems.subList(currentPathIndex,  pathOfRouteItems.size()).clear();
+//        pathOfRouteItems.remove(pathOfRouteItems.get(currentPathIndex));
+//        pathOfRouteItems.remove((
+//                (isGoingBackwards)
+//                ?pathOfRouteItems.get(currentPathIndex)
+//                :pathOfRouteItems.get(currentPathIndex-1)));
 
         /* APPEND SUBPATH TO END OF THE LIST */
-        if(!pathOfRouteItems.addAll((
-                (isGoingBackwards)
-                        ? currentPathIndex
-                        : currentPathIndex-1),
-                subpathRouteItems)){
+        if(!pathOfRouteItems.addAll(currentPathIndex, subpathRouteItems)){
             Log.e("MapGraph", "ERROR 2: Subpath Cannot Be Inserted!");
         }
     }
@@ -318,7 +356,7 @@ public class MapGraph {
     public List<String> getCurrentDirections(){
         /* GET INDEX */
         Integer originalIndex = currentPathIndex;
-        currentPathIndex += (isGoingBackwards) ? 1: -1;
+        currentPathIndex += (0 == currentPathIndex)?currentPathIndex: ((isGoingBackwards) ? 1: -1);
         Log.d("MapGraph", "[GetCurrentDirections] Original Index: " + originalIndex
                 + "\tCurrent Index: " + currentPathIndex);
 
@@ -353,7 +391,9 @@ public class MapGraph {
      * @return a list of `RouteItem`s which is the subpath of unvisited items
      * */
     public List<RouteItem> getRemainingSubpathList(){//TODO:Test This
-        if(pathOfRouteItems.size() <= 1){ return Collections.emptyList();}
+        if(pathOfRouteItems.size() <= 1 || currentPathIndex >= pathOfRouteItems.size()){
+            return Collections.emptyList();
+        }
         int startIndex = currentPathIndex;
         int endIndex = pathOfRouteItems.size()-1;
         return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
@@ -365,9 +405,9 @@ public class MapGraph {
      * @return a list of `RouteItem`s which is the subpath of visited items
      * */
     public List<RouteItem> getVisitedSubpathList(){//TODO:Test This
-        if(pathOfRouteItems.size() > 1){ return Collections.emptyList();}
+        if(pathOfRouteItems.size() <= 1 || currentPathIndex >= pathOfRouteItems.size()){ return Collections.emptyList();}
         int startIndex = 0;
-        int endIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
+        int endIndex = (0 == currentPathIndex)?currentPathIndex:((isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1);
         return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
     }
 

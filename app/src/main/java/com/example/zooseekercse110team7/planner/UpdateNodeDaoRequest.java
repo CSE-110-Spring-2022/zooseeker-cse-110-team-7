@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.List;
 import java.util.Optional;
 
 public class UpdateNodeDaoRequest {
@@ -48,6 +49,17 @@ public class UpdateNodeDaoRequest {
             return nodeDao.getGate(gateString).id;
         }catch (NullPointerException e){
             return "";
+        }
+    }
+    public List<NodeItem> RequestChildrenOf(String parentId){
+        return nodeDao.getChildren(parentId);
+    }
+    public boolean isParent(String anId){
+        try{
+            NodeItem temp = nodeDao.getParent(anId);
+            return true;//if not null
+        }catch (NullPointerException e){
+            return false;
         }
     }
 }
