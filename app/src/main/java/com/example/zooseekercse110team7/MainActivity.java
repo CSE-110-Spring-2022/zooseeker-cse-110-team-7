@@ -98,4 +98,14 @@ public class MainActivity extends AppCompatActivity {
 ////        Intent intent = new Intent(this, CurrentMapLoc.class);
 //        startActivity(intent);
     }
+
+
+    // If it comes back to this activity -- Exit Application -- user should not be here
+    @Override
+    protected void onResume(){
+        super.onResume();
+        finish(); // finish intent
+        System.gc(); // garbage collector
+        System.exit(0); // exit application
+    }
 }

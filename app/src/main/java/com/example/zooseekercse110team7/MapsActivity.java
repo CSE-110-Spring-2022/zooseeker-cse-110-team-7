@@ -624,9 +624,7 @@ public class MapsActivity extends AppCompatActivity implements
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             Log.d(this.getClass().getName(), "OS back button pressed");
-            //finish();
-            System.gc();
-            System.exit(0);
+            finish();// close/exit intent/activity
         }
         return super.onKeyDown(keyCode, event);
     }
