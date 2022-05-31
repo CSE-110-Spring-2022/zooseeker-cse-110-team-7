@@ -91,14 +91,15 @@ public class DirectionsTest extends AndroidJUnitRunner {
         {
             directions = MapGraph.getInstance().getNextDirections();
             assertEquals(4, directions.size());
-            assertEquals(directions.get(0), "Proceed on " + "Gate Path" + " for "
-                    + 10 + "ft towards " + "Front Street / Treetops Way"
+            assertEquals(directions.get(0), "entrance_exit_gate -> koi\n");
+            assertEquals(directions.get(1), "Proceed on " + "Gate Path" + " for "
+                    + 10.0 + "ft towards " + "Front Street / Treetops Way"
                     + "\n");
-            assertEquals(directions.get(1), "Proceed on " + "Front Street" + " for "
-                    + 30 + "ft towards " + "Front Street / Terrace Lagoon Loop (South)"
+            assertEquals(directions.get(2), "Proceed on " + "Front Street" + " for "
+                    + 30.0 + "ft towards " + "Terrace Lagoon Loop (South)"
                     + "\n");
-            assertEquals(directions.get(2), "Continue on " + "Front Street" + " for "
-                    + 20 + "ft towards " + "Koi"
+            assertEquals(directions.get(3), "Proceed on " + "Terrace Lagoon Loop" + " for "
+                    + 20.0 + "ft towards " + "Koi Fish"
                     + "\n");
         }
 

@@ -168,9 +168,16 @@ public class PrettyDirections {
 
             if(!edge.isFlipped()) { // check if edge's source and target were flipped
                 if (Objects.equals(getFirst(streetSpliceSource), getFirst(streetSpliceTarget))) {
-                    result = "Continue on " + getFirst(streetSpliceTarget) + " for "
-                            + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
-                            + "\n";
+                    if(currentStreet.equals(previousStreet)){
+                        result = "Continue on " + getFirst(streetSpliceTarget) + " for "
+                                + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
+                                + "\n";
+                    }else {
+                        result = "Proceed on " + getFirst(streetSpliceTarget) + " for "
+                                + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
+                                + "\n";
+                    }
+
                 } else if (Objects.equals(getLast(streetSpliceSource), getFirst(streetSpliceTarget))) {
                     result = "Proceed on " + getLast(streetSpliceSource) + " for "
                             + distance.toString() + "ft towards " + getLast(streetSpliceTarget)
