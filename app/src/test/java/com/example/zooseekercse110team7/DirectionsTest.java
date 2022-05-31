@@ -91,31 +91,48 @@ public class DirectionsTest extends AndroidJUnitRunner {
         {
             directions = MapGraph.getInstance().getNextDirections();
             assertEquals(4, directions.size());
-            assertEquals(directions.get(0), "entrance_exit_gate -> koi\n");
-            assertEquals(directions.get(1), "Proceed on " + "Gate Path" + " for "
+            assertEquals( "entrance_exit_gate -> koi\n",directions.get(0));
+            assertEquals("Proceed on " + "Gate Path" + " for "
                     + 10.0 + "ft towards " + "Front Street / Treetops Way"
-                    + "\n");
-            assertEquals(directions.get(2), "Proceed on " + "Front Street" + " for "
+                    + "\n", directions.get(1));
+            assertEquals("Proceed on " + "Front Street" + " for "
                     + 30.0 + "ft towards " + "Terrace Lagoon Loop (South)"
-                    + "\n");
-            assertEquals(directions.get(3), "Proceed on " + "Terrace Lagoon Loop" + " for "
+                    + "\n", directions.get(2));
+            assertEquals("Proceed on " + "Terrace Lagoon Loop" + " for "
                     + 20.0 + "ft towards " + "Koi Fish"
-                    + "\n");
+                    + "\n", directions.get(3));
         }
 
-        // koi -> flamingo
+        // entrance -> flamingo
         {
             directions = MapGraph.getInstance().getNextDirections();
-            assertEquals(directions.size(), 5);
-            assertEquals(directions.get(0), "Proceed on " + "Front Street" + " for "
-                    + 10 + "ft towards " + "Front Street / Treetops Way"
-                    + "\n");
-            assertEquals(directions.get(0), "Proceed on " + "Front Street" + " for "
-                    + 30 + "ft towards " + "Front Street / Terrace Lagoon Loop (South)"
-                    + "\n");
-            assertEquals(directions.get(0), "Continue on " + "Front Street" + " for "
-                    + 20 + "ft towards " + "Koi"
-                    + "\n");
+            assertEquals(4, directions.size());
+            assertEquals( "entrance_exit_gate -> flamingo\n",directions.get(0));
+            assertEquals("Proceed on " + "Gate Path" + " for "
+                    + 10.0 + "ft towards " + "Front Street / Treetops Way"
+                    + "\n", directions.get(1));
+            assertEquals("Proceed on " + "Front Street" + " for "
+                    + 50.0 + "ft towards " + "Monkey Trail"
+                    + "\n", directions.get(2));
+            assertEquals("Proceed on " + "Monkey Trail" + " for "
+                    + 30.0 + "ft towards " + "Flamingos"
+                    + "\n", directions.get(3));
+        }
+
+        // entrance -> fern canyon
+        {
+            directions = MapGraph.getInstance().getNextDirections();
+            assertEquals(4, directions.size());
+            assertEquals( "entrance_exit_gate -> flamingo\n",directions.get(0));
+            assertEquals("Proceed on " + "Gate Path" + " for "
+                    + 10.0 + "ft towards " + "Front Street / Treetops Way"
+                    + "\n", directions.get(1));
+            assertEquals("Proceed on " + "Front Street" + " for "
+                    + 50.0 + "ft towards " + "Monkey Trail"
+                    + "\n", directions.get(2));
+            assertEquals("Proceed on " + "Monkey Trail" + " for "
+                    + 30.0 + "ft towards " + "Flamingos"
+                    + "\n", directions.get(3));
         }
 
     }
