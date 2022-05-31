@@ -87,6 +87,11 @@ public class NodeSearchViewModel extends AndroidViewModel{
         Log.d("NodeSearchViewModel[Filters]", "| Success Returning Name Of Filters");
         return filterItems;
     }
+    //here
+
+    public List<NodeItem> getAllSelectedNodeItems() {
+        return nodeDao.getByOnPlanner(true);
+    }
 
     public List<NodeItem> getAllFilteredNodeItems(String filter){
         String queryString;
@@ -127,6 +132,10 @@ public class NodeSearchViewModel extends AndroidViewModel{
     public void removeItemFromPlanner(NodeItem nodeItem){
         nodeItem.onPlanner = false;
         nodeDao.update(nodeItem);
+    }
+
+    public void removeAllItemsFromPlanner() {
+        nodeDao.clearPlanner();
     }
 
     /**

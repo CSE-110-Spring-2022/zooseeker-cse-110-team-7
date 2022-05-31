@@ -70,6 +70,8 @@ public class PlannerActivity extends AppCompatActivity {
         viewModel.getLiveNodeItems().observe(this, nodeObserver);
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
