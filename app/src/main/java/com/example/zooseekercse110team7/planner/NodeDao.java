@@ -63,6 +63,10 @@ public interface NodeDao extends ReadOnlyNodeDao{
     List<NodeItem> getByOnPlanner(Boolean onPlannerBools);
     @Query("SELECT * FROM `node_items` WHERE kind LIKE (:gateString) LIMIT 1")
     NodeItem getGate(String gateString);
+    @Query("SELECT * FROM `node_items` WHERE parent_id =(:parentId)")
+    List<NodeItem> getChildren(String parentId);
+    @Query("SELECT * FROM `node_items` WHERE parent_id=(:anId) LIMIT 1")
+    NodeItem getParent(String anId);
 
     /**
      * Retrieves all the values from the `kind` field in the database as a list of Strings.

@@ -30,7 +30,7 @@ import java.util.List;
  * - Update [Complete] Note: this is another synonym for Add
  * - Delete [Complete]
  * - Find   [Complete] Note: this is another synonym for Query
- * - Clear  [Incomplete]
+ * - Clear  [Complete]
  * */
 @RunWith(AndroidJUnit4.class)
 public class NodeDatabaseTest {
