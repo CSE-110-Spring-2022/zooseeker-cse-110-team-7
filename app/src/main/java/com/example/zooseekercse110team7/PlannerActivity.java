@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -68,6 +70,8 @@ public class PlannerActivity extends AppCompatActivity {
         viewModel.getLiveNodeItems().observe(this, nodeObserver);
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,5 +130,14 @@ public class PlannerActivity extends AppCompatActivity {
     public void onSearchClicked(View view){
         Intent intent = new Intent(PlannerActivity.this, SearchActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        e.putString("last_activity", getClass().getSimpleName());
+        e.commit();
+
+        super.onResume();
     }
 }

@@ -16,7 +16,9 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".PlannerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleInstance"
+            />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -35,18 +37,23 @@
         <activity
             android:name=".map_v2.CurrentMapLoc"
             android:exported="false"
-            android:label="@string/title_activity_current_map_loc" />
+            android:label="@string/title_activity_current_map_loc"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".MapsActivity"
             android:exported="false"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".SearchActivity"
             android:exported="false"
-            android:label="@string/title_activity_search" />
+            android:label="@string/title_activity_search"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleInstance"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
