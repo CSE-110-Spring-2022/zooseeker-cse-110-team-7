@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -136,6 +138,15 @@ public class SearchActivity extends AppCompatActivity {
         Log.d("Search", "| Close Dialog Button Set");
         Log.d("Search", "| End of Function");
 
+    }
+
+    @Override
+    public void onResume() {
+        SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        e.putString("last_activity", getClass().getSimpleName());
+        e.commit();
+
+        super.onResume();
     }
 
 }

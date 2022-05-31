@@ -11,12 +11,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 
 import android.os.Handler;
@@ -533,6 +535,9 @@ public class MapsActivity extends AppCompatActivity implements
     int delay = 15*1000; //Delay for 15 seconds.  One second = 1000 milliseconds.
     @Override
     protected void onResume() {
+        SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        e.putString("last_activity", getClass().getSimpleName());
+        e.commit();
         //location stuff
         super.onResume();
         if (checkPermissions()) {
