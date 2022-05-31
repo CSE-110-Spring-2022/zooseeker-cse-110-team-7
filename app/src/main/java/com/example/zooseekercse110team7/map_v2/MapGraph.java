@@ -405,9 +405,9 @@ public class MapGraph {
      * @return a list of `RouteItem`s which is the subpath of visited items
      * */
     public List<RouteItem> getVisitedSubpathList(){//TODO:Test This
-        if(pathOfRouteItems.size() > 1){ return Collections.emptyList();}
+        if(pathOfRouteItems.size() <= 1 || currentPathIndex >= pathOfRouteItems.size()){ return Collections.emptyList();}
         int startIndex = 0;
-        int endIndex = (isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1;
+        int endIndex = (0 == currentPathIndex)?currentPathIndex:((isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1);
         return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
     }
 

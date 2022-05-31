@@ -518,7 +518,7 @@ public class MapsActivity extends AppCompatActivity implements
         List<RouteItem> routeItemsVisited = graph.getVisitedSubpathList();
         if (routeItemsVisited.size() >= 1) {
             String closestExhibit = getClosestExhibit();
-            List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShorestPath(closestExhibit, routeItemsToVisit, Path.getInstance().getDEFAULT_DESTINATION());
+            List<RouteItem> newRoute = Path.getInstance().notUpdateGraph().getShortestPath(closestExhibit, routeItemsToVisit, Path.getInstance().getDEFAULT_DESTINATION());
             routeItemsVisited.addAll(newRoute);
             graph.setPath(routeItemsVisited);
         }
@@ -530,7 +530,7 @@ public class MapsActivity extends AppCompatActivity implements
      */
     Handler rerouter = new Handler();
     Runnable runnable;
-    int delay = 60*1000; //Delay for 15 seconds.  One second = 1000 milliseconds.
+    int delay = 15*1000; //Delay for 15 seconds.  One second = 1000 milliseconds.
     @Override
     protected void onResume() {
         //location stuff
