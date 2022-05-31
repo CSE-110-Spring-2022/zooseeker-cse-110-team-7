@@ -20,6 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/search" >
 
     </androidx.recyclerview.widget.RecyclerView>
+<!--    t-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/selected_search_node_viewer"

@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+//here
 public class SearchActivity extends AppCompatActivity {
     // Exposed for testing purposes later
     public RecyclerView recyclerView;
