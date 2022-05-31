@@ -108,6 +108,7 @@ public class SearchActivity extends AppCompatActivity {
         selectedRecyclerView = findViewById(R.id.selected_search_node_viewer);
         selectedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         selectedRecyclerView.setAdapter(selectedNodeViewAdapter);
+        onSelectionChange(true);//update selected summary
 
         setSearchViewListener();
 
@@ -119,8 +120,10 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             Log.d(this.getClass().getName(), "OS back button pressed");
-            Intent intent = new Intent(SearchActivity.this, MapsActivity.class);
+            Intent intent = new Intent(SearchActivity.this, MapsActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
         }
         return super.onKeyDown(keyCode, event);
     }

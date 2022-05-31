@@ -99,7 +99,6 @@ public class PlannerActivity extends AppCompatActivity {
         nodeViewer.setOnDeleteButtonClicked(viewModel::deleteItem);
 
         /*-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-*/
-        //TODO: Update UI
 
         //routeViewModel = new ViewModelProvider(this).get(RouteSummaryViewModel.class);
         RouteSummaryViewAdapter routeSummaryViewAdapter = new RouteSummaryViewAdapter();
@@ -147,8 +146,10 @@ public class PlannerActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             Log.d(this.getClass().getName(), "OS back button pressed");
-            Intent intent = new Intent(PlannerActivity.this, MapsActivity.class);
+            Intent intent = new Intent(PlannerActivity.this, MapsActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
         }
         return super.onKeyDown(keyCode, event);
     }

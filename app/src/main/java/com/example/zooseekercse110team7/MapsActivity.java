@@ -610,24 +610,17 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     public void onPlannerClicked(View view){
-        Intent intent = new Intent(MapsActivity.this, PlannerActivity.class);
+        Intent intent = new Intent(MapsActivity.this, PlannerActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
     public void onSearchClicked(View view){
-        Intent intent = new Intent(MapsActivity.this, SearchActivity.class);
+        Intent intent = new Intent(MapsActivity.this, SearchActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
-    //on Android OS back button press -- go to Maps Activity
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Log.d(this.getClass().getName(), "OS back button pressed");
-            finish();// close/exit intent/activity
-        }
-        return super.onKeyDown(keyCode, event);
-    }
 
     /**
      * Called when the Go To Bondi button is clicked.
