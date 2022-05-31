@@ -117,7 +117,7 @@ public class DirectionsTest extends AndroidJUnitRunner {
             assertEquals("Proceed on " + "Monkey Trail" + " for "
                     + 30.0 + "ft towards " + "Flamingos"
                     + "\n", directions.get(3));
-        }
+        }//merged
 
         // entrance -> fern canyon
         {
