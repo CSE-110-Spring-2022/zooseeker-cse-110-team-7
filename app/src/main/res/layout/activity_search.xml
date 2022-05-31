@@ -6,68 +6,96 @@
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_node_viewer"
-        android:layout_width="218dp"
-        android:layout_height="665dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/selected_search_node_viewer"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintVertical_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search" >
+    <!--    t-->
 
-    </androidx.recyclerview.widget.RecyclerView>
-<!--    t-->
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/selected_search_node_viewer"
-        android:layout_width="177dp"
-        android:layout_height="665dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="5dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:layout_constraintTop_toBottomOf="@+id/search"/>
-
-    <SearchView
-        android:id="@+id/search"
-        android:layout_width="250dp"
-        android:layout_height="42dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </SearchView>
+        <LinearLayout
+            android:layout_width="413dp"
+            android:layout_height="54dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/clearAllBtn"
-        android:layout_width="100dp"
-        android:layout_height="42dp"
-        android:onClick="onResetClick"
-        android:text="Clear All"
-        app:layout_constraintBottom_toBottomOf="@+id/search"
-        app:layout_constraintEnd_toStartOf="@+id/filterImage"
-        app:layout_constraintStart_toEndOf="@+id/search"
-        app:layout_constraintTop_toTopOf="@+id/search" />
+            <SearchView
+                android:id="@+id/search"
+                android:layout_width="250dp"
+                android:layout_height="42dp">
 
-    <ImageView
-        android:id="@+id/filterImage"
-        android:layout_width="36dp"
-        android:layout_height="42dp"
-        android:layout_weight="1"
-        android:contentDescription="an image to indicate to user to filter items by kind"
-        android:onClick="onFilterClick"
-        app:layout_constraintBottom_toBottomOf="@+id/search"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.36"
-        app:layout_constraintStart_toEndOf="@+id/clearAllBtn"
-        app:layout_constraintTop_toTopOf="@+id/search"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+            </SearchView>
+
+            <Button
+                android:id="@+id/clearAllBtn"
+                android:layout_width="100dp"
+                android:layout_height="42dp"
+                android:onClick="onResetClick"
+                android:text="Clear All" />
+
+            <ImageView
+                android:id="@+id/filterImage"
+                android:layout_width="48dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:contentDescription="an image to indicate to user to filter items by kind"
+                android:onClick="onFilterClick"
+                app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/search_node_viewer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="182dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Selected"
+                    android:textColor="#000000" />
+
+                <View
+                    android:id="@+id/divider5"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/selected_search_node_viewer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

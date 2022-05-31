@@ -24,6 +24,7 @@ import android.provider.Settings;
 import android.os.Handler;
 import android.text.InputType;
 
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -616,6 +617,18 @@ public class MapsActivity extends AppCompatActivity implements
     public void onSearchClicked(View view){
         Intent intent = new Intent(MapsActivity.this, SearchActivity.class);
         startActivity(intent);
+    }
+
+    //on Android OS back button press -- go to Maps Activity
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Log.d(this.getClass().getName(), "OS back button pressed");
+            //finish();
+            System.gc();
+            System.exit(0);
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     /**

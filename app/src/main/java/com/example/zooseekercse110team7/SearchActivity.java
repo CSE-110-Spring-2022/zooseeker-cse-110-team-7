@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -87,7 +88,7 @@ public class SearchActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);
         selectedViewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);
         nodeViewAdapter = new NodeSearchViewAdapter(viewModel, this::onSelectionChange);
-        selectedNodeViewAdapter = new NodeSearchViewAdapter(selectedViewModel);
+        selectedNodeViewAdapter = new NodeSearchViewAdapter(selectedViewModel, NodeSearchViewAdapter.ItemType.SELECTED_NODE_ITEM);
 
         nodeItems = viewModel.getAllFilteredNodeItems("");
         selectedNodeItems = selectedViewModel.getAllSelectedNodeItems();
@@ -110,7 +111,20 @@ public class SearchActivity extends AppCompatActivity {
 
         setSearchViewListener();
 
+
     }
+
+    //on Android OS back button press -- go to Maps Activity
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Log.d(this.getClass().getName(), "OS back button pressed");
+            Intent intent = new Intent(SearchActivity.this, MapsActivity.class);
+            startActivity(intent);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     public void onResetClick(View view) {
         viewModel.removeAllItemsFromPlanner();

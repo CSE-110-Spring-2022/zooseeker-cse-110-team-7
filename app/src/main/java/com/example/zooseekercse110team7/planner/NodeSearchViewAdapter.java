@@ -38,9 +38,16 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
     private NodeSearchViewModel viewModel;
     private Consumer<Boolean> onSelectionChange;
 
+    public enum ItemType {
+        NODE_ITEM, // default if null
+        SELECTED_NODE_ITEM
+    }
+    ItemType aType;
+
     //constructor -- sets view model
-    public NodeSearchViewAdapter(NodeSearchViewModel viewModel) {
+    public NodeSearchViewAdapter(NodeSearchViewModel viewModel, ItemType aType) {
         this.viewModel = viewModel;
+        this.aType = aType;
     }
 
     //second constructor -- sets view model
@@ -71,9 +78,17 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater
-                .from(parent.getContext())
-                .inflate(R.layout.node_search_item, parent, false);
+        View view = null;
+        if(aType == null || aType == ItemType.NODE_ITEM) {
+            aType = ItemType.NODE_ITEM; // ensures a type at runtime
+            view = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.node_search_item, parent, false);
+        }else if(aType == ItemType.SELECTED_NODE_ITEM){
+            view = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.selected_node_search_item, parent, false);
+        }
         return new ViewHolder(view);
     }
 
@@ -88,19 +103,21 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         NodeItem nodeItem = nodeItems.get(position);
-        holder.checkBox.setChecked(nodeItem.onPlanner);
-        holder.checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (holder.checkBox.isChecked()) {
-                    viewModel.addItemToPlanner(nodeItem);
-                    onSelectionChange.accept(true);
-                } else {
-                    viewModel.removeItemFromPlanner(nodeItem);
-                    onSelectionChange.accept(false);
+        if(aType == ItemType.NODE_ITEM){
+            holder.checkBox.setChecked(nodeItem.onPlanner);
+            holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (holder.checkBox.isChecked()) {
+                        viewModel.addItemToPlanner(nodeItem);
+                        onSelectionChange.accept(true);
+                    } else {
+                        viewModel.removeItemFromPlanner(nodeItem);
+                        onSelectionChange.accept(false);
+                    }
                 }
-            }
-        });
+            });
+        }
         holder.setItem(nodeItem);
     }
 
@@ -125,12 +142,17 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
                 kindTextView;           // text view for the kind node it is (i.e "exhibit")
         public final CheckBox checkBox; // check box to add item to planner
 
+        private final TextView selectedItemTextView;
+
         //constructor
+        //Note: all are assigned even if null!
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             nameTextView = itemView.findViewById(R.id.node_name_tv2);//note: 'tv' means 'text view'
             kindTextView = itemView.findViewById(R.id.node_kind_tv2);
             checkBox = itemView.findViewById(R.id.checkBox);
+
+            selectedItemTextView = itemView.findViewById(R.id.selected_node_item_text_view);
         }
 
         /**
@@ -140,8 +162,12 @@ public class NodeSearchViewAdapter extends RecyclerView.Adapter <NodeSearchViewA
             Log.d("NodeSearchAdapter", "Attempting to set items");
             this.nodeItem = nodeItem;
             try{
-                nameTextView.setText(nodeItem.name);
-                kindTextView.setText(nodeItem.kind);
+                if(aType == ItemType.NODE_ITEM){
+                    nameTextView.setText(nodeItem.name);
+                    kindTextView.setText(nodeItem.kind);
+                }else if(aType == ItemType.SELECTED_NODE_ITEM){
+                    selectedItemTextView.setText(nodeItem.name);
+                }
                 Log.d("NodeSearchAdapter", "|-> Items Set");
             }catch (NullPointerException e){
                 Log.e("NodeSearchAdapter", "|-> ERROR: Items Not Set");
