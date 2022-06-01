@@ -24,11 +24,8 @@ import android.provider.Settings;
 import android.os.Handler;
 import android.text.InputType;
 
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import android.graphics.Color;
@@ -43,13 +40,11 @@ import androidx.core.app.ActivityCompat;
 import com.example.zooseekercse110team7.location.Coord;
 import com.example.zooseekercse110team7.location.MockLocationParser;
 import com.example.zooseekercse110team7.map_v2.AssetLoader;
-import com.example.zooseekercse110team7.depreciated_map.CalculateShortestPath;
 import com.example.zooseekercse110team7.map_v2.MapGraph;
 import com.example.zooseekercse110team7.map_v2.Path;
 
 import com.example.zooseekercse110team7.map_v2.UserLocation;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
-import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -58,10 +53,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 import com.example.zooseekercse110team7.map_v2.PrettyDirections;
-import com.example.zooseekercse110team7.planner.NodeDatabase;
-import com.example.zooseekercse110team7.planner.NodeItem;
-import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
-import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
+import com.example.zooseekercse110team7.planner.NodeDaoRequest;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -86,7 +78,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * This shows how to change the camera position for the map.
+ * This Activity handles everything related to the maps/directions. Because every part of the app is
+ * focused on directions, this has basically become our main activity, but that is just a side
+ * affect and not a conscious decision to break SRP
  */
 // [START maps_camera_events]
 public class MapsActivity extends AppCompatActivity implements
@@ -123,12 +117,8 @@ public class MapsActivity extends AppCompatActivity implements
     private GoogleMap map;
     private PolylineOptions currPolylineOptions;
     private boolean isCanceled = false;
-    private CalculateShortestPath directions;
-    private List<NodeItem> plannedItems;
     ReadOnlyNodeDao nodeDao;
-    AssetLoader g;
-    int startCounter = 0;
-    int goalCounter = 1;
+    AssetLoader assetLoader;
 
 
     //Location variables
@@ -149,142 +139,163 @@ public class MapsActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        loadRequirements();
+        setViewListeners();
+
         // [START_EXCLUDE silent]
 
         // [END_EXCLUDE]
-        ImageButton reroute_btn = (ImageButton) findViewById(R.id.reroute_bt);
 
-        reroute_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reroutePath();
-            }
-        });
-        Button mock_btn = (Button) findViewById(R.id.mock_btn);
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
 
 
-        mock_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
+
+    /**
+     * This functions loads any of the requirements for any of the singletons needed within this
+     * activity. Because some of the singletons depend on one another, there is a hierarchical order
+     * of precedence.
+     * NodeDatabase <-- NodeDao <-- *Any*
+     * */
+    private void loadRequirements(){
+        db = NodeDatabase.getSingleton(getApplicationContext());
+        nodeDao = db.nodeDao();
+
+        Path.getInstance().getShortestPath(
+                nodeDao.getByOnPlanner(true)
+        );//on startup get planner info
+
+        NodeDaoRequest.getInstance().setNodeDao(getApplicationContext());
+        PrettyDirections.getInstance().setNodeDao(getApplicationContext());
+
+        //Part of user location
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        UserLocation.getInstance(this, nodeDao, db); // <--- instantiated
+
+        assetLoader = AssetLoader
+                .getInstance()
+                .loadAssets(
+                        "sample_zoo_graph.json",
+                        "sample_node_info.json",
+                        "sample_edge_info.json",
+                        getApplicationContext()
+                );                       // parses JSON files
+
+    }
+
+    /**
+     * This function sets listeners to view objects within the MapsActivity XML file. However, this
+     * mainly applies to a short amount of steps to occur on an event. Events that require a several
+     * steps use a function call such as `onClickedNext()` which is a large function.
+     * */
+    private void setViewListeners(){
+        /* ROW 1 */
+        {
+            findViewById(R.id.planner_button).setOnClickListener(view -> {
+                // go to planner activity
+                Intent intent = new Intent(MapsActivity.this, PlannerActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            });
+
+            findViewById(R.id.search_button).setOnClickListener(view -> {
+                // go to search activity
+                Intent intent = new Intent(MapsActivity.this, PlannerActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            });
+
+            findViewById(R.id.mock_btn).setOnClickListener(view -> {
+                Log.d("ViewListeners", "Mock Button Clicked");
                 MOCKING_ON= true;
                 location_index = 0;
                 readInPathText();
-            }
-        });
-        Button mock_back = (Button) findViewById(R.id.mock_back_btn);
+            });
+        }
 
-
-        mock_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MOCKING_ON && location_index > 0) {
-                    location_index--;
-                    Log.d("MOCK NEXT", "MOCK_ON " + MOCKING_ON);
-                    Log.d("MOCK NEXT", "Location_index: " + location_index + "Location: " +
-                            mockUserLocations.get(location_index));
-                    Log.d("MOCK NEXT", "Current user location: " + latLng().toString());
-                }
-            }
-        });
-
-
-
-        Button next_mock = (Button) findViewById(R.id.next_mock_btn);
-        next_mock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //checks if at last index already
-
+        /* ROW 2*/
+        {
+            findViewById(R.id.mock_next_btn).setOnClickListener(view -> {
+                Log.d("ViewListeners", "Next Mock Button Clicked");
                 if (MOCKING_ON && location_index < mockUserLocations.size() - 1) {
                     location_index++;
                     Log.d("MOCK NEXT", "MOCK_ON " + MOCKING_ON);
                     Log.d("MOCK NEXT", "Location_index: " + location_index + "Location: " +
                             mockUserLocations.get(location_index));
-                    Log.d("MOCK NEXT", "Current user location: " + latLng().toString());
+                    Log.d("MOCK NEXT", "Current user location: " + getUserLocation().toString());
                 }
+            });
 
-            }
-        });
+            findViewById(R.id.mock_back_btn).setOnClickListener(view -> {
+                Log.d("ViewListeners", "Back Mock Button Clicked");
+                if (MOCKING_ON && location_index > 0) {
+                    location_index--;
+                    Log.d("MOCK NEXT", "MOCK_ON " + MOCKING_ON);
+                    Log.d("MOCK NEXT", "Location_index: " + location_index + "Location: " +
+                            mockUserLocations.get(location_index));
+                    Log.d("MOCK NEXT", "Current user location: " + getUserLocation().toString());
+                }
+            });
 
-
-        Button turn_off_mocking = (Button) findViewById(R.id.turn_off_mocking_btn);
-        turn_off_mocking.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            findViewById(R.id.turn_off_mocking_btn).setOnClickListener(view -> {
+                Log.d("ViewListeners", "Mock Off Button Clicked");
                 MOCKING_ON = false;
                 if(mockUserLocations == null || mockUserLocations.isEmpty()){ return; }
                 location_index = 0;
                 Log.d("MOCK OFF", "MOCK_ON " + MOCKING_ON);
                 Log.d("MOCK OFF", "Location_index: " + location_index + "Location: " +
                         mockUserLocations.get(location_index));
-                Log.d("MOCK OFF", "Current user location: " + latLng().toString());
+                Log.d("MOCK OFF", "Current user location: " + getUserLocation().toString());
+            });
+        }
 
-            }
-        });
+        /* ROW 3 */
+        {
+            findViewById(R.id.reroute_btn).setOnClickListener(view -> {
+                Log.d("ViewListeners", "Mock Button Clicked");
+                reroutePath();
+            });
+        }
 
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-
-
-        //TODO: Create Singleton Class that handles instantiation of precedence
-        // Steve Will take care of this
-        /**
-         * [Note]: Loading the Assets Takes Precedence!
-         * Dependency: AssetLoader <-- MapGraph <-- Path
-         * */
-        g = AssetLoader
-                .getInstance()
-                .loadAssets(
-                "sample_zoo_graph.json",
-                "sample_node_info.json",
-                "sample_edge_info.json",
-                getApplicationContext());                       // parses JSON files
-
-        //Part of user location
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        db = NodeDatabase.getSingleton(getApplicationContext());
-        nodeDao = db.nodeDao();
-        PrettyDirections.getInstance().setNodeDao(getApplicationContext());
-        UpdateNodeDaoRequest.getInstance().setNodeDao(getApplicationContext());
-        Path.getInstance().getShortestPath(nodeDao.getByOnPlanner(true));//on startup get planner info
-
-        UserLocation.getInstance(this, nodeDao, db); // <--- instantiate
-
-        //UserLocation.getInstance();
-    }
-
-    //Helper class that helps with returning latitude,longitude pairs.
-    /*
-    public class Pair<T, U> {
-        public final T latit;
-        public final U longit;
-
-        public Pair(T t, U u) {
-            this.latit = t;
-            this.longit = u;
+        /* ROW 4 */
+        {
+//            findViewById(R.id.next_directions_btn).setOnClickListener(view -> {
+//
+//            });
+//
+//            findViewById(R.id.skip_directions_btn).setOnClickListener(view -> {
+//
+//            });
+//
+//            findViewById(R.id.back_button).setOnClickListener(view -> {
+//
+//            });
         }
     }
 
-     */
-
-    public Coord latLng(){
+    /**
+     * Retrieves the user's current location. If locations are being mocked, then it will return
+     * the mocked location rather than the actual location of the user.
+     *
+     * @return a coordinate object `Coord` of the user's current (and potentially mocked) location
+     * */
+    public Coord getUserLocation(){
         if (MOCKING_ON && mockUserLocations != null && !mockUserLocations.isEmpty()) {
+            //return mocked location
             return mockUserLocations.get(location_index);
         }
         else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             getLastLocation();
             Coord currentCoords = new Coord(latitude, longitude);
+
+            //return actual location
             return currentCoords;
         }
-
-
-        //not sure why that's there
-        //PrettyDirections.getInstance().setContext(getApplicationContext());
-
     }
 
     /**
@@ -328,72 +339,68 @@ public class MapsActivity extends AppCompatActivity implements
         builder.show();
     }
 
-    // Called when Directions is clicked. Displays directions for pairs of destinations in order
-    // each time it's clicked.
+    /**
+     * Called when Directions is clicked. It displays directions from the user's current
+     * position to the next item in the planner/list.
+     *
+     * @param view button of the item being clicked on
+     * */
     public void onNextClicked(View view) {
         Log.d("MapsActivity", "Next Button Clicked!");
-        TextView directionsTextview =
-                (TextView) findViewById(R.id.directions_text); // text view to display directions
 
-        //Coord example = UserLocation.getInstance(this, nodeDao, db).getLocationCoordinates();
-        //String ex2 = UserLocation.getInstance(this, nodeDao, db).getClosestExhibit();
-        //boolean ex3  = UserLocation.getInstance(this, nodeDao, db).checkForReroute();
-
-        String directions = "[Next]\n";
-
+        /* GET DIRECTIONS */
+        StringBuilder directions = new StringBuilder("[Next]\n");
         List<String> route = MapGraph.getInstance().getNextDirections();
-
         for(String detail: route){
-            directions += detail;
-            //directions += "Test of coords: " + example + "\n";
-            //directions += "Test of closest exhibit: " + ex2 + "\n";
-            //directions += "Test of reroute check: " + ex3 + "\n";
+            directions.append(detail);
         }
 
-        directionsTextview.setText(directions);
-        Log.d("MapsActivity", "[Next Directions]" + directions);
-        Log.d("MapsActivity", "Next Updated!");
+        /* SET DIRECTIONS TEXT */
+        TextView directionsTextview =
+                (TextView) findViewById(R.id.directions_text); // text view to display directions
+        directionsTextview.setText(directions.toString());
+        Log.d("MapsActivity", "[Next Directions Updated]\n" + directions);
     }
 
     /**
-     * https://piazza.com/class/l186r5pbwg2q4?cid=648
-     * 1. Does hitting the previous button backtrace and reverse the steps? For example, the user
-     * story mentions 2 scenarios - pressing previous to find out how to backtrack to the hippos
-     * exhibit, but also pressing next to "preview" the next exhibit and then pressing previous to
-     * return to the current one.
+     * Called when Directions is clicked. It displays directions from the user's current
+     * position to the previous item in the planner/list.
      *
-     * This was -- partially -- previously asked and answered in previous clarifications. I recommend
-     * you read those responses carefully. In general, the answer is, yes, Previous reverses the
-     * steps. It's even in the Scenario.However, directions are now from your actual location
-     * as opposed to a supposed location.
+     * @param view button of the item being clicked on
      * */
     public void onBackClicked(View view){
         Log.d("MapsActivity", "Back Button Clicked!");
-        TextView directionsTextview =
-                (TextView) findViewById(R.id.directions_text); // text view to display directions
 
-        String directions = "[Back]\n";
+        /* GET DIRECTIONS */
+        StringBuilder directions = new StringBuilder("[Back]\n");
         List<String> route = MapGraph.getInstance().getPreviousDirections();
         for(String detail: route){
-            directions += detail;
+            directions.append(detail);
         }
 
-        directionsTextview.setText(directions);
-        Log.d("MapsActivity", "[Back Directions]" + directions);
-        Log.d("MapsActivity", "Back Updated!");
+        /* SET DIRECTIONS TEXT */
+        TextView directionsTextview =
+                (TextView) findViewById(R.id.directions_text); // text view to display directions
+        directionsTextview.setText(directions.toString());
+        Log.d("MapsActivity", "[Back Directions Updated]" + directions);
     }
 
 
-    //What happens if you use default end and start, do you remove them?
-    // -- start and ends of a path aren't deleted! so this may be a double edged sword
-    //
+    /**
+     * Called when Directions is clicked. It displays directions from the user's current
+     * position to the second next or previous item in the planner/list removing the first next or
+     * previous item in the list. it then reroutes the remaining items to visit if skipping the next
+     * item in the list. Otherwise it connects to second previous item to user's current location.
+     *
+     * @param view button of the item being clicked on
+     * */
     public void onSkipClicked(View view){
         String itemId = MapGraph.getInstance().getCurrentItemToVisitId();
         if(null == itemId){
             Log.d("MapsActivity", "Cannot Find Skipable Item! -- Returning");
             return;
         }
-        boolean updateSuccess = UpdateNodeDaoRequest.getInstance()
+        boolean updateSuccess = NodeDaoRequest.getInstance()
                 .setContext(getApplicationContext())
                 .RequestPlannerSkip(itemId);
 
@@ -406,55 +413,70 @@ public class MapsActivity extends AppCompatActivity implements
         MapGraph.getInstance().updatePathWithRemovedItem();
 
         //update view/text
-        String directions = "[Updated After Skip]\n";
+        StringBuilder directions = new StringBuilder("[Updated After Skip]\n");
         List<String> route = MapGraph.getInstance().getCurrentDirections();
         for(String detail: route){
-            directions += detail;
+            directions.append(detail);
         }
 
         Log.d("MapsActivity", "[Skip]\n" + directions);
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
-        directionsTextview.setText(directions);
+        directionsTextview.setText(directions.toString());
 
     }
 
+    /**
+     * Called when Refresh Directions is clicked. It gets the current directions and displays it to
+     * the user.
+     *
+     * @param view button of the item being clicked on
+     * */
     public void onRefreshClicked(View view){
-        //update view/text
-        String directions = "[Updated]\n";
+        /* GET DIRECTIONS */
+        StringBuilder directions = new StringBuilder("[Updated]\n");
         List<String> route = MapGraph.getInstance().getCurrentDirections();
         for(String detail: route){
-            directions += detail;
+            directions.append(detail);
         }
 
+        /* SET DIRECTIONS */
         Log.d("MapsActivity", "[Updated]\n" + directions);
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
-        directionsTextview.setText(directions);
+        directionsTextview.setText(directions.toString());
     }
 
+
+    /**
+     * Changes how brief the directions are when the switch is toggled.
+     *
+     * @param view button of the item being clicked on
+     * */
     public void onBriefDirectionsSwitch(View view){
         Log.d("MapsActivity", "Toggled Brief Directions!");
-        MapGraph.getInstance().updateDirectionsBrevity();
 
-        String directions = "[Updated Brevity of Directions]\n";
+        /* GET DIRECTIONS */
+        MapGraph.getInstance().updateDirectionsBrevity();
+        StringBuilder directions = new StringBuilder("[Updated Brevity of Directions]\n");
         List<String> route = MapGraph.getInstance().getCurrentDirections();
         for(String detail: route){
-            directions += detail;
+            directions.append(detail);
         }
 
+        /* SET DIRECTIONS */
         Log.d("MapsActivity", "[On Brief]\n" + directions);
         TextView directionsTextview =
                 (TextView) findViewById(R.id.directions_text); // text view to display directions
-        directionsTextview.setText(directions);
+        directionsTextview.setText(directions.toString());
     }
 
     // [<REROUTE HANDLER>]
 
 
-    /*
+    /**
      * https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android
-     * Creates a dialog box that asks user if they want to reroute or not
+     * Creates a dialog box that asks user if they want to reroute or not.
      */
     private void askUserToReroute () {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -492,7 +514,7 @@ public class MapsActivity extends AppCompatActivity implements
         return UserLocation.getInstance(this, nodeDao, db).getClosestExhibit();
     }
 
-    /*
+    /**
      * Checks if user is going `forward` and user is off-route
      * Queries user if they want to reroute for a more optimal path
      */
@@ -510,7 +532,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     }
 
-    /*
+    /**
      * Uses the graph methods to recreate a new route based off the closest exhibit
      * @ensure the path is going forward
      */
@@ -606,18 +628,6 @@ public class MapsActivity extends AppCompatActivity implements
             return false;
         }
         return true;
-    }
-
-    public void onPlannerClicked(View view){
-        Intent intent = new Intent(MapsActivity.this, PlannerActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
-
-    public void onSearchClicked(View view){
-        Intent intent = new Intent(MapsActivity.this, SearchActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
     }
 
 

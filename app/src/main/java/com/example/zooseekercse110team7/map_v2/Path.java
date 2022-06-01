@@ -3,10 +3,8 @@ package com.example.zooseekercse110team7.map_v2;
 import android.location.Location;
 import android.util.Log;
 
-import com.example.zooseekercse110team7.GlobalDebug;
 import com.example.zooseekercse110team7.planner.NodeItem;
-import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
-import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
+import com.example.zooseekercse110team7.planner.NodeDaoRequest;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import org.jgrapht.GraphPath;
@@ -34,15 +32,15 @@ public class Path {
     // ----------------------------------------END----------------------------------------------- //
 
     private final String DEFAULT_SOURCE = (
-            UpdateNodeDaoRequest.getInstance().RequestGateId().isEmpty()
+            NodeDaoRequest.getInstance().RequestGateId().isEmpty()
     )
             ? "entrance_exit_gate"
-            : UpdateNodeDaoRequest.getInstance().RequestGateId();
+            : NodeDaoRequest.getInstance().RequestGateId();
     private final String DEFAULT_DESTINATION = (
-            UpdateNodeDaoRequest.getInstance().RequestGateId().isEmpty()
+            NodeDaoRequest.getInstance().RequestGateId().isEmpty()
     )
             ? "entrance_exit_gate"
-            : UpdateNodeDaoRequest.getInstance().RequestGateId();
+            : NodeDaoRequest.getInstance().RequestGateId();
     public String getDEFAULT_SOURCE(){ return DEFAULT_SOURCE; }
     public String getDEFAULT_DESTINATION(){ return DEFAULT_DESTINATION; }
 
@@ -119,8 +117,8 @@ public class Path {
     private List<NodeItem> routeItemListToNodeItems(List<RouteItem> routeItems){
         Set<NodeItem> result = new HashSet<>();
         for(RouteItem item: routeItems){
-            result.add(UpdateNodeDaoRequest.getInstance().RequestItem(item.getSource()));
-            result.add(UpdateNodeDaoRequest.getInstance().RequestItem(item.getDestination()));
+            result.add(NodeDaoRequest.getInstance().RequestItem(item.getSource()));
+            result.add(NodeDaoRequest.getInstance().RequestItem(item.getDestination()));
         }
 
         return new ArrayList<>(result);

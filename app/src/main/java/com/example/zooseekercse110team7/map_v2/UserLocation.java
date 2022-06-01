@@ -182,7 +182,7 @@ public class UserLocation extends Activity{
         //MapsActivity r = new MapsActivity();
         //r.onSearchClicked();
 
-        Coord userCoords = myMapsActivity.latLng();
+        Coord userCoords = myMapsActivity.getUserLocation();
         return userCoords;
     }
 

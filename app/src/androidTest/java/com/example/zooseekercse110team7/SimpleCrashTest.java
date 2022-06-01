@@ -55,7 +55,7 @@ public class SimpleCrashTest {
     @Test
     public void crashTest() {
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -137,7 +137,7 @@ public class SimpleCrashTest {
         switch_.perform(click());
 
         ViewInteraction appCompatImageButton2 = onView(
-                allOf(withId(R.id.reroute_bt),
+                allOf(withId(R.id.reroute_btn),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -157,7 +157,7 @@ public class SimpleCrashTest {
         appCompatButton5.perform(click());
 
         ViewInteraction appCompatButton6 = onView(
-                allOf(withId(R.id.next_mock_btn), withText("MOCK NEXT"),
+                allOf(withId(R.id.mock_next_btn), withText("MOCK NEXT"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -196,7 +196,7 @@ public class SimpleCrashTest {
         appCompatButton9.perform(scrollTo(), click());
 
         ViewInteraction appCompatButton10 = onView(
-                allOf(withId(R.id.back_step_plan), withText("Back"),
+                allOf(withId(R.id.back_directions_btn), withText("Back"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -206,7 +206,7 @@ public class SimpleCrashTest {
         appCompatButton10.perform(click());
 
         ViewInteraction appCompatButton11 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -216,7 +216,7 @@ public class SimpleCrashTest {
         appCompatButton11.perform(click());
 
         ViewInteraction appCompatButton12 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),

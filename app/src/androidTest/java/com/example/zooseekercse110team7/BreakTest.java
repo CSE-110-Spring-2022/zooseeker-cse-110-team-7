@@ -225,7 +225,7 @@ public class BreakTest {
         switch_2.perform(click());
 
         ViewInteraction appCompatButton7 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -235,7 +235,7 @@ public class BreakTest {
         appCompatButton7.perform(click());
 
         ViewInteraction appCompatButton8 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -245,7 +245,7 @@ public class BreakTest {
         appCompatButton8.perform(click());
 
         ViewInteraction appCompatButton9 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -255,7 +255,7 @@ public class BreakTest {
         appCompatButton9.perform(click());
 
         ViewInteraction appCompatButton10 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -265,7 +265,7 @@ public class BreakTest {
         appCompatButton10.perform(click());
 
         ViewInteraction appCompatButton11 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -276,7 +276,7 @@ public class BreakTest {
 
 
         ViewInteraction appCompatButton19 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -286,7 +286,7 @@ public class BreakTest {
         appCompatButton19.perform(click());
 
         ViewInteraction appCompatButton20 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -296,7 +296,7 @@ public class BreakTest {
         appCompatButton20.perform(click());
 
         ViewInteraction appCompatButton21 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -306,7 +306,7 @@ public class BreakTest {
         appCompatButton21.perform(click());
 
         ViewInteraction appCompatButton22 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -316,7 +316,7 @@ public class BreakTest {
         appCompatButton22.perform(click());
 
         ViewInteraction appCompatImageButton2 = onView(
-                allOf(withId(R.id.reroute_bt),
+                allOf(withId(R.id.reroute_btn),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -326,7 +326,7 @@ public class BreakTest {
         appCompatImageButton2.perform(click());
 
         ViewInteraction appCompatButton23 = onView(
-                allOf(withId(R.id.next_mock_btn), withText("MOCK NEXT"),
+                allOf(withId(R.id.mock_next_btn), withText("MOCK NEXT"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -346,7 +346,7 @@ public class BreakTest {
         appCompatButton24.perform(click());
 
         ViewInteraction appCompatImageButton3 = onView(
-                allOf(withId(R.id.reroute_bt),
+                allOf(withId(R.id.reroute_btn),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -356,7 +356,7 @@ public class BreakTest {
         appCompatImageButton3.perform(click());
 
         ViewInteraction appCompatButton25 = onView(
-                allOf(withId(R.id.back_step_plan), withText("Back"),
+                allOf(withId(R.id.back_directions_btn), withText("Back"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -366,7 +366,7 @@ public class BreakTest {
         appCompatButton25.perform(click());
 
         ViewInteraction appCompatButton26 = onView(
-                allOf(withId(R.id.back_step_plan), withText("Back"),
+                allOf(withId(R.id.back_directions_btn), withText("Back"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -376,7 +376,7 @@ public class BreakTest {
         appCompatButton26.perform(click());
 
         ViewInteraction appCompatButton27 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -386,7 +386,7 @@ public class BreakTest {
         appCompatButton27.perform(click());
 
         ViewInteraction appCompatButton28 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -436,7 +436,7 @@ public class BreakTest {
         appCompatButton31.perform(click());
 
         ViewInteraction appCompatButton32 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -446,7 +446,7 @@ public class BreakTest {
         appCompatButton32.perform(click());
 
         ViewInteraction appCompatButton33 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -456,7 +456,7 @@ public class BreakTest {
         appCompatButton33.perform(click());
 
         ViewInteraction appCompatButton34 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -466,7 +466,7 @@ public class BreakTest {
         appCompatButton34.perform(click());
 
         ViewInteraction appCompatButton35 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -476,7 +476,7 @@ public class BreakTest {
         appCompatButton35.perform(click());
 
         ViewInteraction appCompatButton36 = onView(
-                allOf(withId(R.id.back_step_plan), withText("Back"),
+                allOf(withId(R.id.back_directions_btn), withText("Back"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -486,7 +486,7 @@ public class BreakTest {
         appCompatButton36.perform(click());
 
         ViewInteraction appCompatButton37 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -496,7 +496,7 @@ public class BreakTest {
         appCompatButton37.perform(click());
 
         ViewInteraction appCompatButton38 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -506,7 +506,7 @@ public class BreakTest {
         appCompatButton38.perform(click());
 
         ViewInteraction appCompatButton39 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -585,7 +585,7 @@ public class BreakTest {
         switch_6.perform(click());
 
         ViewInteraction appCompatButton43 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -653,7 +653,7 @@ public class BreakTest {
         pressBack();
 
         ViewInteraction appCompatButton46 = onView(
-                allOf(withId(R.id.next_mock_btn), withText("MOCK NEXT"),
+                allOf(withId(R.id.mock_next_btn), withText("MOCK NEXT"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -663,7 +663,7 @@ public class BreakTest {
         appCompatButton46.perform(click());
 
         ViewInteraction appCompatButton47 = onView(
-                allOf(withId(R.id.next_button), withText("Next"),
+                allOf(withId(R.id.next_directions_btn), withText("Next"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -673,7 +673,7 @@ public class BreakTest {
         appCompatButton47.perform(click());
 
         ViewInteraction appCompatButton48 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),
@@ -695,7 +695,7 @@ public class BreakTest {
         pressBack();
 
         ViewInteraction appCompatButton50 = onView(
-                allOf(withId(R.id.skip_btn), withText("Skip"),
+                allOf(withId(R.id.skip_directions_btn), withText("Skip"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.validity),

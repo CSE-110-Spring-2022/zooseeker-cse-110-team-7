@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.zooseekercse110team7.GlobalDebug;
 import com.example.zooseekercse110team7.planner.NodeItem;
-import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
+import com.example.zooseekercse110team7.planner.NodeDaoRequest;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import org.jgrapht.Graph;
@@ -258,11 +258,11 @@ public class MapGraph {
         String resultId = (isGoingBackwards)?currentRouteItem.getSource():currentRouteItem.getDestination();
 
         /* UPDATE APPROPRIATELY IF ID IS PARENT */
-        if(UpdateNodeDaoRequest.getInstance().isParent(resultId)){
-            List<NodeItem> children = UpdateNodeDaoRequest.getInstance().RequestChildrenOf(resultId);
+        if(NodeDaoRequest.getInstance().isParent(resultId)){
+            List<NodeItem> children = NodeDaoRequest.getInstance().RequestChildrenOf(resultId);
             for(NodeItem child: children){
                 if(child.onPlanner){
-                    UpdateNodeDaoRequest.getInstance().RequestPlannerSkip(child.id);
+                    NodeDaoRequest.getInstance().RequestPlannerSkip(child.id);
                 }
             }
         }
@@ -362,7 +362,7 @@ public class MapGraph {
     }
 
     public void updatePath(){
-        Path.getInstance().getShortestPath(UpdateNodeDaoRequest.getInstance().RequestPlannedItems());
+        Path.getInstance().getShortestPath(NodeDaoRequest.getInstance().RequestPlannedItems());
     }
 
     /**

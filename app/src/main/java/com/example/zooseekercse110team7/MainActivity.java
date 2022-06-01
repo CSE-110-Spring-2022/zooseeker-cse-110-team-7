@@ -4,20 +4,15 @@ package com.example.zooseekercse110team7;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.example.zooseekercse110team7.map_v2.AssetLoader;
-import com.example.zooseekercse110team7.map_v2.MapGraph;
 import com.example.zooseekercse110team7.map_v2.Path;
 import com.example.zooseekercse110team7.map_v2.PrettyDirections;
-import com.example.zooseekercse110team7.map_v2.UserLocation;
 import com.example.zooseekercse110team7.planner.NodeDatabase;
 import com.example.zooseekercse110team7.planner.ReadOnlyNodeDao;
-import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
-import com.google.android.gms.location.LocationServices;
+import com.example.zooseekercse110team7.planner.NodeDaoRequest;
 
 import java.util.Objects;
 
@@ -43,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         db = NodeDatabase.getSingleton(getApplicationContext());
         nodeDao = db.nodeDao();
         PrettyDirections.getInstance().setNodeDao(getApplicationContext());
-        UpdateNodeDaoRequest.getInstance().setNodeDao(getApplicationContext());
+        NodeDaoRequest.getInstance().setNodeDao(getApplicationContext());
         Path.getInstance().getShortestPath(nodeDao.getByOnPlanner(true));//on startup get planner info
 
         // get last open Activity
