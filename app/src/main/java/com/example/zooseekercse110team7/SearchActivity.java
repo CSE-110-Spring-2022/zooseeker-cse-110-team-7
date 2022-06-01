@@ -13,12 +13,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.example.zooseekercse110team7.map_v2.MapGraph;
+import com.example.zooseekercse110team7.map_v2.Path;
 import com.example.zooseekercse110team7.planner.FilterDialogViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.NodeSearchViewAdapter;
@@ -87,7 +90,7 @@ public class SearchActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);
         selectedViewModel = new ViewModelProvider(this).get(NodeSearchViewModel.class);
         nodeViewAdapter = new NodeSearchViewAdapter(viewModel, this::onSelectionChange);
-        selectedNodeViewAdapter = new NodeSearchViewAdapter(selectedViewModel);
+        selectedNodeViewAdapter = new NodeSearchViewAdapter(selectedViewModel, NodeSearchViewAdapter.ItemType.SELECTED_NODE_ITEM);
 
         nodeItems = viewModel.getAllFilteredNodeItems("");
         selectedNodeItems = selectedViewModel.getAllSelectedNodeItems();
@@ -107,10 +110,27 @@ public class SearchActivity extends AppCompatActivity {
         selectedRecyclerView = findViewById(R.id.selected_search_node_viewer);
         selectedRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         selectedRecyclerView.setAdapter(selectedNodeViewAdapter);
+        onSelectionChange(true);//update selected summary
 
         setSearchViewListener();
 
+
     }
+
+    //on Android OS back button press -- go to Maps Activity
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Log.d(this.getClass().getName(), "OS back button pressed");
+            MapGraph.getInstance().updatePath();
+            Intent intent = new Intent(SearchActivity.this, MapsActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     public void onResetClick(View view) {
         viewModel.removeAllItemsFromPlanner();

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.zooseekercse110team7.GlobalDebug;
 import com.example.zooseekercse110team7.planner.NodeItem;
-import com.example.zooseekercse110team7.planner.UpdateNodeDaoRequest;
+import com.example.zooseekercse110team7.planner.NodeDaoRequest;
 import com.example.zooseekercse110team7.routesummary.RouteItem;
 
 import org.jgrapht.Graph;
@@ -200,7 +200,7 @@ public class MapGraph {
      *
      * @return Directions in the form of a String list
      * */
-    public List<String> getPreviousDirections(){ //TODO: Make Strings Look Nicer
+    public List<String> getPreviousDirections(){
         isGoingBackwards = true;
         List<String> result = new ArrayList<>();// holds result of parsed string for directions
 
@@ -258,11 +258,11 @@ public class MapGraph {
         String resultId = (isGoingBackwards)?currentRouteItem.getSource():currentRouteItem.getDestination();
 
         /* UPDATE APPROPRIATELY IF ID IS PARENT */
-        if(UpdateNodeDaoRequest.getInstance().isParent(resultId)){
-            List<NodeItem> children = UpdateNodeDaoRequest.getInstance().RequestChildrenOf(resultId);
+        if(NodeDaoRequest.getInstance().isParent(resultId)){
+            List<NodeItem> children = NodeDaoRequest.getInstance().RequestChildrenOf(resultId);
             for(NodeItem child: children){
                 if(child.onPlanner){
-                    UpdateNodeDaoRequest.getInstance().RequestPlannerSkip(child.id);
+                    NodeDaoRequest.getInstance().RequestPlannerSkip(child.id);
                 }
             }
         }
@@ -311,15 +311,7 @@ public class MapGraph {
 
         //can assume going forward
         /* GET SOURCE AND DESTINATION INFORMATION */
-        RouteItem previousRouteItem = pathOfRouteItems.get(
-                ((0 == currentPathIndex)?currentPathIndex:currentPathIndex-1)
-        );
-        RouteItem currentRouteItem = pathOfRouteItems.get(currentPathIndex);
         String newSource = getCurrentSource();
-        String newDestination =
-                (!isGoingBackwards)
-                ? currentRouteItem.getDestination()
-                : previousRouteItem.getDestination();
 
         /* CALCULATE NEW SUBPATH */
         List<RouteItem> remainingList = getRemainingSubpathList();
@@ -335,7 +327,7 @@ public class MapGraph {
         }
 
         /* REMOVE SKIPPED ITEMS FROM LIST */
-        pathOfRouteItems.subList(currentPathIndex,  pathOfRouteItems.size()).clear();
+        pathOfRouteItems.subList(currentPathIndex-1,  pathOfRouteItems.size()).clear();
 //        pathOfRouteItems.remove(pathOfRouteItems.get(currentPathIndex));
 //        pathOfRouteItems.remove((
 //                (isGoingBackwards)
@@ -343,7 +335,7 @@ public class MapGraph {
 //                :pathOfRouteItems.get(currentPathIndex-1)));
 
         /* APPEND SUBPATH TO END OF THE LIST */
-        if(!pathOfRouteItems.addAll(currentPathIndex, subpathRouteItems)){
+        if(!pathOfRouteItems.addAll(currentPathIndex-1, subpathRouteItems)){
             Log.e("MapGraph", "ERROR 2: Subpath Cannot Be Inserted!");
         }
     }
@@ -369,6 +361,10 @@ public class MapGraph {
         return result;
     }
 
+    public void updatePath(){
+        Path.getInstance().getShortestPath(NodeDaoRequest.getInstance().RequestPlannedItems());
+    }
+
     /**
      * This function returns the most recent path that was calculated
      *
@@ -390,12 +386,12 @@ public class MapGraph {
      *
      * @return a list of `RouteItem`s which is the subpath of unvisited items
      * */
-    public List<RouteItem> getRemainingSubpathList(){//TODO:Test This
+    public List<RouteItem> getRemainingSubpathList(){
         if(pathOfRouteItems.size() <= 1 || currentPathIndex >= pathOfRouteItems.size()){
             return Collections.emptyList();
         }
         int startIndex = currentPathIndex;
-        int endIndex = pathOfRouteItems.size()-1;
+        int endIndex = pathOfRouteItems.size();
         return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
     }
 
@@ -404,7 +400,7 @@ public class MapGraph {
      *
      * @return a list of `RouteItem`s which is the subpath of visited items
      * */
-    public List<RouteItem> getVisitedSubpathList(){//TODO:Test This
+    public List<RouteItem> getVisitedSubpathList(){
         if(pathOfRouteItems.size() <= 1 || currentPathIndex >= pathOfRouteItems.size()){ return Collections.emptyList();}
         int startIndex = 0;
         int endIndex = (0 == currentPathIndex)?currentPathIndex:((isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1);

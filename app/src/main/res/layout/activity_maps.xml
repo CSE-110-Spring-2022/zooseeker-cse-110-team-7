@@ -50,7 +50,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:onClick="onPlannerClicked"
             android:text="Planner"
             android:textSize="12sp" />
 
@@ -59,7 +58,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:onClick="onSearchClicked"
             android:text="Search"
             android:textSize="12sp" />
 
@@ -87,7 +85,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/next_mock_btn"
+                android:id="@+id/mock_next_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
@@ -134,7 +132,7 @@
                 android:text="Brief Directions" />
 
             <ImageButton
-                android:id="@+id/reroute_bt"
+                android:id="@+id/reroute_btn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
@@ -147,7 +145,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/next_button"
+                android:id="@+id/next_directions_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
@@ -155,7 +153,7 @@
                 android:text="Next" />
 
             <Button
-                android:id="@+id/skip_btn"
+                android:id="@+id/skip_directions_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
@@ -163,7 +161,7 @@
                 android:text="Skip" />
 
             <Button
-                android:id="@+id/back_step_plan"
+                android:id="@+id/back_directions_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"

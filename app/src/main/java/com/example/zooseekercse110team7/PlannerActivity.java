@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -98,7 +99,6 @@ public class PlannerActivity extends AppCompatActivity {
         nodeViewer.setOnDeleteButtonClicked(viewModel::deleteItem);
 
         /*-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-*/
-        //TODO: Update UI
 
         //routeViewModel = new ViewModelProvider(this).get(RouteSummaryViewModel.class);
         RouteSummaryViewAdapter routeSummaryViewAdapter = new RouteSummaryViewAdapter();
@@ -139,5 +139,18 @@ public class PlannerActivity extends AppCompatActivity {
         e.commit();
 
         super.onResume();
+    }
+
+    //on Android OS back button press -- go to Maps Activity
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Log.d(this.getClass().getName(), "OS back button pressed");
+            Intent intent = new Intent(PlannerActivity.this, MapsActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
