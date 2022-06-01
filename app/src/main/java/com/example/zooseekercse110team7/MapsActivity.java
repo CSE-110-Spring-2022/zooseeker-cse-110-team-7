@@ -420,7 +420,6 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     public void onRefreshClicked(View view){
-        //TODO: Refresh Directions
         //update view/text
         String directions = "[Updated]\n";
         List<String> route = MapGraph.getInstance().getCurrentDirections();

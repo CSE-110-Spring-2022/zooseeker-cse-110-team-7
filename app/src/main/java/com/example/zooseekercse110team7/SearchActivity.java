@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.example.zooseekercse110team7.map_v2.MapGraph;
+import com.example.zooseekercse110team7.map_v2.Path;
 import com.example.zooseekercse110team7.planner.FilterDialogViewAdapter;
 import com.example.zooseekercse110team7.planner.NodeItem;
 import com.example.zooseekercse110team7.planner.NodeSearchViewAdapter;
@@ -120,6 +122,7 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             Log.d(this.getClass().getName(), "OS back button pressed");
+            MapGraph.getInstance().updatePath();
             Intent intent = new Intent(SearchActivity.this, MapsActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

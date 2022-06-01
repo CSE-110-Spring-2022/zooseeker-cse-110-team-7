@@ -48,6 +48,7 @@ public class UpdateNodeDaoRequest {
         try{
             return nodeDao.getGate(gateString).id;
         }catch (NullPointerException e){
+            e.printStackTrace();
             return "";
         }
     }
@@ -60,6 +61,17 @@ public class UpdateNodeDaoRequest {
             return true;//if not null
         }catch (NullPointerException e){
             return false;
+        }
+    }
+    public List<NodeItem> RequestPlannedItems(){
+        return nodeDao.getByOnPlanner(true);
+    }
+    public String RequestName(String anId){
+        try{
+            return nodeDao.get(anId).name;
+        }catch (NullPointerException e){
+            e.printStackTrace();
+            return anId; // return id if cannot find node item
         }
     }
 }

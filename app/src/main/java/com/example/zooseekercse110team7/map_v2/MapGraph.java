@@ -311,15 +311,7 @@ public class MapGraph {
 
         //can assume going forward
         /* GET SOURCE AND DESTINATION INFORMATION */
-        RouteItem previousRouteItem = pathOfRouteItems.get(
-                ((0 == currentPathIndex)?currentPathIndex:currentPathIndex-1)
-        );
-        RouteItem currentRouteItem = pathOfRouteItems.get(currentPathIndex);
         String newSource = getCurrentSource();
-        String newDestination =
-                (!isGoingBackwards)
-                ? currentRouteItem.getDestination()
-                : previousRouteItem.getDestination();
 
         /* CALCULATE NEW SUBPATH */
         List<RouteItem> remainingList = getRemainingSubpathList();
@@ -335,7 +327,7 @@ public class MapGraph {
         }
 
         /* REMOVE SKIPPED ITEMS FROM LIST */
-        pathOfRouteItems.subList(currentPathIndex,  pathOfRouteItems.size()).clear();
+        pathOfRouteItems.subList(currentPathIndex-1,  pathOfRouteItems.size()).clear();
 //        pathOfRouteItems.remove(pathOfRouteItems.get(currentPathIndex));
 //        pathOfRouteItems.remove((
 //                (isGoingBackwards)
@@ -343,7 +335,7 @@ public class MapGraph {
 //                :pathOfRouteItems.get(currentPathIndex-1)));
 
         /* APPEND SUBPATH TO END OF THE LIST */
-        if(!pathOfRouteItems.addAll(currentPathIndex, subpathRouteItems)){
+        if(!pathOfRouteItems.addAll(currentPathIndex-1, subpathRouteItems)){
             Log.e("MapGraph", "ERROR 2: Subpath Cannot Be Inserted!");
         }
     }
@@ -367,6 +359,10 @@ public class MapGraph {
         currentPathIndex = originalIndex;
 
         return result;
+    }
+
+    public void updatePath(){
+        Path.getInstance().getShortestPath(UpdateNodeDaoRequest.getInstance().RequestPlannedItems());
     }
 
     /**
@@ -395,7 +391,7 @@ public class MapGraph {
             return Collections.emptyList();
         }
         int startIndex = currentPathIndex;
-        int endIndex = pathOfRouteItems.size()-1;
+        int endIndex = pathOfRouteItems.size();
         return new ArrayList<>(pathOfRouteItems.subList(startIndex, endIndex));
     }
 
