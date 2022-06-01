@@ -266,10 +266,4 @@ public class Path {
      * @return null if no path has previously been calculated, else a Double of the total cost
      * */
     public Double getTotalCost(){ return pathCost; }
-
-    //TODO
-    public List<RouteItem> getShortestLocationPath(Location source, List<NodeItem> mustVisitItems,
-                                                   String destination){
-        return null;
-    }
 }

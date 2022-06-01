@@ -6,7 +6,7 @@ package com.example.zooseekercse110team7.routesummary;
  * */
 public class RouteItem {
     String toExhibitName, fromExhibitName, distance;
-    public RouteItem(String dest, String source, String dist){//TODO: change order -> source, dest, dist
+    public RouteItem(String dest, String source, String dist){
         this.toExhibitName = dest;
         this.fromExhibitName = source;
         this.distance = dist;

@@ -200,7 +200,7 @@ public class MapGraph {
      *
      * @return Directions in the form of a String list
      * */
-    public List<String> getPreviousDirections(){ //TODO: Make Strings Look Nicer
+    public List<String> getPreviousDirections(){
         isGoingBackwards = true;
         List<String> result = new ArrayList<>();// holds result of parsed string for directions
 
@@ -386,7 +386,7 @@ public class MapGraph {
      *
      * @return a list of `RouteItem`s which is the subpath of unvisited items
      * */
-    public List<RouteItem> getRemainingSubpathList(){//TODO:Test This
+    public List<RouteItem> getRemainingSubpathList(){
         if(pathOfRouteItems.size() <= 1 || currentPathIndex >= pathOfRouteItems.size()){
             return Collections.emptyList();
         }
@@ -400,7 +400,7 @@ public class MapGraph {
      *
      * @return a list of `RouteItem`s which is the subpath of visited items
      * */
-    public List<RouteItem> getVisitedSubpathList(){//TODO:Test This
+    public List<RouteItem> getVisitedSubpathList(){
         if(pathOfRouteItems.size() <= 1 || currentPathIndex >= pathOfRouteItems.size()){ return Collections.emptyList();}
         int startIndex = 0;
         int endIndex = (0 == currentPathIndex)?currentPathIndex:((isGoingBackwards) ? currentPathIndex+1: currentPathIndex-1);
